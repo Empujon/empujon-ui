@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shantell+Sans:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Las CSS vars de fuente que los componentes referencian (font-inter / font-shantell). */
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-shantell: 'Shantell Sans', cursive;
+}
+
+body {
+  font-family: var(--font-inter);
+}
