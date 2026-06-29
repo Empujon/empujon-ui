@@ -27,30 +27,40 @@ const buttonVariants = cva(
   ],
   {
     variants: {
-      /** Jerarquía visual + contexto de fondo. Nombres tomados del Figma. */
+      /**
+       * Jerarquía visual + contexto de fondo. Nombres y colores tomados 1:1 del
+       * Figma (size M). Estados: default = clases base; hover = `hover:`;
+       * activo (pressed) = `active:`; deshabilitado = `disabled:`.
+       *
+       * Patrones del sistema: el hover vira a celeste (#45acf7) casi siempre;
+       * el estado activo agrega un borde celeste de 3px; deshabilitado usa
+       * gris #6b796b (token `divider`).
+       */
       variant: {
-        // primario: fondo sólido naranja → hover celeste, texto negro
+        // primario on dark: naranja → hover celeste (texto negro siempre); activo agrega borde celeste
         'primary-dark':
-          'bg-orange text-black hover:bg-blue focus-visible:ring-orange disabled:bg-gray-700 disabled:text-gray-600',
+          'bg-orange text-black hover:bg-blue active:border-[3px] active:border-blue focus-visible:ring-orange disabled:bg-gray-700 disabled:text-divider',
+        // primario on light: fondo NEGRO + texto naranja → hover gris-oscuro + texto celeste
         'primary-light':
-          'bg-orange text-black hover:bg-blue focus-visible:ring-orange disabled:bg-lgray disabled:text-gray-600',
-        // secundario: borde naranja, texto naranja → hover se rellena
+          'bg-black text-orange hover:bg-darker-gray hover:text-blue active:border-[3px] active:border-blue disabled:bg-lightgray disabled:text-darker-gray disabled:opacity-40 focus-visible:ring-orange',
+        // secundario on dark: gris-oscuro + borde/texto naranja → hover borde/texto celeste; activo fondo gris-300 + texto negro
         'secondary-dark':
-          'bg-darker-gray text-orange border-[3px] border-orange hover:bg-orange hover:text-black focus-visible:ring-orange disabled:border-gray-700 disabled:text-gray-600 disabled:bg-transparent',
+          'bg-darker-gray text-orange border-[3px] border-orange hover:border-blue hover:text-blue active:bg-lgray active:border-blue active:text-black disabled:border-divider disabled:text-divider focus-visible:ring-orange',
+        // secundario on light: transparente + borde/texto naranja → hover fondo claro + borde/texto negro
         'secondary-light':
-          'bg-whitesmoke text-orange border-[3px] border-orange hover:bg-orange hover:text-black focus-visible:ring-orange disabled:border-lgray disabled:text-gray-600',
-        // sin fondo (ghost): solo texto, hover sutil
+          'bg-transparent text-orange border-[3px] border-orange hover:bg-whitesmoke hover:border-black hover:text-black active:border-blue disabled:border-divider disabled:text-divider focus-visible:ring-orange',
+        // sin fondo: link subrayado, texto blanco → hover celeste, activo amarillo
         ghost:
-          'bg-transparent text-white hover:text-orange focus-visible:ring-orange disabled:text-gray-600',
-        // sin fondo shantell: ghost con tipografía display
+          'bg-transparent text-whitesmoke underline underline-offset-4 hover:text-blue active:text-yellow disabled:text-lightgray disabled:opacity-40 focus-visible:ring-blue',
+        // sin fondo shantell: link subrayado en Shantell, texto negro → hover naranja
         'ghost-shantell':
-          'bg-transparent text-white font-shantell hover:text-orange focus-visible:ring-orange disabled:text-gray-600',
-        // peligro relleno: rojo, texto negro
+          'bg-transparent text-black font-shantell underline underline-offset-4 hover:text-orange active:text-black disabled:text-divider disabled:opacity-40 focus-visible:ring-orange',
+        // peligro relleno: rojo + texto negro → hover INVIERTE (fondo negro + texto rojo); activo borde negro
         'danger-fill':
-          'bg-red text-black hover:brightness-110 focus-visible:ring-red disabled:bg-gray-700 disabled:text-gray-600',
-        // peligro borde: borde rojo, texto rojo → hover se rellena
+          'bg-red text-black hover:bg-black hover:text-red active:border-[3px] active:border-black focus-visible:ring-red disabled:bg-gray-700 disabled:text-divider',
+        // peligro borde: gris-oscuro + borde/texto rojo → hover borde/texto celeste
         'danger-outline':
-          'bg-transparent text-red border-[3px] border-red hover:bg-red hover:text-black focus-visible:ring-red disabled:border-gray-700 disabled:text-gray-600',
+          'bg-darker-gray text-red border-[3px] border-red hover:border-blue hover:text-blue active:border-blue active:text-red disabled:border-divider disabled:text-divider focus-visible:ring-red',
       },
       /** Tamaño. Padding + tipografía según escala del Figma (S/M/L). */
       size: {

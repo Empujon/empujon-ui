@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './Button';
 
@@ -74,6 +75,35 @@ export const Estados: Story = {
       <Button disabled icon={<Spark />}>Deshabilitado</Button>
       <Button loading>Cargando</Button>
       <Button icon={<Spark />} iconPosition="right">Ícono derecha</Button>
+    </div>
+  ),
+};
+
+const ALL_VARIANTS = [
+  'primary-dark',
+  'primary-light',
+  'secondary-dark',
+  'secondary-light',
+  'ghost',
+  'ghost-shantell',
+  'danger-fill',
+  'danger-outline',
+] as const;
+
+// Todas las variantes en default y deshabilitado (hover/activo se ven interactuando).
+export const Matriz: Story = {
+  render: () => (
+    <div className="grid grid-cols-[170px_1fr_1fr] gap-x-6 gap-y-3 items-center">
+      <span />
+      <span className="text-white/60 text-xs font-inter">default</span>
+      <span className="text-white/60 text-xs font-inter">deshabilitado</span>
+      {ALL_VARIANTS.map((v) => (
+        <React.Fragment key={v}>
+          <span className="text-white/80 text-xs font-inter">{v}</span>
+          <Button variant={v} icon={<Spark />}>Botón</Button>
+          <Button variant={v} icon={<Spark />} disabled>Botón</Button>
+        </React.Fragment>
+      ))}
     </div>
   ),
 };
