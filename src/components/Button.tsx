@@ -36,31 +36,34 @@ const buttonVariants = cva(
        * el estado activo agrega un borde celeste de 3px; deshabilitado usa
        * gris #6b796b (token `divider`).
        */
+      // NOTA: hover/active van prefijados con `enabled:` para que NO se disparen
+      // cuando el botón está deshabilitado (disabled no debe tener efectos).
+      // El estado activo (onClick) usa `ring` (box-shadow) — no agranda el botón.
       variant: {
-        // primario on dark: naranja → hover celeste (texto negro siempre); activo agrega borde celeste
+        // primario on dark: naranja → hover celeste (texto negro). Activo: naranja + anillo celeste.
         'primary-dark':
-          'bg-orange text-black hover:bg-blue active:border-[3px] active:border-blue focus-visible:ring-orange disabled:bg-gray-700 disabled:text-divider',
-        // primario on light: fondo NEGRO + texto naranja → hover gris-oscuro + texto celeste
+          'bg-orange text-black enabled:hover:bg-blue enabled:active:bg-orange enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue focus-visible:ring-orange disabled:bg-gray-700 disabled:text-divider',
+        // primario on light: fondo NEGRO + texto naranja → hover gris-oscuro + texto celeste; activo anillo celeste
         'primary-light':
-          'bg-black text-orange hover:bg-darker-gray hover:text-blue active:border-[3px] active:border-blue disabled:bg-lightgray disabled:text-darker-gray disabled:opacity-40 focus-visible:ring-orange',
+          'bg-black text-orange enabled:hover:bg-darker-gray enabled:hover:text-blue enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue disabled:bg-lightgray disabled:text-darker-gray disabled:opacity-40 focus-visible:ring-orange',
         // secundario on dark: gris-oscuro + borde/texto naranja → hover borde/texto celeste; activo fondo gris-300 + texto negro
         'secondary-dark':
-          'bg-darker-gray text-orange border-[3px] border-orange hover:border-blue hover:text-blue active:bg-lgray active:border-blue active:text-black disabled:border-divider disabled:text-divider focus-visible:ring-orange',
+          'bg-darker-gray text-orange border-[3px] border-orange enabled:hover:border-blue enabled:hover:text-blue enabled:active:bg-lgray enabled:active:border-blue enabled:active:text-black disabled:border-divider disabled:text-divider focus-visible:ring-orange',
         // secundario on light: transparente + borde/texto naranja → hover fondo claro + borde/texto negro
         'secondary-light':
-          'bg-transparent text-orange border-[3px] border-orange hover:bg-whitesmoke hover:border-black hover:text-black active:border-blue disabled:border-divider disabled:text-divider focus-visible:ring-orange',
+          'bg-transparent text-orange border-[3px] border-orange enabled:hover:bg-whitesmoke enabled:hover:border-black enabled:hover:text-black enabled:active:border-blue disabled:border-divider disabled:text-divider focus-visible:ring-orange',
         // sin fondo: link subrayado, texto blanco → hover celeste, activo amarillo
         ghost:
-          'bg-transparent text-whitesmoke underline underline-offset-4 hover:text-blue active:text-yellow disabled:text-lightgray disabled:opacity-40 focus-visible:ring-blue',
+          'bg-transparent text-whitesmoke underline underline-offset-4 enabled:hover:text-blue enabled:active:text-yellow disabled:text-lightgray disabled:opacity-40 focus-visible:ring-blue',
         // sin fondo shantell: link subrayado en Shantell, texto negro → hover naranja
         'ghost-shantell':
-          'bg-transparent text-black font-shantell underline underline-offset-4 hover:text-orange active:text-black disabled:text-divider disabled:opacity-40 focus-visible:ring-orange',
-        // peligro relleno: rojo + texto negro → hover INVIERTE (fondo negro + texto rojo); activo borde negro
+          'bg-transparent text-black font-shantell underline underline-offset-4 enabled:hover:text-orange enabled:active:text-black disabled:text-divider disabled:opacity-40 focus-visible:ring-orange',
+        // peligro relleno: rojo + texto negro → hover INVIERTE (fondo negro + texto rojo); activo anillo negro
         'danger-fill':
-          'bg-red text-black hover:bg-black hover:text-red active:border-[3px] active:border-black focus-visible:ring-red disabled:bg-gray-700 disabled:text-divider',
+          'bg-red text-black enabled:hover:bg-black enabled:hover:text-red enabled:active:bg-red enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-black focus-visible:ring-red disabled:bg-gray-700 disabled:text-divider',
         // peligro borde: gris-oscuro + borde/texto rojo → hover borde/texto celeste
         'danger-outline':
-          'bg-darker-gray text-red border-[3px] border-red hover:border-blue hover:text-blue active:border-blue active:text-red disabled:border-divider disabled:text-divider focus-visible:ring-red',
+          'bg-darker-gray text-red border-[3px] border-red enabled:hover:border-blue enabled:hover:text-blue enabled:active:border-blue enabled:active:text-red disabled:border-divider disabled:text-divider focus-visible:ring-red',
       },
       /** Tamaño. Padding + tipografía según escala del Figma (S/M/L). */
       size: {
