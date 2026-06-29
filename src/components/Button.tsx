@@ -17,9 +17,11 @@ import { cn } from '../lib/cn';
  * NO reemplaza a components/buttons/Button.tsx (legacy). Migración gradual.
  */
 const buttonVariants = cva(
-  // base: layout pill + tipografía + transición + foco accesible + disabled
+  // base común: layout + tipografía + transición + foco accesible + disabled.
+  // El padding y el tamaño de texto los ponen `size`/`compoundVariants` porque
+  // las variantes "ghost" del Figma NO llevan padding horizontal.
   [
-    'inline-flex items-center justify-center gap-2 rounded-full',
+    'inline-flex items-center justify-center gap-2',
     'font-inter font-semibold whitespace-nowrap select-none',
     'transition-colors duration-200 ease-in-out',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black',
@@ -28,48 +30,42 @@ const buttonVariants = cva(
   {
     variants: {
       /**
-       * Jerarquía visual + contexto de fondo. Nombres y colores tomados 1:1 del
-       * Figma (size M). Estados: default = clases base; hover = `hover:`;
-       * activo (pressed) = `active:`; deshabilitado = `disabled:`.
-       *
-       * Patrones del sistema: el hover vira a celeste (#45acf7) casi siempre;
-       * el estado activo agrega un borde celeste de 3px; deshabilitado usa
-       * gris #6b796b (token `divider`).
+       * Tipo. Colores/estados tomados 1:1 del Figma (size M, leídos del
+       * design-context de cada nodo). Estados: default = base; hover = `enabled:hover:`;
+       * activo (onClick) = `enabled:active:`; deshabilitado = `disabled:`.
+       * El activo de las variantes rellenas usa `ring` (box-shadow) para no agrandar.
        */
-      // NOTA: hover/active van prefijados con `enabled:` para que NO se disparen
-      // cuando el botón está deshabilitado (disabled no debe tener efectos).
-      // El estado activo (onClick) usa `ring` (box-shadow) — no agranda el botón.
       variant: {
-        // primario on dark: naranja → hover celeste (texto negro). Activo: naranja + anillo celeste.
+        // primario on dark — default naranja/negro · hover celeste · activo naranja+anillo celeste · disabled gris700/divider
         'primary-dark':
-          'bg-orange text-black enabled:hover:bg-blue enabled:active:bg-orange enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue focus-visible:ring-orange disabled:bg-gray-700 disabled:text-divider',
-        // primario on light: fondo NEGRO + texto naranja → hover gris-oscuro + texto celeste; activo anillo celeste
+          'rounded-full bg-orange text-black enabled:hover:bg-blue enabled:active:bg-orange enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue focus-visible:ring-orange disabled:bg-gray-700 disabled:text-divider',
+        // primario on light — default negro/naranja · hover gris-oscuro/celeste · activo anillo celeste · disabled lightgray/darker-gray
         'primary-light':
-          'bg-black text-orange enabled:hover:bg-darker-gray enabled:hover:text-blue enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue disabled:bg-lightgray disabled:text-darker-gray disabled:opacity-40 focus-visible:ring-orange',
-        // secundario on dark: gris-oscuro + borde/texto naranja → hover borde/texto celeste; activo fondo gris-300 + texto negro
+          'rounded-full bg-black text-orange enabled:hover:bg-darker-gray enabled:hover:text-blue enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue disabled:bg-lightgray disabled:text-darker-gray focus-visible:ring-orange',
+        // secundario on dark — gris-oscuro + borde/texto naranja · hover celeste · activo fondo gris-300 + texto negro · disabled divider
         'secondary-dark':
-          'bg-darker-gray text-orange border-[3px] border-orange enabled:hover:border-blue enabled:hover:text-blue enabled:active:bg-lgray enabled:active:border-blue enabled:active:text-black disabled:border-divider disabled:text-divider focus-visible:ring-orange',
-        // secundario on light: transparente + borde/texto naranja → hover fondo claro + borde/texto negro
+          'rounded-full bg-darker-gray text-orange border-[3px] border-orange enabled:hover:border-blue enabled:hover:text-blue enabled:active:bg-lgray enabled:active:border-blue enabled:active:text-black disabled:border-divider disabled:text-divider focus-visible:ring-orange',
+        // secundario on light — transparente + borde/texto naranja · hover fondo claro + borde/texto negro · activo borde celeste · disabled divider
         'secondary-light':
-          'bg-transparent text-orange border-[3px] border-orange enabled:hover:bg-whitesmoke enabled:hover:border-black enabled:hover:text-black enabled:active:border-blue disabled:border-divider disabled:text-divider focus-visible:ring-orange',
-        // sin fondo: link subrayado, texto blanco → hover celeste, activo amarillo
+          'rounded-full bg-transparent text-orange border-[3px] border-orange enabled:hover:bg-whitesmoke enabled:hover:border-black enabled:hover:text-black enabled:active:border-blue disabled:border-divider disabled:text-divider focus-visible:ring-orange',
+        // sin fondo — link wavy, texto blanco · hover celeste · activo amarillo · disabled lightgray
         ghost:
-          'bg-transparent text-whitesmoke underline underline-offset-4 enabled:hover:text-blue enabled:active:text-yellow disabled:text-lightgray disabled:opacity-40 focus-visible:ring-blue',
-        // sin fondo shantell: link subrayado en Shantell, texto negro → hover naranja
+          'bg-transparent text-whitesmoke [text-decoration-line:underline] [text-decoration-style:wavy] underline-offset-2 enabled:hover:text-blue enabled:active:text-yellow disabled:text-lightgray focus-visible:ring-blue',
+        // sin fondo shantell — link wavy en Shantell, texto negro · hover naranja · activo negro · disabled divider
         'ghost-shantell':
-          'bg-transparent text-black font-shantell underline underline-offset-4 enabled:hover:text-orange enabled:active:text-black disabled:text-divider disabled:opacity-40 focus-visible:ring-orange',
-        // peligro relleno: rojo + texto negro → hover INVIERTE (fondo negro + texto rojo); activo anillo negro
+          'bg-transparent text-black font-shantell [text-decoration-line:underline] [text-decoration-style:wavy] underline-offset-2 enabled:hover:text-orange enabled:active:text-black disabled:text-divider focus-visible:ring-orange',
+        // peligro relleno — rojo/negro · hover INVIERTE (negro/rojo) · activo rojo+anillo negro · disabled gris700/divider
         'danger-fill':
-          'bg-red text-black enabled:hover:bg-black enabled:hover:text-red enabled:active:bg-red enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-black focus-visible:ring-red disabled:bg-gray-700 disabled:text-divider',
-        // peligro borde: gris-oscuro + borde/texto rojo → hover borde/texto celeste
+          'rounded-full bg-red text-black enabled:hover:bg-black enabled:hover:text-red enabled:active:bg-red enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-black focus-visible:ring-red disabled:bg-gray-700 disabled:text-divider',
+        // peligro borde — gris-oscuro + borde/texto rojo · hover borde/texto celeste · activo borde celeste + texto rojo · disabled divider
         'danger-outline':
-          'bg-darker-gray text-red border-[3px] border-red enabled:hover:border-blue enabled:hover:text-blue enabled:active:border-blue enabled:active:text-red disabled:border-divider disabled:text-divider focus-visible:ring-red',
+          'rounded-full bg-darker-gray text-red border-[3px] border-red enabled:hover:border-blue enabled:hover:text-blue enabled:active:border-blue enabled:active:text-red disabled:border-divider disabled:text-divider focus-visible:ring-red',
       },
-      /** Tamaño. Padding + tipografía según escala del Figma (S/M/L). */
+      /** Tamaño (texto). El padding lo aplican los compoundVariants según el tipo. */
       size: {
-        sm: 'px-4 py-2 text-label-chico',
-        md: 'px-6 py-4 text-label-medio',
-        lg: 'px-8 py-6 text-label-grande',
+        sm: 'text-label-chico',
+        md: 'text-label-medio',
+        lg: 'text-label-grande',
       },
       /** Ancho completo del contenedor. */
       fullWidth: {
@@ -77,6 +73,22 @@ const buttonVariants = cva(
         false: '',
       },
     },
+    compoundVariants: [
+      // Variantes con caja (pill): padding completo por tamaño.
+      ...(['primary-dark', 'primary-light', 'secondary-dark', 'secondary-light', 'danger-fill', 'danger-outline'] as const).flatMap(
+        (v) => [
+          { variant: v, size: 'sm' as const, class: 'px-4 py-2' },
+          { variant: v, size: 'md' as const, class: 'px-6 py-4' },
+          { variant: v, size: 'lg' as const, class: 'px-8 py-6' },
+        ],
+      ),
+      // ghost (sin fondo): solo padding vertical, sin horizontal. Disabled al 38% (Figma).
+      { variant: 'ghost', class: 'py-4 disabled:opacity-[0.38]' },
+      // ghost-shantell: tipografía FIJA 16px (no escala con size), padding vertical 8px. Disabled 38%.
+      { variant: 'ghost-shantell', class: 'py-2 !text-label-chico disabled:opacity-[0.38]' },
+      // primario on light: disabled al 38% (Figma aplica opacity al contenido).
+      { variant: 'primary-light', class: 'disabled:opacity-[0.38]' },
+    ],
     defaultVariants: {
       variant: 'primary-dark',
       size: 'md',
