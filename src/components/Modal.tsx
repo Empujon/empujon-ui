@@ -116,13 +116,19 @@ const Modal: React.FC<ModalProps> & {
   );
 };
 
-/** Región de contenido scrolleable. Dueña del único overflow del modal. */
+/** Región de contenido scrolleable. Dueña del único overflow del modal.
+ *
+ *  Nota: algunos consumidores (empujón) ocultan globalmente el scrollbar de
+ *  elementos anidados con `*::-webkit-scrollbar { display: none }`. Forzamos
+ *  aquí el `::-webkit-scrollbar` base a mostrarse para que la barra estilizada
+ *  del plugin `tailwind-scrollbar` sea visible pese a esa regla global. */
 const ModalContent: React.FC<SlotProps> = ({ children, className }) => (
   <div
     className={cn(
       'flex-1 min-h-0 overflow-y-auto mx-5 pt-3 pb-5 pr-2 flex flex-col gap-5',
       'scrollbar scrollbar-thin scrollbar-thumb-white scrollbar-track-[#879187]',
       'scrollbar-thumb-rounded-full scrollbar-track-rounded-full',
+      '[&::-webkit-scrollbar]:!block [&::-webkit-scrollbar]:!w-2',
       className,
     )}
   >
