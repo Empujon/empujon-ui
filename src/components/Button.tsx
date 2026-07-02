@@ -45,9 +45,9 @@ const buttonVariants = cva(
         // secundario on dark — gris-oscuro + borde/texto naranja · hover celeste · activo fondo gris-300 + texto negro · disabled divider
         'secondary-dark':
           'rounded-full bg-darker-gray text-orange border-[3px] border-orange enabled:hover:border-blue enabled:hover:text-blue enabled:active:bg-lgray enabled:active:border-blue enabled:active:text-black disabled:border-divider disabled:text-divider focus-visible:ring-orange',
-        // secundario on light — transparente + borde/texto naranja · hover fondo claro + borde/texto negro · activo borde celeste · disabled divider
+        // secundario on light — fondo gris-oscuro #252924 + borde/texto naranja · hover fondo claro + borde/texto negro · activo borde celeste · disabled divider
         'secondary-light':
-          'rounded-full bg-transparent text-orange border-[3px] border-orange enabled:hover:bg-whitesmoke enabled:hover:border-black enabled:hover:text-black enabled:active:border-blue disabled:border-divider disabled:text-divider focus-visible:ring-orange',
+          'rounded-full bg-darker-gray text-orange border-[3px] border-orange enabled:hover:bg-whitesmoke enabled:hover:border-black enabled:hover:text-black enabled:active:border-blue disabled:border-divider disabled:text-divider focus-visible:ring-orange',
         // sin fondo — link wavy, texto blanco · hover celeste · activo amarillo · disabled lightgray
         ghost:
           'bg-transparent text-whitesmoke [text-decoration-line:underline] [text-decoration-style:wavy] underline-offset-2 enabled:hover:text-blue enabled:active:text-yellow disabled:text-lightgray focus-visible:ring-blue',

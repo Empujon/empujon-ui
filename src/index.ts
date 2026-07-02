@@ -19,3 +19,10 @@ export {
 } from './components/Card';
 export { Badge, type BadgeProps } from './components/Badge';
 export { Notification, type NotificationProps } from './components/Notification';
+export { Modal, type ModalProps } from './components/Modal';
+export {
+  DatePicker,
+  type DatePickerLocale,
+  type DateRange,
+} from './components/DatePicker';
+export { DateRangePicker } from './components/DateRangePicker';
