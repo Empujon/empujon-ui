@@ -1,0 +1,26 @@
+// Registro de bloques del design system para page builders.
+//
+// Índice explícito de los componentes que se exponen como bloques arrastrables.
+// Agregar un componente nuevo como bloque = importar su `*BlockMeta` acá.
+// Los componentes que NO deben ser bloques de landing (Modal, DatePicker,
+// DateRangePicker) simplemente no se listan.
+
+import type { UiBlockMeta } from './block-meta';
+import { buttonBlockMeta } from './components/Button';
+import { badgeBlockMeta } from './components/Badge';
+import { cardBlockMeta } from './components/Card';
+import { notificationBlockMeta } from './components/Notification';
+import { spinnerBlockMeta } from './components/Spinner';
+import { dotsBlockMeta, progressBlockMeta } from './components/Loading';
+
+export const uiBlocks: UiBlockMeta[] = [
+  buttonBlockMeta,
+  badgeBlockMeta,
+  cardBlockMeta,
+  notificationBlockMeta,
+  spinnerBlockMeta,
+  dotsBlockMeta,
+  progressBlockMeta,
+];
+
+export type { UiBlockMeta, UiPropMeta } from './block-meta';

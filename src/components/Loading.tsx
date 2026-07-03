@@ -110,3 +110,30 @@ export function ProgressDots({
 }
 
 export default DotsLoader;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const dotsBlockMeta: UiBlockMeta = {
+  type: 'ui:dots',
+  label: 'Puntos (carga)',
+  icon: 'MoreHorizontal',
+  exportName: 'DotsLoader',
+  props: {
+    color: { control: 'enum', label: 'Color', default: 'green', options: ['green', 'orange', 'blue', 'white'] },
+    size: { control: 'enum', label: 'Tamaño', default: 'md', options: ['sm', 'md', 'lg'] },
+    count: { control: 'number', label: 'Cantidad', default: 3, min: 2, max: 6 },
+  },
+};
+
+export const progressBlockMeta: UiBlockMeta = {
+  type: 'ui:progress',
+  label: 'Barra de progreso',
+  icon: 'BarChart3',
+  exportName: 'ProgressDots',
+  props: {
+    value: { control: 'number', label: 'Progreso (%)', default: 60, min: 0, max: 100 },
+    total: { control: 'number', label: 'Cantidad de puntos', default: 10, min: 4, max: 20 },
+    color: { control: 'enum', label: 'Color', default: 'green', options: ['green', 'orange', 'blue', 'white'] },
+  },
+};

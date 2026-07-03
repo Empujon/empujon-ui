@@ -171,3 +171,34 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
 
 export { Button, buttonVariants };
 export default Button;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const buttonBlockMeta: UiBlockMeta = {
+  type: 'ui:button',
+  label: 'Botón',
+  icon: 'MousePointerClick',
+  exportName: 'Button',
+  childrenProp: 'children',
+  props: {
+    children: { control: 'text', label: 'Texto', default: 'Botón', inline: true },
+    variant: {
+      control: 'enum',
+      label: 'Estilo',
+      default: 'primary-dark',
+      options: [
+        'primary-dark',
+        'primary-light',
+        'secondary-dark',
+        'secondary-light',
+        'ghost',
+        'ghost-shantell',
+        'danger-fill',
+        'danger-outline',
+      ],
+    },
+    size: { control: 'enum', label: 'Tamaño', default: 'md', options: ['sm', 'md', 'lg'] },
+    fullWidth: { control: 'boolean', label: 'Ancho completo', default: false },
+  },
+};

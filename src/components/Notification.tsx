@@ -93,3 +93,24 @@ export function Notification({
 }
 
 export default Notification;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const notificationBlockMeta: UiBlockMeta = {
+  type: 'ui:notification',
+  label: 'Notificación',
+  icon: 'Bell',
+  exportName: 'Notification',
+  props: {
+    title: { control: 'text', label: 'Título', default: 'Título de la notificación' },
+    meta: { control: 'text', label: 'Detalle', default: 'Hace 5 min' },
+    type: {
+      control: 'enum',
+      label: 'Tipo',
+      default: 'success',
+      options: ['success', 'warning', 'info'],
+    },
+    actionLabel: { control: 'text', label: 'Acción', default: '' },
+  },
+};

@@ -52,3 +52,22 @@ export function Spinner({ size, color, label = 'Cargando', className, ...props }
 }
 
 export default Spinner;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const spinnerBlockMeta: UiBlockMeta = {
+  type: 'ui:spinner',
+  label: 'Spinner',
+  icon: 'Loader',
+  exportName: 'Spinner',
+  props: {
+    size: { control: 'enum', label: 'Tamaño', default: 'md', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
+    color: {
+      control: 'enum',
+      label: 'Color',
+      default: 'orange',
+      options: ['orange', 'green', 'blue', 'white', 'black'],
+    },
+  },
+};

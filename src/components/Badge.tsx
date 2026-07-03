@@ -56,3 +56,29 @@ export function Badge({ variant, status, className, children, ...props }: BadgeP
 }
 
 export default Badge;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const badgeBlockMeta: UiBlockMeta = {
+  type: 'ui:badge',
+  label: 'Etiqueta',
+  icon: 'Tag',
+  exportName: 'Badge',
+  childrenProp: 'children',
+  props: {
+    children: { control: 'text', label: 'Texto', default: 'Etiqueta', inline: true },
+    variant: {
+      control: 'enum',
+      label: 'Estilo',
+      default: 'neutral',
+      options: ['neutral', 'orange', 'yellow', 'green', 'blue', 'danger', 'outline'],
+    },
+    status: {
+      control: 'enum',
+      label: 'Punto de estado',
+      default: '',
+      options: ['', 'green', 'orange', 'yellow', 'red', 'blue', 'divider'],
+    },
+  },
+};

@@ -26,3 +26,8 @@ export {
   type DateRange,
 } from './components/DatePicker';
 export { DateRangePicker } from './components/DateRangePicker';
+
+// Metadata de bloques para page builders. También disponible en el subpath
+// '@empujon/ui/blocks' (tree-shakeable, sin arrastrar componentes).
+export { uiBlocks } from './blocks';
+export type { UiBlockMeta, UiPropMeta } from './block-meta';

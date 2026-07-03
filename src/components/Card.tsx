@@ -70,3 +70,25 @@ export function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDiv
 }
 
 export default Card;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const cardBlockMeta: UiBlockMeta = {
+  type: 'ui:card',
+  label: 'Tarjeta',
+  icon: 'Square',
+  exportName: 'Card',
+  childrenProp: 'children',
+  props: {
+    children: { control: 'text', label: 'Contenido', default: 'Contenido de la tarjeta', inline: true },
+    surface: {
+      control: 'enum',
+      label: 'Superficie',
+      default: 'dark',
+      options: ['dark', 'black', 'light', 'outline'],
+    },
+    radius: { control: 'enum', label: 'Redondeo', default: 'md', options: ['sm', 'md', 'lg'] },
+    padding: { control: 'enum', label: 'Relleno', default: 'md', options: ['none', 'sm', 'md', 'lg'] },
+  },
+};
