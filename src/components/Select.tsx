@@ -259,3 +259,23 @@ function NeutralSelect({
 }
 
 export default Select;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+// Nota: `options` es un array y el sistema de bloques aún no tiene control para
+// arrays; el wrapper del builder inyecta un set de opciones de ejemplo para que
+// el bloque sea presentacional. Editar las opciones reales queda pendiente.
+export const selectBlockMeta: UiBlockMeta = {
+  type: 'ui:select',
+  label: 'Selector',
+  icon: 'ChevronDown',
+  exportName: 'Select',
+  controlled: { valueProp: 'value', onChangeProp: 'onChange', initial: '' },
+  props: {
+    label: { control: 'text', label: 'Etiqueta', default: 'Elegí una opción' },
+    placeholder: { control: 'text', label: 'Placeholder', default: 'Elegir' },
+    variant: { control: 'enum', label: 'Estilo', default: 'neutral', options: ['neutral', 'default'] },
+    disabled: { control: 'boolean', label: 'Deshabilitado', default: false },
+  },
+};

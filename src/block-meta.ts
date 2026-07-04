@@ -27,6 +27,19 @@ export interface UiBlockMeta {
   exportName: string;
   /** Prop que recibe el texto/children editable inline en el lienzo (si aplica). */
   childrenProp?: string;
+  /**
+   * Para componentes CONTROLADOS (value + onChange obligatorios). Le dice al
+   * consumidor (el wrapper del builder) que inyecte estado local: así el widget
+   * es interactivo en la vitrina/landing sin lógica de formulario real. Presentacional.
+   */
+  controlled?: {
+    /** Prop que recibe el valor (ej. 'checked', 'value'). */
+    valueProp: string;
+    /** Prop callback de cambio (ej. 'onChange'). */
+    onChangeProp: string;
+    /** Valor inicial del estado local. */
+    initial: boolean | string;
+  };
   /** Props editables → controles. */
   props: Record<string, UiPropMeta>;
 }

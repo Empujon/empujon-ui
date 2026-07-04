@@ -74,3 +74,20 @@ export function Radio({
 }
 
 export default Radio;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const radioBlockMeta: UiBlockMeta = {
+  type: 'ui:radio',
+  label: 'Radio',
+  icon: 'CircleDot',
+  exportName: 'Radio',
+  controlled: { valueProp: 'checked', onChangeProp: 'onChange', initial: false },
+  props: {
+    name: { control: 'text', label: 'Grupo (name)', default: 'grupo' },
+    tone: { control: 'enum', label: 'Color', default: 'orange', options: ['orange', 'yellow'] },
+    size: { control: 'enum', label: 'Tamaño', default: 'md', options: ['sm', 'md'] },
+    disabled: { control: 'boolean', label: 'Deshabilitado', default: false },
+  },
+};

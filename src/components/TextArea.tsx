@@ -98,3 +98,21 @@ export function TextArea({
 }
 
 export default TextArea;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const textAreaBlockMeta: UiBlockMeta = {
+  type: 'ui:textarea',
+  label: 'Área de texto',
+  icon: 'Text',
+  exportName: 'TextArea',
+  controlled: { valueProp: 'value', onChangeProp: 'onChange', initial: '' },
+  props: {
+    label: { control: 'text', label: 'Etiqueta', default: 'Etiqueta' },
+    placeholder: { control: 'text', label: 'Placeholder', default: 'Escribí…' },
+    rows: { control: 'number', label: 'Filas', default: 4, min: 2, max: 20 },
+    variant: { control: 'enum', label: 'Estilo', default: 'neutral', options: ['neutral', 'default'] },
+    disabled: { control: 'boolean', label: 'Deshabilitado', default: false },
+  },
+};

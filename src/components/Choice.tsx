@@ -49,3 +49,21 @@ export function Choice({
 }
 
 export default Choice;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const choiceBlockMeta: UiBlockMeta = {
+  type: 'ui:choice',
+  label: 'Opción (control + texto)',
+  icon: 'ListChecks',
+  exportName: 'Choice',
+  childrenProp: 'label',
+  controlled: { valueProp: 'checked', onChangeProp: 'onChange', initial: false },
+  props: {
+    label: { control: 'text', label: 'Texto', default: 'Opción', inline: true },
+    type: { control: 'enum', label: 'Tipo', default: 'checkbox', options: ['checkbox', 'radio'] },
+    size: { control: 'enum', label: 'Tamaño', default: 'md', options: ['sm', 'md'] },
+    disabled: { control: 'boolean', label: 'Deshabilitado', default: false },
+  },
+};

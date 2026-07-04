@@ -12,6 +12,12 @@ import { cardBlockMeta } from './components/Card';
 import { notificationBlockMeta } from './components/Notification';
 import { spinnerBlockMeta } from './components/Spinner';
 import { dotsBlockMeta, progressBlockMeta } from './components/Loading';
+import { checkboxBlockMeta } from './components/Checkbox';
+import { radioBlockMeta } from './components/Radio';
+import { choiceBlockMeta } from './components/Choice';
+import { inputBlockMeta } from './components/Input';
+import { textAreaBlockMeta } from './components/TextArea';
+import { selectBlockMeta } from './components/Select';
 
 export const uiBlocks: UiBlockMeta[] = [
   buttonBlockMeta,
@@ -21,6 +27,13 @@ export const uiBlocks: UiBlockMeta[] = [
   spinnerBlockMeta,
   dotsBlockMeta,
   progressBlockMeta,
+  // Controles de selección / formulario (presentacionales en el builder).
+  checkboxBlockMeta,
+  radioBlockMeta,
+  choiceBlockMeta,
+  inputBlockMeta,
+  textAreaBlockMeta,
+  selectBlockMeta,
 ];
 
 export type { UiBlockMeta, UiPropMeta } from './block-meta';

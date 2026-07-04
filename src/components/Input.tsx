@@ -111,3 +111,21 @@ export function Input({
 }
 
 export default Input;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const inputBlockMeta: UiBlockMeta = {
+  type: 'ui:input',
+  label: 'Campo de texto',
+  icon: 'TextCursorInput',
+  exportName: 'Input',
+  controlled: { valueProp: 'value', onChangeProp: 'onChange', initial: '' },
+  props: {
+    label: { control: 'text', label: 'Etiqueta', default: 'Etiqueta' },
+    placeholder: { control: 'text', label: 'Placeholder', default: 'Escribí…' },
+    variant: { control: 'enum', label: 'Estilo', default: 'neutral', options: ['neutral', 'default'] },
+    helper: { control: 'text', label: 'Texto de ayuda', default: '' },
+    disabled: { control: 'boolean', label: 'Deshabilitado', default: false },
+  },
+};

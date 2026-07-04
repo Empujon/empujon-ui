@@ -84,3 +84,20 @@ export function Checkbox({
 }
 
 export default Checkbox;
+
+// ── Metadata de bloque (page builder) ──────────────────────────────────────────
+import type { UiBlockMeta } from '../block-meta';
+
+export const checkboxBlockMeta: UiBlockMeta = {
+  type: 'ui:checkbox',
+  label: 'Checkbox',
+  icon: 'SquareCheck',
+  exportName: 'Checkbox',
+  controlled: { valueProp: 'checked', onChangeProp: 'onChange', initial: false },
+  props: {
+    tone: { control: 'enum', label: 'Color', default: 'blue', options: ['blue', 'orange', 'yellow'] },
+    size: { control: 'enum', label: 'Tamaño', default: 'md', options: ['xs', 'sm', 'md'] },
+    shape: { control: 'enum', label: 'Forma', default: 'square', options: ['square', 'round'] },
+    disabled: { control: 'boolean', label: 'Deshabilitado', default: false },
+  },
+};
