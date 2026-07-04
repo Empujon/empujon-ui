@@ -36,6 +36,9 @@ export {
   type OptionPillsProps,
   type OptionPillItem,
 } from './components/OptionPills';
+export { Input, type InputProps } from './components/Input';
+export { TextArea, type TextAreaProps } from './components/TextArea';
+export { Select, type SelectProps, type SelectOption } from './components/Select';
 
 // Compositores de chrome (header/footer/menú). Presentacionales: la lógica
 // (auth, roles, navegación, push del chat) la inyecta la app por slots + style.
