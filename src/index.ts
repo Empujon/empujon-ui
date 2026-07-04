@@ -27,6 +27,17 @@ export {
 } from './components/DatePicker';
 export { DateRangePicker } from './components/DateRangePicker';
 
+// Compositores de chrome (header/footer/menú). Presentacionales: la lógica
+// (auth, roles, navegación, push del chat) la inyecta la app por slots + style.
+export { Navbar, type NavbarProps } from './components/Navbar';
+export { Footer, type FooterProps, type FooterLink } from './components/Footer';
+export {
+  CurtainMenu,
+  type CurtainMenuProps,
+  type CurtainMenuItem,
+} from './components/CurtainMenu';
+export { HamburgerMenu, type HamburgerMenuProps } from './components/HamburgerMenu';
+
 // Metadata de bloques para page builders. También disponible en el subpath
 // '@empujon/ui/blocks' (tree-shakeable, sin arrastrar componentes).
 export { uiBlocks } from './blocks';
