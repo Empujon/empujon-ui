@@ -27,6 +27,16 @@ export {
 } from './components/DatePicker';
 export { DateRangePicker } from './components/DateRangePicker';
 
+// Controles de selección (formularios).
+export { Radio, type RadioProps } from './components/Radio';
+export { Checkbox, type CheckboxProps } from './components/Checkbox';
+export { Choice, type ChoiceProps } from './components/Choice';
+export {
+  OptionPills,
+  type OptionPillsProps,
+  type OptionPillItem,
+} from './components/OptionPills';
+
 // Compositores de chrome (header/footer/menú). Presentacionales: la lógica
 // (auth, roles, navegación, push del chat) la inyecta la app por slots + style.
 export { Navbar, type NavbarProps } from './components/Navbar';
