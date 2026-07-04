@@ -60,6 +60,9 @@ const buttonVariants = cva(
         // peligro borde — gris-oscuro + borde/texto rojo · hover borde/texto celeste · activo borde celeste + texto rojo · disabled divider
         'danger-outline':
           'rounded-full bg-darker-gray text-red border-[3px] border-red enabled:hover:border-blue enabled:hover:text-blue enabled:active:border-blue enabled:active:text-red disabled:border-divider disabled:text-divider focus-visible:ring-red',
+        // link — hipervínculo simple: texto naranja subrayado, hover celeste. Sin caja.
+        link:
+          'bg-transparent text-orange underline underline-offset-2 enabled:hover:text-blue enabled:active:text-yellow disabled:text-lightgray focus-visible:ring-orange',
       },
       /** Tamaño (texto). El padding lo aplican los compoundVariants según el tipo. */
       size: {
@@ -86,6 +89,8 @@ const buttonVariants = cva(
       { variant: 'ghost', class: 'py-4 disabled:opacity-[0.38]' },
       // ghost-shantell: tipografía FIJA 16px (no escala con size), padding vertical 8px. Disabled 38%.
       { variant: 'ghost-shantell', class: 'py-2 !text-label-chico disabled:opacity-[0.38]' },
+      // link: sin caja, solo el texto; disabled al 38%.
+      { variant: 'link', class: 'disabled:opacity-[0.38]' },
       // primario on light: disabled al 38% (Figma aplica opacity al contenido).
       { variant: 'primary-light', class: 'disabled:opacity-[0.38]' },
     ],
@@ -113,6 +118,12 @@ export interface ButtonProps
   iconPosition?: 'left' | 'right';
   /** Muestra spinner y deshabilita el botón. */
   loading?: boolean;
+  /** Si se pasa, el botón se renderiza como <a href>. */
+  href?: string;
+  /** target del enlace (sólo con href). */
+  target?: string;
+  /** rel del enlace (sólo con href). */
+  rel?: string;
 }
 
 const Spinner = ({ className }: { className?: string }) => (
@@ -131,7 +142,7 @@ const Spinner = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(function Button(
   {
     className,
     variant,
@@ -143,28 +154,59 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     disabled,
     children,
     type = 'button',
+    href,
+    target,
+    rel,
     ...props
   },
   ref,
 ) {
   const isDisabled = disabled || loading;
   const iconSizeClass = ICON_SIZE[size ?? 'md'];
+  const classes = cn(buttonVariants({ variant, size, fullWidth }), className);
 
   const renderIcon = (node: React.ReactNode) =>
     node ? <span className={cn('shrink-0 inline-flex items-center justify-center', iconSizeClass)}>{node}</span> : null;
 
-  return (
-    <button
-      ref={ref}
-      type={type}
-      disabled={isDisabled}
-      className={cn(buttonVariants({ variant, size, fullWidth }), className)}
-      {...props}
-    >
+  const content = (
+    <>
       {loading && renderIcon(<Spinner className={iconSizeClass} />)}
       {!loading && iconPosition === 'left' && renderIcon(icon)}
       {children != null && <span className="leading-[1.3]">{children}</span>}
       {!loading && iconPosition === 'right' && renderIcon(icon)}
+    </>
+  );
+
+  // Como enlace (<a>) cuando hay href y no está deshabilitado. Un <a> no tiene
+  // estado disabled nativo, así que si está disabled caemos al <button>.
+  if (href && !isDisabled) {
+    // Los pseudo `:enabled`/`:disabled` (prefijo `enabled:`/`disabled:` de Tailwind)
+    // NO matchean en un <a>, así que el hover/active no se dispararía. Como acá el
+    // enlace nunca está disabled, quitamos esos prefijos para que hover/active valgan.
+    const linkClasses = classes.replace(/enabled:/g, '').replace(/disabled:\S+/g, '');
+    return (
+      <a
+        ref={ref as React.Ref<HTMLAnchorElement>}
+        href={href}
+        target={target}
+        rel={rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined)}
+        className={cn(linkClasses, 'inline-flex items-center justify-center gap-2')}
+        {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      ref={ref as React.Ref<HTMLButtonElement>}
+      type={type}
+      disabled={isDisabled}
+      className={classes}
+      {...props}
+    >
+      {content}
     </button>
   );
 });
@@ -183,6 +225,7 @@ export const buttonBlockMeta: UiBlockMeta = {
   childrenProp: 'children',
   props: {
     children: { control: 'text', label: 'Texto', default: 'Botón', inline: true },
+    href: { control: 'text', label: 'Enlace (URL)', default: '' },
     variant: {
       control: 'enum',
       label: 'Estilo',
@@ -196,6 +239,7 @@ export const buttonBlockMeta: UiBlockMeta = {
         'ghost-shantell',
         'danger-fill',
         'danger-outline',
+        'link',
       ],
     },
     size: { control: 'enum', label: 'Tamaño', default: 'md', options: ['sm', 'md', 'lg'] },
