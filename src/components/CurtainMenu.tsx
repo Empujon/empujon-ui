@@ -72,14 +72,14 @@ export function CurtainMenu({ items, adminItems = [], footer, open = true, class
           <button
             key={`admin-${index}`}
             onClick={item.onClick}
-            className="bg-black/20 border-2 border-black/30 rounded-2xl w-24 h-24 lg:w-32 lg:h-32 flex flex-col items-center justify-center hover:scale-105 transition-transform duration-200 p-2"
+            className="bg-[#E5F5E0] border-2 border-blue hover:bg-blue rounded-2xl w-24 h-24 lg:w-32 lg:h-32 flex flex-col items-center justify-center transition-colors duration-200 shadow-sm p-2"
           >
-            <div className="relative w-8 h-8 lg:w-12 lg:h-12 mb-1 flex items-center justify-center">
+            <div className="relative w-8 h-8 lg:w-12 lg:h-12 mb-2 lg:mb-3 flex items-center justify-center">
               {item.icon ?? (
                 <span className="text-black font-extrabold text-2xl lg:text-3xl">{item.letter}</span>
               )}
             </div>
-            <span className="text-black font-bold text-[10px] lg:text-xs text-center leading-tight px-1">
+            <span className="text-black font-bold text-sm lg:text-base text-center leading-tight px-1">
               {item.label}
             </span>
           </button>
