@@ -44,7 +44,7 @@ export function Input({
   error,
   disabled = false,
   helper,
-  variant = 'default',
+  variant = 'neutral',
   className,
   maxLength,
 }: InputProps) {

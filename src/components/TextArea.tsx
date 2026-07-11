@@ -34,7 +34,7 @@ export function TextArea({
   error,
   disabled = false,
   helper,
-  variant = 'default',
+  variant = 'neutral',
   className,
 }: TextAreaProps) {
   if (variant === 'neutral') {
