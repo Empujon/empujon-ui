@@ -38,10 +38,10 @@ const buttonVariants = cva(
       variant: {
         // primario on dark — default naranja/negro · hover celeste · activo naranja+anillo celeste · disabled gris700/divider
         'primary-dark':
-          'rounded-full bg-orange text-black enabled:hover:bg-blue enabled:active:bg-orange enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue focus-visible:ring-orange disabled:bg-gray-700 disabled:text-divider',
+          'rounded-full bg-orange text-black border-[3px] border-transparent enabled:hover:bg-blue enabled:active:bg-orange enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue focus-visible:ring-orange disabled:bg-gray-700 disabled:text-divider',
         // primario on light — default negro/naranja · hover gris-oscuro/celeste · activo anillo celeste · disabled lightgray/darker-gray
         'primary-light':
-          'rounded-full bg-black text-orange enabled:hover:bg-darker-gray enabled:hover:text-blue enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue disabled:bg-lightgray disabled:text-darker-gray focus-visible:ring-orange',
+          'rounded-full bg-black text-orange border-[3px] border-transparent enabled:hover:bg-darker-gray enabled:hover:text-blue enabled:active:ring-[3px] enabled:active:ring-inset enabled:active:ring-blue disabled:bg-lightgray disabled:text-darker-gray focus-visible:ring-orange',
         // secundario on dark — gris-oscuro + borde/texto naranja · hover celeste · activo fondo gris-300 + texto negro · disabled divider
         'secondary-dark':
           'rounded-full bg-darker-gray text-orange border-[3px] border-orange enabled:hover:border-blue enabled:hover:text-blue enabled:active:bg-lgray enabled:active:border-blue enabled:active:text-black disabled:border-divider disabled:text-divider focus-visible:ring-orange',
