@@ -72,7 +72,9 @@ export function OptionPills({
               onClick={() => toggleOption(option.value)}
               disabled={disabled}
               className={cn(
-                'flex items-center gap-2 h-11 px-4 py-2.5 rounded-full border-2 font-inter font-semibold text-base leading-6 tracking-[0.16px] transition-all w-fit',
+                // min-h + max-w-full + wrap: un label largo crece a lo alto y
+                // jamás desborda el contenedor (antes h-11 fijo + w-fit libre).
+                'flex items-center gap-2 min-h-11 px-4 py-2.5 rounded-full border-2 font-inter font-semibold text-base leading-6 tracking-[0.16px] transition-all w-fit max-w-full whitespace-normal break-words text-left',
                 isSelected
                   ? 'bg-[#dde3dd] border-blue text-black'
                   : 'bg-dark-gray border-orange text-whitesmoke hover:border-blue hover:text-blue',
