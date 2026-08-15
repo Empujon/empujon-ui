@@ -1,11 +1,18 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './Button';
+import { IconChipActividad as Spark } from './designerIcons';
 
-const Spark = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="size-full" aria-hidden="true">
-    <path d="M12 2l2.4 5.6L20 10l-5.6 2.4L12 18l-2.4-5.6L4 10l5.6-2.4L12 2z" fill="currentColor" />
-  </svg>
+// Variantes "On Light" (primary-light, secondary-light, ghost-light, ghost-shantell) están
+// pensadas por Figma para vivir sobre una superficie clara — ghost-light/ghost-shantell son
+// texto negro sobre fondo transparente, literalmente invisibles sobre el canvas oscuro por
+// default de Storybook. En vez de depender del toggle de "backgrounds" del toolbar (que no
+// aplica en un export estático de Storybook ni en la vista de Docs), cada swatch declara su
+// propio fondo — así el ejemplo es correcto sin que nadie tenga que acordarse de cambiar nada.
+const LIGHT_SURFACE_VARIANTS = new Set(['primary-light', 'secondary-light', 'ghost-light', 'ghost-shantell']);
+
+const Swatch = ({ light, children }: { light: boolean; children: React.ReactNode }) => (
+  <div className={`inline-flex rounded-xl p-4 ${light ? 'bg-whitesmoke' : 'bg-black'}`}>{children}</div>
 );
 
 const meta: Meta<typeof Button> = {
@@ -21,6 +28,7 @@ const meta: Meta<typeof Button> = {
         'secondary-dark',
         'secondary-light',
         'ghost',
+        'ghost-light',
         'ghost-shantell',
         'danger-fill',
         'danger-outline',
@@ -33,25 +41,29 @@ export default meta;
 
 type Story = StoryObj<typeof Button>;
 
-export const Playground: Story = { args: { icon: <Spark /> } };
+export const Playground: Story = { args: { icon: <Spark className="size-full" /> } };
 
 export const Variantes: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-4">
-      {(
-        [
-          'primary-dark',
-          'secondary-dark',
-          'ghost',
-          'ghost-shantell',
-          'danger-fill',
-          'danger-outline',
-        ] as const
-      ).map((v) => (
-        <Button key={v} variant={v} icon={<Spark />}>
-          {v}
-        </Button>
-      ))}
+    <div className="flex flex-col gap-4">
+      <Swatch light={false}>
+        <div className="flex flex-wrap gap-4">
+          {(['primary-dark', 'secondary-dark', 'ghost', 'danger-fill', 'danger-outline'] as const).map((v) => (
+            <Button key={v} variant={v} icon={<Spark className="size-full" />}>
+              {v}
+            </Button>
+          ))}
+        </div>
+      </Swatch>
+      <Swatch light={true}>
+        <div className="flex flex-wrap gap-4">
+          {(['primary-light', 'secondary-light', 'ghost-light', 'ghost-shantell'] as const).map((v) => (
+            <Button key={v} variant={v} icon={<Spark className="size-full" />}>
+              {v}
+            </Button>
+          ))}
+        </div>
+      </Swatch>
     </div>
   ),
 };
@@ -60,7 +72,7 @@ export const Tamaños: Story = {
   render: () => (
     <div className="flex flex-wrap items-center gap-4">
       {(['sm', 'md', 'lg'] as const).map((s) => (
-        <Button key={s} size={s} icon={<Spark />}>
+        <Button key={s} size={s} icon={<Spark className="size-full" />}>
           Botón {s}
         </Button>
       ))}
@@ -71,10 +83,10 @@ export const Tamaños: Story = {
 export const Estados: Story = {
   render: () => (
     <div className="flex flex-wrap items-center gap-4">
-      <Button icon={<Spark />}>Default</Button>
-      <Button disabled icon={<Spark />}>Deshabilitado</Button>
+      <Button icon={<Spark className="size-full" />}>Default</Button>
+      <Button disabled icon={<Spark className="size-full" />}>Deshabilitado</Button>
       <Button loading>Cargando</Button>
-      <Button icon={<Spark />} iconPosition="right">Ícono derecha</Button>
+      <Button icon={<Spark className="size-full" />} iconPosition="right">Ícono derecha</Button>
     </div>
   ),
 };
@@ -85,25 +97,35 @@ const ALL_VARIANTS = [
   'secondary-dark',
   'secondary-light',
   'ghost',
+  'ghost-light',
   'ghost-shantell',
   'danger-fill',
   'danger-outline',
 ] as const;
 
 // Todas las variantes en default y deshabilitado (hover/activo se ven interactuando).
+// Fondo del swatch de cada fila = la superficie real donde Figma pensó esa variante, no el
+// canvas de Storybook — así la matriz es correcta mires o no mires con el toolbar de "claro".
 export const Matriz: Story = {
   render: () => (
     <div className="grid grid-cols-[170px_1fr_1fr] gap-x-6 gap-y-3 items-center">
       <span />
       <span className="text-white/60 text-xs font-inter">default</span>
       <span className="text-white/60 text-xs font-inter">deshabilitado</span>
-      {ALL_VARIANTS.map((v) => (
-        <React.Fragment key={v}>
-          <span className="text-white/80 text-xs font-inter">{v}</span>
-          <Button variant={v} icon={<Spark />}>Botón</Button>
-          <Button variant={v} icon={<Spark />} disabled>Botón</Button>
-        </React.Fragment>
-      ))}
+      {ALL_VARIANTS.map((v) => {
+        const light = LIGHT_SURFACE_VARIANTS.has(v);
+        return (
+          <React.Fragment key={v}>
+            <span className="text-white/80 text-xs font-inter">{v}</span>
+            <Swatch light={light}>
+              <Button variant={v} icon={<Spark className="size-full" />}>Botón</Button>
+            </Swatch>
+            <Swatch light={light}>
+              <Button variant={v} icon={<Spark className="size-full" />} disabled>Botón</Button>
+            </Swatch>
+          </React.Fragment>
+        );
+      })}
     </div>
   ),
 };

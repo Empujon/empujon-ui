@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '../lib/cn';
+import { IconCheckMark } from './designerIcons';
 
 /**
  * Notification — aviso del sistema de diseño.
@@ -22,12 +23,11 @@ const ICON_BG: Record<NotificationType, string> = {
   info: 'bg-blue',
 };
 
-const CheckIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="size-6" aria-hidden="true">
-    <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
+// El link que se probó para este ícono resultó ser una "x" de cerrar (misma pieza
+// que Select/Modal), no un check ni un signo de exclamación — no correspondía a
+// este componente. El check sí es el glifo real (`IconCheckMark`, ya confirmado
+// contra Figma en Pagination/CardActionButton). El de advertencia sigue pendiente:
+// no tengo un link real para el signo de exclamación de Figma todavía.
 const BangIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" className="size-6" aria-hidden="true">
     <path d="M12 7v6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
@@ -73,7 +73,7 @@ export function Notification({
         )}
         aria-hidden="true"
       >
-        {type === 'success' ? <CheckIcon /> : <BangIcon />}
+        {type === 'success' ? <IconCheckMark className="size-6" /> : <BangIcon />}
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <p className="font-shantell font-semibold text-xl text-whitesmoke">{title}</p>

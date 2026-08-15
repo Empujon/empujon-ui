@@ -10,6 +10,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+import { IconCaretDown } from './designerIcons';
 
 type Variant = 'default' | 'neutral';
 
@@ -32,17 +33,9 @@ export interface SelectProps {
   className?: string;
 }
 
-// Chevron del proyecto (currentColor) — mismo path que usan BreadcrumbSelect y
-// los filtros de Gestión.
+// Chevron real de Figma (mismo glifo de Dropdown/Accordion), no el hand-drawn de antes.
 function Chevron({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden className={className}>
-      <path
-        fill="currentColor"
-        d="M5.3509 6.03546C5.91827 6.03546 6.45019 6.14184 6.94664 6.35461C7.4431 6.56738 7.97501 6.91017 8.54238 7.38298C9.10976 7.85579 9.74806 8.49409 10.4573 9.29787C11.1665 10.1253 12.0057 11.1655 12.975 12.4184L11.1665 12.383C12.5377 10.9173 13.6369 9.74704 14.4644 8.87234C15.2918 8.02128 15.9419 7.38298 16.4147 6.95745C16.8875 6.55555 17.2776 6.29551 17.5849 6.1773C17.8686 6.0591 18.1641 6 18.4715 6C18.8734 6 19.2634 6.10638 19.6417 6.31915C19.9963 6.53191 20.2918 6.80378 20.5282 7.13475C20.7646 7.46572 20.8828 7.78487 20.8828 8.0922C20.8828 8.35225 20.8355 8.61229 20.741 8.87234C20.6464 9.13239 20.4336 9.45154 20.1027 9.82979C19.7717 10.208 19.2752 10.7045 18.6133 11.3191C17.9514 11.9338 17.053 12.7258 15.9183 13.695C15.2091 14.3097 14.6535 14.7825 14.2516 15.1135C13.8261 15.4444 13.4242 15.669 13.0459 15.7872C12.6677 15.9291 12.1949 16 11.6275 16C11.0601 16 10.5755 15.8818 10.1736 15.6454C9.74806 15.4326 9.27525 14.9598 8.75515 14.227C7.85681 12.9976 7.06484 12.0284 6.37926 11.3191C5.67004 10.6099 5.07903 10.0544 4.60622 9.65248C4.10976 9.25059 3.74333 8.9078 3.50692 8.62411C3.24688 8.36407 3.11685 8.04492 3.11685 7.66667C3.11685 7.21749 3.32962 6.82742 3.75515 6.49645C4.15704 6.18913 4.68896 6.03546 5.3509 6.03546Z"
-      />
-    </svg>
-  );
+  return <IconCaretDown className={className} />;
 }
 
 export function Select({
