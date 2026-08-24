@@ -49,7 +49,13 @@ export {
   type SegmentedOption,
 } from './components/SegmentedControl';
 export { NumberInput, type NumberInputProps } from './components/NumberInput';
-export { Tooltip, type TooltipProps } from './components/Tooltip';
+export { Tooltip, type TooltipProps, type TooltipArrow, type TooltipColor } from './components/Tooltip';
+export {
+  InformativeTooltip,
+  type InformativeTooltipProps,
+  type InformativeTooltipArrow,
+  type InformativeTooltipColor,
+} from './components/InformativeTooltip';
 export { Search, type SearchProps } from './components/Search';
 export { Pagination, type PaginationProps } from './components/Pagination';
 export { TabBar, type TabItem, type TabBarProps } from './components/TabBar';

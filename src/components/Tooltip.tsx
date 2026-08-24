@@ -2,92 +2,166 @@
 
 import React from 'react';
 import { cn } from '../lib/cn';
-import { IconCloseX } from './designerIcons';
+import { IconCloseX, IconChevronUp, IconChevronDown } from './designerIcons';
 
 /**
- * Tooltip — globo de guiado/tutorial (Figma › "Tooltip" › "Tutorial Tooltip").
+ * Tooltip — globo de guiado/tutorial y popover de acción (Figma › "Tooltip" › "Interactive Tooltip").
  *
- * Gap 100% nuevo. Distinto del sistema de "guiado tipo tour" que ya existe en
- * `empujon/frontend` (`GuideProvider`, con spotlight + anclaje por `data-guide`) — este
- * es solo la burbuja visual con paginación (ej. "1/3") y acciones Siguiente/Cerrar,
- * pensada para que la app la posicione (con o sin su propio sistema de spotlight).
+ * Actualizado 1:1 contra el rebuild de Figma (node 6777:1816): antes solo cubría el caso
+ * de onboarding (right/down, un solo color, sin description). Ahora es un único componente
+ * que cubre dos usos:
+ *   1. Coachmark de onboarding — step + acción secundaria "Cerrar" + primaria "Siguiente"/"Finalizar".
+ *   2. Popover contextual (ej. nodo del circuito) — sin step, sin secundaria, un solo primary
+ *      action tipo "Comenzar", con `description` como segunda línea.
  *
- * La "cruz" de cerrar inline junto al mensaje SÍ es el glifo real de Figma (`IconCloseX`)
- * — se me había pasado por completo en la primera pasada, no solo el placeholder. La flecha
- * decorativa que apunta al elemento anclado sigue siendo un triángulo CSS, no un asset.
+ * `arrow` reemplaza al viejo `direction` (ahora 4 lados, no 2) y `color` es nuevo (antes
+ * solo existía el naranja). Cada sección (X / description / step / acciones) se muestra
+ * según la presencia del prop correspondiente — mismo patrón que ya usaba este componente.
+ *
+ * La cruz de cerrar es el glifo real de Figma (`IconCloseX`). El hint de teclado
+ * (`showKeyboardHint`) es una aproximación simplificada de las teclas rotadas de Figma
+ * (acá: dos chips con flecha arriba/abajo) — no hay asset 1:1 en la librería de íconos.
+ * La flecha decorativa que apunta al elemento anclado sigue siendo un triángulo CSS,
+ * no un asset (evita depender de una URL de Figma que expira a los 7 días).
  */
+export type TooltipArrow = 'right' | 'bottom' | 'left' | 'top';
+export type TooltipColor = 'orange' | 'white';
+
 export interface TooltipProps {
+  /** Texto principal (título). */
   message: string;
+  /** Segunda línea opcional, más chica. Si se pasa, se muestra. */
+  description?: string;
   /** Paginación tipo "1/3". Si se omite no se muestra. */
   step?: string;
-  direction?: 'right' | 'down';
-  onNext?: () => void;
-  nextLabel?: string;
+  /** Lado de la flecha — de qué lado está el elemento anclado. */
+  arrow?: TooltipArrow;
+  /** Color de la burbuja. */
+  color?: TooltipColor;
+  /** Hint de navegación por teclado (flechas arriba/abajo). */
+  showKeyboardHint?: boolean;
+  /** Muestra la X de cerrar arriba a la derecha. */
   onClose?: () => void;
-  closeLabel?: string;
+  /** Acción principal (ej. "Siguiente", "Finalizar", "Comenzar"). */
+  onPrimaryAction?: () => void;
+  primaryActionLabel?: string;
+  /** Acción secundaria (ej. "Cerrar"). Solo tiene sentido en el flujo de onboarding. */
+  onSecondaryAction?: () => void;
+  secondaryActionLabel?: string;
   className?: string;
 }
 
+const BUBBLE_BG: Record<TooltipColor, string> = {
+  orange: 'bg-orange',
+  white: 'bg-whitesmoke',
+};
+
+/** Triángulo CSS por lado × color — clases completas (Tailwind no resuelve interpolación). */
+const ARROW_SHAPE: Record<TooltipArrow, Record<TooltipColor, string>> = {
+  right: {
+    orange: 'border-y-8 border-l-8 border-y-transparent border-l-orange',
+    white: 'border-y-8 border-l-8 border-y-transparent border-l-whitesmoke',
+  },
+  left: {
+    orange: 'border-y-8 border-r-8 border-y-transparent border-r-orange',
+    white: 'border-y-8 border-r-8 border-y-transparent border-r-whitesmoke',
+  },
+  bottom: {
+    orange: 'border-x-8 border-t-8 border-x-transparent border-t-orange',
+    white: 'border-x-8 border-t-8 border-x-transparent border-t-whitesmoke',
+  },
+  top: {
+    orange: 'border-x-8 border-b-8 border-x-transparent border-b-orange',
+    white: 'border-x-8 border-b-8 border-x-transparent border-b-whitesmoke',
+  },
+};
+
+/** Dirección del flex del wrapper — bubble siempre primero en el DOM, `-reverse` la ubica del otro lado. */
+const WRAPPER_LAYOUT: Record<TooltipArrow, string> = {
+  right: 'flex-row items-center',
+  left: 'flex-row-reverse items-center',
+  bottom: 'flex-col items-center',
+  top: 'flex-col-reverse items-center',
+};
+
 export function Tooltip({
   message,
+  description,
   step,
-  direction = 'right',
-  onNext,
-  nextLabel = 'Siguiente',
+  arrow = 'right',
+  color = 'orange',
+  showKeyboardHint = false,
   onClose,
-  closeLabel = 'Cerrar',
+  onPrimaryAction,
+  primaryActionLabel = 'Siguiente',
+  onSecondaryAction,
+  secondaryActionLabel = 'Cerrar',
   className,
 }: TooltipProps) {
-  const isDown = direction === 'down';
+  const showControlsRow = Boolean(step || onPrimaryAction || onSecondaryAction);
+
   return (
-    <div className={cn('inline-flex', isDown ? 'flex-col items-center' : 'items-center', className)}>
-      <div
-        className={cn(
-          'flex flex-col gap-4 items-start rounded-[24px] bg-orange p-4 shadow-verde',
-          isDown ? 'items-center' : '',
-        )}
-      >
-        <div className={cn('flex items-start gap-2 max-w-[359px]', isDown ? 'flex-row-reverse' : '')}>
-          <p className="flex-1 font-shantell font-semibold text-[20px] leading-[1.3] text-black">{message}</p>
+    <div className={cn('inline-flex drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]', WRAPPER_LAYOUT[arrow], className)}>
+      <div className={cn('flex max-w-[423px] flex-col items-start gap-4 rounded-card px-4 py-[15px]', BUBBLE_BG[color])}>
+        <div className="flex items-start gap-2">
+          <div className="flex flex-col items-start gap-2">
+            <p className="w-[359px] font-shantell text-[20px] font-semibold leading-[1.3] text-black">{message}</p>
+            {description && (
+              <p className="w-[359px] font-inter text-[16px] font-semibold leading-normal text-black">{description}</p>
+            )}
+          </div>
           {onClose && (
-            <button type="button" aria-label={closeLabel} onClick={onClose} className="shrink-0">
-              <IconCloseX className="size-6 text-black" />
+            <button
+              type="button"
+              aria-label="Cerrar"
+              onClick={onClose}
+              className="flex size-6 shrink-0 items-center justify-center"
+            >
+              <IconCloseX className="size-3.5 text-black" />
             </button>
           )}
         </div>
-        {(step || onNext || onClose) && (
-          <div className="flex items-center gap-2 w-full">
+
+        {showKeyboardHint && (
+          <div className="flex items-center gap-2 py-2">
+            <span className="flex size-11 items-center justify-center rounded-chico border-2 border-black">
+              <IconChevronUp className="size-4 text-black" />
+            </span>
+            <span className="flex size-11 items-center justify-center rounded-chico border-2 border-black">
+              <IconChevronDown className="size-4 text-black" />
+            </span>
+          </div>
+        )}
+
+        {showControlsRow && (
+          <div className="flex w-full items-center gap-2">
             {step && (
-              <span className="flex-1 font-inter font-bold text-[20px] leading-[1.4] text-black underline">
+              <span className="flex-1 font-inter text-[16px] font-semibold leading-[1.5] tracking-[0.16px] text-black">
                 {step}
               </span>
             )}
-            {onClose && (
+            {onSecondaryAction && (
               <button
                 type="button"
-                onClick={onClose}
-                className="flex h-11 shrink-0 items-center justify-center rounded-pill border-2 border-orange px-4 font-inter font-semibold text-[16px] tracking-[0.16px] text-orange"
+                onClick={onSecondaryAction}
+                className="flex h-11 shrink-0 items-center justify-center rounded-pill border-2 border-black px-4 font-inter text-[16px] font-semibold tracking-[0.16px] text-black transition-colors duration-200 ease-in-out hover:border-black hover:bg-blue hover:text-black active:border-blue active:bg-transparent active:text-black active:duration-0"
               >
-                {closeLabel}
+                {secondaryActionLabel}
               </button>
             )}
-            {onNext && (
+            {onPrimaryAction && (
               <button
                 type="button"
-                onClick={onNext}
-                className="flex h-11 shrink-0 items-center justify-center rounded-pill bg-black px-4 font-inter font-semibold text-[16px] tracking-[0.16px] text-orange"
+                onClick={onPrimaryAction}
+                className="flex h-11 shrink-0 items-center justify-center rounded-pill border-[3px] border-transparent bg-black px-4 font-inter text-[16px] font-semibold tracking-[0.16px] text-orange transition-colors duration-200 ease-in-out hover:border-transparent hover:bg-darker-gray hover:text-blue active:border-blue active:bg-black active:text-orange active:duration-0"
               >
-                {nextLabel}
+                {primaryActionLabel}
               </button>
             )}
           </div>
         )}
       </div>
-      {isDown ? (
-        <div className="border-x-8 border-t-8 border-x-transparent border-t-orange" />
-      ) : (
-        <div className="border-y-8 border-l-8 border-y-transparent border-l-orange" />
-      )}
+      <div className={ARROW_SHAPE[arrow][color]} />
     </div>
   );
 }
