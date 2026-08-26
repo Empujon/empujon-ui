@@ -2,8 +2,9 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '../lib/cn';
-import { IconCaretDown, IconCheckMark, IconHome, IconSearch } from './designerIcons';
+import { IconCaretDown, IconCheckMark, IconHome } from './designerIcons';
 import { IconButton } from './IconButton';
+import { Search } from './Search';
 
 /**
  * Breadcrumb — migas de pan de navegación (Figma › "Breadcrumb", node 7414:3177).
@@ -241,17 +242,7 @@ function BreadcrumbDropdownPanel({ options, currentId, onPick, search }: PanelPr
     <div className="absolute left-0 top-[calc(100%+4px)] z-50 w-[340px] overflow-hidden rounded-[16px] bg-darker-gray py-2 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.3),0px_2px_8px_1px_rgba(0,0,0,0.1)]">
       {showSearch && (
         <div className="px-2 pb-2" onClick={(e) => e.stopPropagation()}>
-          <div className="relative">
-            <IconSearch className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-whitesmoke" />
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar"
-              className="h-11 w-full rounded-[16px] border-2 border-lgray bg-darker-gray pl-10 pr-4 font-inter text-[16px] text-whitesmoke placeholder:text-whitesmoke transition-colors focus:border-blue focus:outline-none"
-            />
-          </div>
+          <Search ref={inputRef} value={query} onChange={setQuery} />
         </div>
       )}
       {filtered.length === 0 ? (

@@ -20,7 +20,10 @@ export interface SearchProps {
   className?: string;
 }
 
-export function Search({ value, onChange, placeholder = 'Buscar', disabled, className }: SearchProps) {
+export const Search = React.forwardRef<HTMLInputElement, SearchProps>(function Search(
+  { value, onChange, placeholder = 'Buscar', disabled, className },
+  ref,
+) {
   const [isFocused, setIsFocused] = React.useState(false);
   const filled = value.length > 0;
   return (
@@ -44,6 +47,7 @@ export function Search({ value, onChange, placeholder = 'Buscar', disabled, clas
         )}
       />
       <input
+        ref={ref}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -79,6 +83,6 @@ export function Search({ value, onChange, placeholder = 'Buscar', disabled, clas
       )}
     </div>
   );
-}
+});
 
 export default Search;
