@@ -61,12 +61,13 @@ export { Pagination, type PaginationProps } from './components/Pagination';
 export { TabBar, type TabItem, type TabBarProps } from './components/TabBar';
 export { Dropdown, type DropdownItem, type DropdownProps } from './components/Dropdown';
 export { Avatar, type AvatarProps, type AvatarCharacter } from './components/Avatar';
-export { Breadcrumb, type BreadcrumbItem, type BreadcrumbProps } from './components/Breadcrumb';
 export {
-  BreadcrumbSelect,
-  type BreadcrumbSelectOption,
-  type BreadcrumbSelectProps,
-} from './components/BreadcrumbSelect';
+  Breadcrumb,
+  type BreadcrumbItem,
+  type BreadcrumbProps,
+  type BreadcrumbDropdown,
+  type BreadcrumbDropdownOption,
+} from './components/Breadcrumb';
 export { Accordion, type AccordionProps } from './components/Accordion';
 export { Mic, type MicProps } from './components/Mic';
 export { Pill, type PillProps } from './components/Pill';
