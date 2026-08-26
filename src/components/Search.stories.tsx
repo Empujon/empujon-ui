@@ -6,7 +6,7 @@ const meta: Meta<typeof Search> = { title: 'Componentes/Search', component: Sear
 export default meta;
 type Story = StoryObj<typeof Search>;
 
-export const Playground: Story = {
+export const Default: Story = {
   render: () => {
     const [value, setValue] = useState('');
     return <Search value={value} onChange={setValue} />;

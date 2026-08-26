@@ -3,6 +3,7 @@
 import React from 'react';
 import { cn } from '../lib/cn';
 import { IconSearch, IconClearX } from './designerIcons';
+import { IconButton } from './IconButton';
 
 /**
  * Search — input de búsqueda (Figma › "Search"). Gap 100% nuevo.
@@ -20,42 +21,61 @@ export interface SearchProps {
 }
 
 export function Search({ value, onChange, placeholder = 'Buscar', disabled, className }: SearchProps) {
+  const [isFocused, setIsFocused] = React.useState(false);
   const filled = value.length > 0;
   return (
     <div
       className={cn(
-        'group flex h-11 w-full items-center gap-3 rounded-[16px] border-2 px-4 transition-colors',
+        'group flex h-11 w-full items-center gap-3 rounded-[16px] border-2 pl-4 pr-2 transition-colors',
         disabled
-          ? 'bg-divider border-gray-700 cursor-not-allowed'
-          : filled
-            ? 'bg-black border-whitesmoke'
-            : 'bg-black border-lgray hover:bg-darker-gray hover:border-blue focus-within:bg-black focus-within:border-blue',
+          ? 'bg-darker-gray border-divider cursor-not-allowed'
+          : isFocused
+            ? 'bg-black border-blue'
+            : filled
+              ? 'bg-black border-whitesmoke'
+              : 'bg-black border-lgray hover:bg-darker-gray hover:border-blue',
         className,
       )}
     >
       <IconSearch
         className={cn(
           'size-6 shrink-0',
-          disabled ? 'text-gray-700' : filled ? 'text-lgray' : 'text-lgray group-hover:text-blue group-focus-within:text-lgray',
+          disabled ? 'text-divider' : isFocused ? 'text-blue' : 'text-lightgray group-hover:text-blue',
         )}
       />
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         placeholder={placeholder}
         disabled={disabled}
         className={cn(
           'flex-1 min-w-0 bg-transparent font-inter font-semibold text-[16px] outline-none placeholder:font-semibold',
           disabled
-            ? 'text-gray-700 placeholder:text-gray-700 cursor-not-allowed'
+            ? 'text-divider placeholder:text-divider cursor-not-allowed'
             : 'text-whitesmoke placeholder:text-lgray group-hover:placeholder:text-blue',
         )}
       />
       {filled && !disabled && (
-        <button type="button" aria-label="Limpiar búsqueda" onClick={() => onChange('')} className="shrink-0">
-          <IconClearX className="size-6 text-whitesmoke" />
-        </button>
+        <IconButton
+          // El glifo de designerIcons.tsx viene recortado justo al borde del
+          // trazo, sin el padding que tiene dentro de su frame "Icon" de
+          // 24×24 en Figma (mismo criterio que el back-icon de IconButton.stories) —
+          // el trazo real ocupa ~52%/56% del casillero, por eso se dibuja a
+          // ese tamaño en vez de al 100%, para igualar el tamaño óptico real.
+          icon={
+            <span className="flex size-full items-center justify-center">
+              <IconClearX className="h-[56%] w-[52%]" />
+            </span>
+          }
+          aria-label="Limpiar búsqueda"
+          onClick={() => onChange('')}
+          size="s"
+          background="without"
+          className="shrink-0 text-whitesmoke"
+        />
       )}
     </div>
   );
