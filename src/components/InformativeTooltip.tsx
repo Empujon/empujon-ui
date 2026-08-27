@@ -15,6 +15,8 @@ import { cn } from '../lib/cn';
  * Figma internamente (ver `rotate-90`/`rotate-180`/`-rotate-90` en el código
  * exportado del componente), no un triángulo aproximado. Se normaliza a
  * `currentColor` para recolorear por `color` en vez de bundlear un SVG por color.
+ * Sin overlap/gap negativo contra la burbuja — a diferencia de la versión anterior
+ * de este glifo, esta forma (cóncava) ya calza sin hueco con gap 0.
  *
  * `arrow` describe hacia dónde apunta la flecha (= de qué lado está el trigger
  * respecto de la burbuja) — la burbuja se posiciona automáticamente del lado
@@ -52,30 +54,17 @@ const ARROW_ROTATION: Record<InformativeTooltipArrow, string> = {
 };
 
 /**
- * Overlap negativo de 8px hacia la burbuja (Figma: `mr-[-8px]` en el Pointer para
- * Left, análogo para las otras 3). Sin esto, el borde redondeado de la burbuja
- * curva hacia adentro y deja un hueco visible entre la punta de la flecha y la
- * burbuja — el overlap mete la base de la flecha debajo de esa curva.
- */
-const ARROW_OVERLAP: Record<InformativeTooltipArrow, string> = {
-  right: '-ml-2',
-  left: '-mr-2',
-  bottom: '-mt-2',
-  top: '-mb-2',
-};
-
-/**
  * Tamaño de la caja EXTERIOR de la flecha — swapeado en Top/Bottom porque el
- * glifo (17×19.3) se rota 90°, así que su huella post-rotación es 19.3×17.
- * Mismo truco que usa el código exportado de Figma (wrapper con w/h
- * intercambiados alrededor de un `rotate-90` interno) — sin esto, rotar un
- * glifo no cuadrado corre el contenido fuera de su caja.
+ * glifo (8×16) se rota 90°, así que su huella post-rotación es 16×8. Mismo
+ * truco que usa el código exportado de Figma (wrapper con w/h intercambiados
+ * alrededor de un `rotate-90` interno) — sin esto, rotar un glifo no cuadrado
+ * corre el contenido fuera de su caja.
  */
 const ARROW_BOX: Record<InformativeTooltipArrow, string> = {
-  left: 'h-[19.3235px] w-[17px]',
-  right: 'h-[19.3235px] w-[17px]',
-  top: 'h-[17px] w-[19.3235px]',
-  bottom: 'h-[17px] w-[19.3235px]',
+  left: 'h-4 w-2',
+  right: 'h-4 w-2',
+  top: 'h-2 w-4',
+  bottom: 'h-2 w-4',
 };
 
 /** Dirección del flex de la burbuja — bubble siempre primero en el DOM, `-reverse` la ubica del otro lado. */
@@ -99,14 +88,11 @@ const BUBBLE_POSITION: Record<InformativeTooltipArrow, string> = {
   top: 'top-[calc(100%+4px)] left-1/2 -translate-x-1/2',
 };
 
-/** Glifo real de Figma (node "left", path único) — apunta a la izquierda; se rota para las demás direcciones. */
+/** Glifo real de Figma (node "Vector", path único) — apunta a la izquierda; se rota para las demás direcciones. */
 function ArrowGlyph({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 17 19.3235" fill="none" className={className} aria-hidden="true">
-      <path
-        d="M0.5 10.5278C-0.166666 10.1429 -0.166667 9.18062 0.5 8.79572L15.5 0.135466C16.1667 -0.249434 17 0.231692 17 1.00149V18.322C17 19.0918 16.1667 19.5729 15.5 19.188L0.5 10.5278Z"
-        fill="currentColor"
-      />
+    <svg viewBox="0 0 8 16" fill="none" className={className} aria-hidden="true">
+      <path d="M0 8C4.41828 8 8 4.41828 8 0V16C8 11.5817 4.41828 8 0 8Z" fill="currentColor" />
     </svg>
   );
 }
@@ -135,11 +121,11 @@ export function InformativeTooltip({ text, arrow = 'right', color = 'orange', ch
           WRAPPER_LAYOUT[arrow],
         )}
       >
-        <span className={cn('w-max max-w-[160px] shrink-0 rounded-2xl px-4 py-2', BUBBLE_BG[color])}>
-          <span className="block font-inter text-[14px] font-medium leading-[1.5] tracking-[0.14px] text-black">{text}</span>
+        <span className={cn('flex h-8 w-max max-w-[160px] shrink-0 items-center justify-center rounded-[8px] px-2', BUBBLE_BG[color])}>
+          <span className="block w-full font-inter text-[14px] font-medium leading-[1.5] tracking-[0.14px] text-black">{text}</span>
         </span>
-        <span className={cn('inline-flex shrink-0 items-center justify-center', ARROW_BOX[arrow], ARROW_OVERLAP[arrow])}>
-          <ArrowGlyph className={cn('h-[19.3235px] w-[17px]', ARROW_COLOR[color], ARROW_ROTATION[arrow])} />
+        <span className={cn('inline-flex shrink-0 items-center justify-center', ARROW_BOX[arrow])}>
+          <ArrowGlyph className={cn('h-4 w-2', ARROW_COLOR[color], ARROW_ROTATION[arrow])} />
         </span>
       </span>
     </span>
