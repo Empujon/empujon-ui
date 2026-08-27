@@ -18,7 +18,6 @@ export {
   CardFooter,
   type CardProps,
 } from './components/Card';
-export { Badge, type BadgeProps } from './components/Badge';
 export { Notification, type NotificationProps } from './components/Notification';
 export { Countdown, type CountdownProps } from './components/Countdown';
 export { TrainerHeader, type TrainerHeaderProps } from './components/TrainerHeader';
@@ -70,7 +69,6 @@ export {
 } from './components/Breadcrumb';
 export { Accordion, type AccordionProps } from './components/Accordion';
 export { Mic, type MicProps } from './components/Mic';
-export { Pill, type PillProps } from './components/Pill';
 export { StudentCard, type StudentCardProps } from './components/StudentCard';
 export { RoundButton, type RoundButtonProps } from './components/RoundButton';
 export { IconButton, type IconButtonProps } from './components/IconButton';
@@ -135,3 +133,7 @@ export { HamburgerMenu, type HamburgerMenuProps } from './components/HamburgerMe
 // '@empujon/ui/blocks' (tree-shakeable, sin arrastrar componentes).
 export { uiBlocks } from './blocks';
 export type { UiBlockMeta, UiPropMeta } from './block-meta';
+
+// Componente aparte del futuro Chip interactivo (ex "Tag") — pendiente de
+// diseño en Figma. Va al final a propósito, no alfabetizado con el resto.
+export { StatusLabel, type StatusLabelProps } from './components/StatusLabel';

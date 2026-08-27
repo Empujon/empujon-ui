@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Card, CardHeader, CardTitle, CardBody, CardFooter } from './Card';
 import { Button } from './Button';
-import { Badge } from './Badge';
+import { StatusLabel } from './StatusLabel';
 
 const meta: Meta<typeof Card> = { title: 'Componentes/Card', component: Card };
 export default meta;
@@ -12,7 +12,7 @@ export const Completa: Story = {
     <Card className="max-w-sm">
       <CardHeader>
         <CardTitle>Card dark</CardTitle>
-        <Badge variant="green">activo</Badge>
+        <StatusLabel variant="success">activo</StatusLabel>
       </CardHeader>
       <CardBody className="text-white/80">
         Contenedor estándar (radius 24, padding md) con slots header / body / footer.

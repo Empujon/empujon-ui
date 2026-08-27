@@ -11,7 +11,7 @@ consuma los mismos componentes en vez de reimplementarlos inline.
 - `Spinner` — loader circular (unifica el patrón `border-t-transparent animate-spin`).
 - `DotsLoader` / `ProgressDots` — loaders de puntos (Figma › Loading).
 - `Card` (+ `CardHeader`/`CardTitle`/`CardBody`/`CardFooter`) — contenedor base.
-- `Badge` — pill/etiqueta con punto de estado opcional.
+- `StatusLabel` — etiqueta informativa con punto de estado opcional (no interactiva).
 - `Notification` — aviso éxito/advertencia con acción.
 
 ## Tokens
@@ -45,7 +45,7 @@ export default {
 ```
 
 ```tsx
-import { Button, Card, Badge } from '@empujon/ui';
+import { Button, Card, StatusLabel } from '@empujon/ui';
 
 <Button variant="primary-dark" size="md">Empezar</Button>
 ```

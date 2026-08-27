@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Spinner } from './Spinner';
 import { DotsLoader, ProgressDots } from './Loading';
-import { Badge } from './Badge';
+import { StatusLabel } from './StatusLabel';
 import { Notification } from './Notification';
 import { Card } from './Card';
 
@@ -39,17 +39,16 @@ export const Progreso: Story = {
   ),
 };
 
-export const Badges: Story = {
+export const StatusLabels: Story = {
   render: () => (
     <div className="flex flex-wrap gap-3">
-      <Badge>Menor de edad</Badge>
-      <Badge status="green">Consentimiento aprobado</Badge>
-      <Badge status="red" variant="outline">Faltan datos</Badge>
-      <Badge variant="orange">Nivel 1</Badge>
-      <Badge variant="yellow">Pendiente</Badge>
-      <Badge variant="blue">Activo</Badge>
-      <Badge variant="green">Completado</Badge>
-      <Badge variant="danger">Error</Badge>
+      <StatusLabel variant="neutral">Menor de edad</StatusLabel>
+      <StatusLabel variant="success">Consentimiento aprobado</StatusLabel>
+      <StatusLabel variant="error">Faltan datos</StatusLabel>
+      <StatusLabel variant="alert">Pendiente</StatusLabel>
+      <StatusLabel variant="info">Nivel 1</StatusLabel>
+      <StatusLabel variant="success" background="color">Completado</StatusLabel>
+      <StatusLabel variant="error" background="color" showIcon={false}>Error</StatusLabel>
     </div>
   ),
 };

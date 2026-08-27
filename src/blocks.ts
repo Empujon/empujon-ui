@@ -7,7 +7,6 @@
 
 import type { UiBlockMeta } from './block-meta';
 import { buttonBlockMeta } from './components/Button';
-import { badgeBlockMeta } from './components/Badge';
 import { cardBlockMeta } from './components/Card';
 import { notificationBlockMeta } from './components/Notification';
 import { spinnerBlockMeta } from './components/Spinner';
@@ -18,10 +17,10 @@ import { choiceBlockMeta } from './components/Choice';
 import { inputBlockMeta } from './components/Input';
 import { textAreaBlockMeta } from './components/TextArea';
 import { selectBlockMeta } from './components/Select';
+import { statusLabelBlockMeta } from './components/StatusLabel';
 
 export const uiBlocks: UiBlockMeta[] = [
   buttonBlockMeta,
-  badgeBlockMeta,
   cardBlockMeta,
   notificationBlockMeta,
   spinnerBlockMeta,
@@ -34,6 +33,8 @@ export const uiBlocks: UiBlockMeta[] = [
   inputBlockMeta,
   textAreaBlockMeta,
   selectBlockMeta,
+  // Aparte, al final a propósito (ver StatusLabel.tsx).
+  statusLabelBlockMeta,
 ];
 
 export type { UiBlockMeta, UiPropMeta } from './block-meta';
