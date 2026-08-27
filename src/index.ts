@@ -134,6 +134,6 @@ export { HamburgerMenu, type HamburgerMenuProps } from './components/HamburgerMe
 export { uiBlocks } from './blocks';
 export type { UiBlockMeta, UiPropMeta } from './block-meta';
 
-// Componente aparte del futuro Chip interactivo (ex "Tag") — pendiente de
-// diseño en Figma. Va al final a propósito, no alfabetizado con el resto.
+// Componentes aparte, al final a propósito, no alfabetizados con el resto.
 export { StatusLabel, type StatusLabelProps } from './components/StatusLabel';
+export { Tag, type TagProps } from './components/Tag';

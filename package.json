@@ -35,7 +35,7 @@
     "build": "npm run tokens && tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
-    "storybook": "storybook dev -p 6007",
+    "storybook": "storybook dev -p ${PORT:-6007}",
     "build-storybook": "storybook build",
     "prepublishOnly": "npm run build"
   },
