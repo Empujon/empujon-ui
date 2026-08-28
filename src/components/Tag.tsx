@@ -53,6 +53,11 @@ const CONTAINER_PADDING = {
   informative: { s: 'px-3', l: 'pl-4 pr-3' },
 } as const;
 
+// Un `action` SIN cruz no tiene por qué reservarle lugar: el pr-2 medido en
+// Figma es el aire entre la cruz y el borde, no entre el texto y el borde.
+// Sin cruz, el padding vuelve a ser simétrico como en cualquier chip.
+const CONTAINER_PADDING_SIN_CIERRE = { s: 'px-4', l: 'px-4' } as const;
+
 export function Tag({
   children,
   size = 's',
@@ -83,7 +88,9 @@ export function Tag({
         'inline-flex items-center whitespace-nowrap rounded-full font-inter transition-colors duration-150 ease-in-out',
         'focus-visible:outline-none',
         'gap-1',
-        CONTAINER_PADDING[variant][size],
+        isAction && !onClose
+          ? CONTAINER_PADDING_SIN_CIERRE[size]
+          : CONTAINER_PADDING[variant][size],
         size === 's'
           ? 'h-8 text-sm font-medium tracking-[0.14px]'
           : 'h-11 text-base font-semibold tracking-[0.16px]',
@@ -101,7 +108,12 @@ export function Tag({
     >
       {icon && <span className={cn('shrink-0', ICON_SIZE[size])}>{icon}</span>}
       <span className="leading-[1.5]">{children}</span>
-      {isAction && (onClose ? (
+      {/* La X SÓLO cuando hay algo que cerrar (fix 28/08). Antes un `action`
+          sin `onClose` igual dibujaba la cruz: se veía cerrable y al clickearla
+          no pasaba nada — un affordance que miente. Un tag que no se cierra
+          (un filtro, una keyword que se elige) termina en su texto. Los
+          estados hover/focus/pressed del Figma no dependen de la cruz. */}
+      {isAction && onClose && (
         <button
           type="button"
           aria-label="Cerrar"
@@ -116,11 +128,7 @@ export function Tag({
         >
           <IconCloseX className={CLOSE_GLYPH_SIZE} />
         </button>
-      ) : (
-        <span className={cn('inline-flex shrink-0 items-center justify-center', CLOSE_HIT_SIZE)}>
-          <IconCloseX className={CLOSE_GLYPH_SIZE} />
-        </span>
-      ))}
+      )}
     </span>
   );
 }
