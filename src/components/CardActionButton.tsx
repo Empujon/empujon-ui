@@ -4,11 +4,20 @@ import React from 'react';
 import { cn } from '../lib/cn';
 import { IconChevronForward, IconCheckMark } from './designerIcons';
 
-/** CardActionButton — banda de acción grande con ícono + label + chevron (Figma › "Buttons" › "Card Action Button"). */
+/**
+ * CardActionButton — banda de acción grande con ícono + label + chevron (Figma ›
+ * "Buttons" › "Card Action Button", node 3473:7704). 6 estados medidos 1:1:
+ *
+ * - Filled: Default = bg whitesmoke/texto negro · Hover = bg celeste/texto negro
+ *   (sin cambio) · Complete = bg negro, texto whitesmoke, check.
+ * - Outline: el fondo es SIEMPRE gris-oscuro-800 en sus 3 estados — solo cambian
+ *   borde y texto. Default = borde/texto naranja · Hover = borde/texto celeste ·
+ *   Complete = borde/texto divider (gris-500), sin hover propio (estado terminal).
+ */
 export interface CardActionButtonProps {
   label: string;
   icon?: React.ReactNode;
-  /** Marca la acción como completada (fondo negro, texto blanco, check en vez de chevron). */
+  /** Marca la acción como completada (check en vez de chevron; color según variant). */
   complete?: boolean;
   variant?: 'white' | 'outline';
   onClick?: () => void;
@@ -16,16 +25,19 @@ export interface CardActionButtonProps {
 }
 
 export function CardActionButton({ label, icon, complete, variant = 'white', onClick, className }: CardActionButtonProps) {
+  const outline = variant === 'outline';
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
-        'flex h-24 w-full items-center gap-6 rounded-[20px] px-6 transition-colors',
-        complete
-          ? 'bg-black text-whitesmoke'
-          : variant === 'outline'
-            ? 'border-[3px] border-green bg-darker-gray text-green hover:border-transparent hover:bg-blue hover:text-black'
+        'flex h-24 w-full items-center gap-6 rounded-[20px] px-6 transition-colors duration-200 ease-in-out',
+        outline
+          ? complete
+            ? 'border-[3px] border-divider bg-darker-gray text-divider'
+            : 'border-[3px] border-orange bg-darker-gray text-whitesmoke hover:border-blue hover:text-blue'
+          : complete
+            ? 'bg-black text-whitesmoke'
             : 'bg-whitesmoke text-black hover:bg-blue',
         className,
       )}
