@@ -17,6 +17,12 @@ import { cn } from '../lib/cn';
  * `size-8`/`size-11` fijan el diámetro por default; en hover una clase `w-auto`
  * (mayor especificidad por el pseudo-elemento) gana sobre ese `width` fijo para
  * que el botón pueda crecer sin tocar el alto.
+ *
+ * BUG real medido con getBoundingClientRect: con `gap-2` fijo, el ícono quedaba
+ * 8px corrido a la izquierda del centro real del círculo — el `gap` de flexbox
+ * se reserva ENTRE los dos hijos aunque el label mida 0px de ancho (max-w-0), así
+ * que ese hueco fantasma empujaba el ícono. `gap-2` pasa a ser solo `hover:gap-2`
+ * (no hace falta espacio que reservar cuando el label no se ve).
  */
 export interface RoundButtonProps {
   icon: React.ReactNode;
@@ -33,9 +39,9 @@ export function RoundButton({ icon, label, size = 'sm', onClick, className }: Ro
       onClick={onClick}
       title={label}
       className={cn(
-        'group inline-flex items-center justify-center gap-2 overflow-hidden rounded-pill bg-darker-gray text-whitesmoke transition-colors duration-200 ease-in-out hover:bg-blue hover:text-black',
+        'group inline-flex items-center justify-center overflow-hidden rounded-pill bg-darker-gray text-whitesmoke transition-colors duration-200 ease-in-out hover:bg-blue hover:text-black',
         size === 'sm' ? 'size-8' : 'size-11',
-        label && (size === 'sm' ? 'hover:w-auto hover:pl-2 hover:pr-4' : 'hover:w-auto hover:pl-4 hover:pr-4'),
+        label && (size === 'sm' ? 'hover:w-auto hover:gap-2 hover:pl-2 hover:pr-4' : 'hover:w-auto hover:gap-2 hover:pl-4 hover:pr-4'),
         className,
       )}
     >
