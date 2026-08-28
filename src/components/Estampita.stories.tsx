@@ -1,20 +1,30 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Estampita } from './Estampita';
 
-const PlusIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="size-full" aria-hidden="true">
-    <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-  </svg>
-);
-
 const meta: Meta<typeof Estampita> = {
-  title: 'Componentes/Estampita',
+  title: 'Componentes/Button',
   component: Estampita,
-  args: { label: 'Agregar', icon: <PlusIcon /> },
+  argTypes: {
+    style: { control: 'inline-radio', options: ['curso', 'agregar', 'profesores'] },
+    disabled: { control: 'boolean' },
+  },
 };
 export default meta;
 type Story = StoryObj<typeof Estampita>;
 
-export const Playground: Story = {};
-export const Deshabilitada: Story = { args: { disabled: true } };
+// Hover es interacción real (pasá el mouse). Las 3 variantes de contenido de
+// Figma — curso (abreviatura), agregar (+) y profesores (ícono) — en default y
+// deshabilitado.
+export const EstampitaPage: Story = {
+  name: 'Estampita',
+  render: () => (
+    <div className="flex flex-wrap gap-8">
+      <Estampita style="curso" nombreAbreviado="6A" label="6to A" />
+      <Estampita style="agregar" />
+      <Estampita style="profesores" />
+      <Estampita style="curso" nombreAbreviado="6A" label="6to A" disabled />
+      <Estampita style="agregar" disabled />
+      <Estampita style="profesores" disabled />
+    </div>
+  ),
+};

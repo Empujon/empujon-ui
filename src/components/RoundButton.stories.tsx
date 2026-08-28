@@ -9,11 +9,21 @@ const PencilIcon = () => (
 );
 
 const meta: Meta<typeof RoundButton> = {
-  title: 'Componentes/RoundButton',
+  title: 'Componentes/Button',
   component: RoundButton,
   args: { icon: <PencilIcon />, label: 'Editar curso' },
 };
 export default meta;
 type Story = StoryObj<typeof RoundButton>;
 
-export const Playground: Story = {};
+// Hover es interacción real (pasá el mouse) — el círculo se expande a pill y
+// muestra el label.
+export const RoundButtonPage: Story = {
+  name: 'Round button',
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-6">
+      <RoundButton {...args} size="sm" />
+      <RoundButton {...args} size="md" />
+    </div>
+  ),
+};

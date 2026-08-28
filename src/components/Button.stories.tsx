@@ -41,56 +41,6 @@ export default meta;
 
 type Story = StoryObj<typeof Button>;
 
-export const Playground: Story = { args: { icon: <Spark className="size-full" /> } };
-
-export const Variantes: Story = {
-  render: () => (
-    <div className="flex flex-col gap-4">
-      <Swatch light={false}>
-        <div className="flex flex-wrap gap-4">
-          {(['primary-dark', 'secondary-dark', 'ghost', 'danger-fill', 'danger-outline'] as const).map((v) => (
-            <Button key={v} variant={v} icon={<Spark className="size-full" />}>
-              {v}
-            </Button>
-          ))}
-        </div>
-      </Swatch>
-      <Swatch light={true}>
-        <div className="flex flex-wrap gap-4">
-          {(['primary-light', 'secondary-light', 'ghost-light', 'ghost-shantell'] as const).map((v) => (
-            <Button key={v} variant={v} icon={<Spark className="size-full" />}>
-              {v}
-            </Button>
-          ))}
-        </div>
-      </Swatch>
-    </div>
-  ),
-};
-
-export const Tamaños: Story = {
-  render: () => (
-    <div className="flex flex-wrap items-center gap-4">
-      {(['sm', 'md', 'lg'] as const).map((s) => (
-        <Button key={s} size={s} icon={<Spark className="size-full" />}>
-          Botón {s}
-        </Button>
-      ))}
-    </div>
-  ),
-};
-
-export const Estados: Story = {
-  render: () => (
-    <div className="flex flex-wrap items-center gap-4">
-      <Button icon={<Spark className="size-full" />}>Default</Button>
-      <Button disabled icon={<Spark className="size-full" />}>Deshabilitado</Button>
-      <Button loading>Cargando</Button>
-      <Button icon={<Spark className="size-full" />} iconPosition="right">Ícono derecha</Button>
-    </div>
-  ),
-};
-
 const ALL_VARIANTS = [
   'primary-dark',
   'primary-light',
@@ -106,7 +56,8 @@ const ALL_VARIANTS = [
 // Todas las variantes en default y deshabilitado (hover/activo se ven interactuando).
 // Fondo del swatch de cada fila = la superficie real donde Figma pensó esa variante, no el
 // canvas de Storybook — así la matriz es correcta mires o no mires con el toolbar de "claro".
-export const Matriz: Story = {
+export const BasicButton: Story = {
+  name: 'Basic button',
   render: () => (
     <div className="grid grid-cols-[170px_1fr_1fr] gap-x-6 gap-y-3 items-center">
       <span />
