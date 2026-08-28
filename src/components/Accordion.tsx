@@ -56,18 +56,19 @@ export function Accordion({
   };
 
   if (variant === 'line') {
+    // SÓLO EL TÍTULO ES EL BOTÓN (fix 28/08). Antes el <button> envolvía
+    // también el contenido y la línea divisoria: cualquier click adentro
+    // cerraba el acordeón, y anidar checkboxes/inputs dentro de un <button>
+    // es HTML inválido (los navegadores lo reparan de formas distintas).
     return (
-      <button
-        type="button"
-        onClick={toggle}
-        disabled={disabled}
-        aria-expanded={isOpen}
-        className={cn(
-          'group flex w-full flex-col items-start gap-4 pt-4 text-left disabled:cursor-not-allowed',
-          className,
-        )}
-      >
-        <div className="flex w-full items-center justify-center gap-4">
+      <div className={cn('group flex w-full flex-col gap-4 pt-4', className)}>
+        <button
+          type="button"
+          onClick={toggle}
+          disabled={disabled}
+          aria-expanded={isOpen}
+          className="flex w-full items-center gap-4 text-left disabled:cursor-not-allowed"
+        >
           <span
             className={cn(
               'flex-1 font-shantell font-semibold text-[20px] leading-[1.3]',
@@ -83,11 +84,14 @@ export function Accordion({
               disabled ? 'text-gray-700' : 'text-whitesmoke group-hover:text-blue',
             )}
           />
-        </div>
+        </button>
         {isOpen && (
           <div
             className={cn(
-              'flex w-full flex-col items-start py-2',
+              // `items-stretch` (el default) y no `items-start`: si no, cada
+              // hijo se encoge a su ancho mínimo y el contenido queda
+              // comprimido contra la izquierda en vez de ocupar el ancho.
+              'flex w-full flex-col py-2',
               disabled ? 'text-gray-700' : 'text-whitesmoke',
             )}
           >
@@ -102,7 +106,7 @@ export function Accordion({
             disabled ? 'bg-divider' : 'bg-orange group-hover:bg-blue',
           )}
         />
-      </button>
+      </div>
     );
   }
 
