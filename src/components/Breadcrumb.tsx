@@ -44,6 +44,8 @@ export interface BreadcrumbDropdown {
 
 export interface BreadcrumbItem {
   label: string;
+  /** Destino del ítem. Si se pasa, se renderiza un <a> real: navega, admite
+   *  click del medio y "abrir en pestaña nueva". Sin esto, usar `onClick`. */
   href?: string;
   /** Click del CUERPO del ítem (ícono + label) — navega u otra acción. En un
    *  ítem con `dropdown`, si se pasa, el cuerpo hace esto y el chevron pasa a
@@ -95,6 +97,20 @@ export function Breadcrumb({ items, showHomeIcon = true, className }: Breadcrumb
                 {icon}
                 {item.label}
               </span>
+            ) : item.href ? (
+              // Un item con `href` es un ENLACE REAL (fix 28/08). Antes se
+              // renderizaba siempre un <button> con `onClick` y el `href` se
+              // ignoraba en silencio: la miga se veía cliqueable y no hacía
+              // nada. Como <a>, además, funciona el click del medio, "abrir en
+              // pestaña nueva" y los lectores de pantalla lo anuncian bien.
+              <a
+                href={item.href}
+                onClick={item.onClick}
+                className={cn('inline-flex items-center gap-2 whitespace-nowrap font-inter text-[20px] font-semibold text-whitesmoke', LINK_HOVER)}
+              >
+                {icon}
+                {item.label}
+              </a>
             ) : (
               <button
                 type="button"
