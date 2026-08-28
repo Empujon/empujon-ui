@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '../lib/cn';
-import { IconDuck } from './designerIcons';
+import { IconDuck, IconDuckDisabled } from './designerIcons';
 
 /**
  * CardButton — "Illustration Button" en Figma (› "Buttons" › "Illustration Button",
@@ -19,7 +19,11 @@ import { IconDuck } from './designerIcons';
  *
  * `icon` trae un default (el pato ilustrado, igual que la instancia default de
  * Figma) para que el slot nunca se vea vacío — pasá tu propio ReactNode para
- * reemplazarlo.
+ * reemplazarlo. El pato default cambia de arte cuando `disabled` — Figma usa un
+ * asset APARTE para ese estado (silueta lisa con contorno gris-500, node dentro
+ * de 7674:3712), no el mismo pato recoloreado por CSS. Si pasás tu propio ícono,
+ * sos vos quien decide cómo se ve en disabled (no se autogenera una versión
+ * apagada de un ReactNode arbitrario).
  */
 export interface CardButtonProps {
   label?: string;
@@ -29,7 +33,9 @@ export interface CardButtonProps {
   className?: string;
 }
 
-export function CardButton({ label, icon = <IconDuck className="size-full" />, disabled, onClick, className }: CardButtonProps) {
+export function CardButton({ label, icon, disabled, onClick, className }: CardButtonProps) {
+  const resolvedIcon =
+    icon ?? (disabled ? <IconDuckDisabled className="size-full" /> : <IconDuck className="size-full" />);
   return (
     <button
       type="button"
@@ -43,7 +49,7 @@ export function CardButton({ label, icon = <IconDuck className="size-full" />, d
         className,
       )}
     >
-      <span className="size-[240px] shrink-0">{icon}</span>
+      <span className="size-[240px] shrink-0">{resolvedIcon}</span>
       {label && (
         <span
           className={cn(
