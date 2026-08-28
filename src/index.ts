@@ -75,7 +75,6 @@ export { IconButton, type IconButtonProps } from './components/IconButton';
 export { CardActionButton, type CardActionButtonProps } from './components/CardActionButton';
 export { CardButton, type CardButtonProps } from './components/CardButton';
 export { SquareButton, type SquareButtonProps } from './components/SquareButton';
-export { SuperButton, type SuperButtonProps } from './components/SuperButton';
 export { ImageCard, type ImageCardProps } from './components/ImageCard';
 export { ProfileCard, type ProfileCardProps } from './components/ProfileCard';
 export { FeedbackChip, type FeedbackChipProps } from './components/FeedbackChip';
