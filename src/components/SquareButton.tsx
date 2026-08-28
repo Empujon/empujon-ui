@@ -9,51 +9,43 @@ import { cn } from '../lib/cn';
  * 8 nodos del component set (2 types × 4 states):
  *
  * - Sin `icon` ("Type=Text Only"): tile grande centrada de 390×120, texto centrado.
- *   Default = bg naranja · Hover = bg celeste · Active(`selected`) = bg naranja +
- *   borde celeste · Disabled = sin fondo, borde+texto divider.
+ *   Default = bg naranja · Hover = bg celeste · Active = bg naranja + borde celeste
+ *   · Disabled = sin fondo, borde+texto divider.
  * - Con `icon` ("Type=With Icon"): fila compacta de 390px, ícono + label a la izq.
  *   Default = bg gris-claro-200 · Hover = bg celeste (+ label subrayado wavy) ·
- *   Active(`selected`) = bg gris-claro-200 + borde celeste · Disabled = sin fondo,
- *   borde+texto divider.
+ *   Active = bg gris-claro-200 + borde celeste · Disabled = sin fondo, borde+texto
+ *   divider.
  *
- * `selected` mapea al estado "Active" de Figma (borde celeste persistente) — no es
- * el `:active` real del navegador, es una selección que el consumidor controla
- * (ej. elegir un método de ingreso entre varias Square Button).
+ * Hover/Active son interacción real (`enabled:hover:`/`enabled:active:`), igual
+ * criterio que Button — no hay prop de "seleccionado". En un click real el mouse
+ * sigue sobre el botón mientras está presionado, así que hover Y active matchean
+ * al mismo tiempo: por eso active redeclara el bg explícitamente (si no, se
+ * quedaría con el celeste del hover en vez de volver al color default).
  */
 export interface SquareButtonProps {
   label: string;
   description?: string;
   icon?: React.ReactNode;
-  selected?: boolean;
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
 }
 
-export function SquareButton({ label, description, icon, selected, disabled, onClick, className }: SquareButtonProps) {
+export function SquareButton({ label, description, icon, disabled, onClick, className }: SquareButtonProps) {
   const hasIcon = Boolean(icon);
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      aria-pressed={selected}
       className={cn(
-        'group flex w-[390px] rounded-[24px] border-[3px] p-4 text-left transition-colors duration-200 ease-in-out',
+        'group flex w-[390px] rounded-[24px] border-[3px] border-transparent p-4 text-left transition-colors duration-200 ease-in-out active:duration-[0ms]',
         hasIcon ? 'items-center gap-[15px]' : 'h-[120px] flex-col items-center justify-center gap-2 text-center',
         disabled
           ? 'border-divider text-divider'
-          : cn(
-              'text-black',
-              selected ? 'border-blue' : 'border-transparent',
-              hasIcon
-                ? selected
-                  ? 'bg-lightgray'
-                  : 'bg-lightgray enabled:hover:bg-blue'
-                : selected
-                  ? 'bg-orange'
-                  : 'bg-orange enabled:hover:bg-blue',
-            ),
+          : hasIcon
+            ? 'bg-lightgray text-black enabled:hover:bg-blue enabled:active:border-blue enabled:active:bg-lightgray'
+            : 'bg-orange text-black enabled:hover:bg-blue enabled:active:border-blue enabled:active:bg-orange',
         className,
       )}
     >
