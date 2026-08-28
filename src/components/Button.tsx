@@ -75,9 +75,6 @@ const buttonVariants = cva(
         // sin fondo, para usar sobre superficies claras — texto negro · hover gris-oscuro-700 · activo amarillo · disabled divider
         'ghost-light':
           'bg-transparent text-black [text-decoration-line:underline] [text-decoration-style:wavy] underline-offset-2 enabled:hover:text-gray-700 enabled:active:text-yellow disabled:text-divider focus-visible:ring-orange',
-        // sin fondo shantell — link wavy en Shantell, texto negro · hover naranja · activo negro · disabled divider
-        'ghost-shantell':
-          'bg-transparent text-black font-shantell [text-decoration-line:underline] [text-decoration-style:wavy] underline-offset-2 enabled:hover:text-orange enabled:active:text-black disabled:text-divider focus-visible:ring-orange',
         // peligro relleno — rojo/negro · hover INVIERTE (negro/rojo) · activo rojo+borde negro · disabled gris700/divider
         'danger-fill':
           'rounded-full bg-red text-black border-[3px] border-transparent enabled:hover:bg-black enabled:hover:text-red enabled:active:bg-red enabled:active:text-black enabled:active:border-black focus-visible:ring-red disabled:bg-gray-700 disabled:text-divider',
@@ -112,8 +109,6 @@ const buttonVariants = cva(
       // ghost (sin fondo): solo padding vertical, sin horizontal. Disabled al 38% (Figma).
       { variant: 'ghost', class: 'py-4 disabled:opacity-[0.38]' },
       { variant: 'ghost-light', class: 'py-4 disabled:opacity-[0.38]' },
-      // ghost-shantell: tipografía FIJA 16px (no escala con size), padding vertical 8px. Disabled 38%.
-      { variant: 'ghost-shantell', class: 'py-2 !text-label-chico disabled:opacity-[0.38]' },
       // link: sin caja, solo el texto; disabled al 38%.
       { variant: 'link', class: 'disabled:opacity-[0.38]' },
       // primario on light: disabled al 38% (Figma aplica opacity al contenido).
@@ -262,7 +257,6 @@ export const buttonBlockMeta: UiBlockMeta = {
         'secondary-light',
         'ghost',
         'ghost-light',
-        'ghost-shantell',
         'danger-fill',
         'danger-outline',
         'link',
