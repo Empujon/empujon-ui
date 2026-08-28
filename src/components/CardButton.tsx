@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '../lib/cn';
+import { IconDuck } from './designerIcons';
 
 /**
  * CardButton — "Illustration Button" en Figma (› "Buttons" › "Illustration Button",
@@ -15,16 +16,20 @@ import { cn } from '../lib/cn';
  *
  * Sin variante "seleccionado" — a diferencia de SquareButton, este set de Figma
  * no tiene un estado persistente de selección, solo interacción real (hover/active).
+ *
+ * `icon` trae un default (el pato ilustrado, igual que la instancia default de
+ * Figma) para que el slot nunca se vea vacío — pasá tu propio ReactNode para
+ * reemplazarlo.
  */
 export interface CardButtonProps {
   label?: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
 }
 
-export function CardButton({ label, icon, disabled, onClick, className }: CardButtonProps) {
+export function CardButton({ label, icon = <IconDuck className="size-full" />, disabled, onClick, className }: CardButtonProps) {
   return (
     <button
       type="button"
