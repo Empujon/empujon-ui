@@ -69,12 +69,17 @@ const buttonVariants = cva(
         // secundario on light — fondo gris-oscuro #252924 + borde/texto naranja · hover fondo claro + borde/texto negro · activo borde celeste · disabled divider
         'secondary-light':
           'rounded-full bg-darker-gray text-orange border-[3px] border-orange enabled:hover:bg-whitesmoke enabled:hover:border-black enabled:hover:text-black enabled:active:bg-whitesmoke enabled:active:border-blue enabled:active:text-black disabled:border-divider disabled:text-divider focus-visible:ring-orange',
-        // sin fondo — link wavy, texto blanco · hover celeste · activo amarillo · disabled lightgray
+        // sin fondo — link wavy, texto blanco e Inter en default. Hover Y activo cambian la
+        // FAMILIA a Shantell, no solo el color ("label/shantell/hover" en Figma, confirmado
+        // en nodes 2994:3042/3062/3082 para S/M/L — Active, node 2994:3047, también queda en
+        // Shantell, con texto naranja en vez de amarillo). Disabled vuelve a lightgray/Inter.
         ghost:
-          'bg-transparent text-whitesmoke [text-decoration-line:underline] [text-decoration-style:wavy] underline-offset-2 enabled:hover:text-blue enabled:active:text-yellow disabled:text-lightgray focus-visible:ring-blue',
-        // sin fondo, para usar sobre superficies claras — texto negro · hover gris-oscuro-700 · activo amarillo · disabled divider
+          'bg-transparent text-whitesmoke [text-decoration-line:underline] [text-decoration-style:wavy] underline-offset-2 enabled:hover:text-blue enabled:hover:font-shantell enabled:active:text-orange enabled:active:font-shantell disabled:text-lightgray focus-visible:ring-blue',
+        // sin fondo, para usar sobre superficies claras — mismo criterio que ghost (Shantell en
+        // hover/activo, node 7321:4514/4520): hover cambia a gris-oscuro-700, activo se queda
+        // en negro (igual que el default) pero en Shantell.
         'ghost-light':
-          'bg-transparent text-black [text-decoration-line:underline] [text-decoration-style:wavy] underline-offset-2 enabled:hover:text-gray-700 enabled:active:text-yellow disabled:text-divider focus-visible:ring-orange',
+          'bg-transparent text-black [text-decoration-line:underline] [text-decoration-style:wavy] underline-offset-2 enabled:hover:text-gray-700 enabled:hover:font-shantell enabled:active:font-shantell disabled:text-divider focus-visible:ring-orange',
         // peligro relleno — rojo/negro · hover INVIERTE (negro/rojo) · activo rojo+borde negro · disabled gris700/divider
         'danger-fill':
           'rounded-full bg-red text-black border-[3px] border-transparent enabled:hover:bg-black enabled:hover:text-red enabled:active:bg-red enabled:active:text-black enabled:active:border-black focus-visible:ring-red disabled:bg-gray-700 disabled:text-divider',
