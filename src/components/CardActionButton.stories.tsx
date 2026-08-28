@@ -15,13 +15,6 @@ export const CardActionButtonPage: Story = {
   name: 'Card action button',
   render: () => (
     <div className="flex w-full flex-col gap-8">
-      <p className="max-w-[664px] font-inter text-sm text-white/70">
-        <strong className="text-white">Enabled</strong> = la acción todavía no se hizo: es
-        clickeable, responde al hover y termina en un chevron ("&gt;") que invita a
-        ejecutarla. <strong className="text-white">Complete</strong> = la acción ya se
-        completó: queda fija (sin hover propio) con una insignia de check verde al final en
-        vez del chevron, como registro visual de que no hace falta volver a tocarla.
-      </p>
       <div className="grid w-full grid-cols-1 gap-8">
         <div className="flex flex-col gap-4">
           <span className="text-xs font-inter text-white/60">Filled</span>
