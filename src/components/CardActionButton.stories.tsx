@@ -14,7 +14,7 @@ type Story = StoryObj<typeof CardActionButton>;
 export const CardActionButtonPage: Story = {
   name: 'Card action button',
   render: () => (
-    <div className="grid w-[664px] grid-cols-1 gap-8">
+    <div className="grid w-full grid-cols-1 gap-8">
       <div className="flex flex-col gap-4">
         <span className="text-xs font-inter text-white/60">Filled</span>
         <CardActionButton label="Ajustar cámara" />

@@ -31,7 +31,7 @@ export function CardActionButton({ label, icon, complete, variant = 'white', onC
       type="button"
       onClick={onClick}
       className={cn(
-        'flex h-24 w-full items-center gap-6 rounded-[20px] px-6 transition-colors duration-200 ease-in-out',
+        'flex h-24 w-full max-w-[664px] items-center gap-6 rounded-[20px] px-6 transition-colors duration-200 ease-in-out',
         outline
           ? complete
             ? 'border-[3px] border-divider bg-darker-gray text-divider'
