@@ -4,19 +4,15 @@ import { Countdown } from './Countdown';
 const meta: Meta<typeof Countdown> = {
   title: 'Componentes/Countdown',
   component: Countdown,
-  args: { from: 3, color: 'yellow', onComplete: () => alert('¡Arrancó!') },
-  argTypes: { color: { control: 'inline-radio', options: ['yellow', 'orange'] } },
+  args: { from: 3, onComplete: () => alert('¡Arrancó!') },
 };
 export default meta;
 type Story = StoryObj<typeof Countdown>;
 
-export const Playground: Story = {};
+export const Yellow: Story = {
+  args: { color: 'yellow' },
+};
 
-export const Colores: Story = {
-  render: () => (
-    <div className="flex gap-8">
-      <Countdown key="y" from={3} color="yellow" onComplete={() => {}} />
-      <Countdown key="o" from={3} color="orange" onComplete={() => {}} />
-    </div>
-  ),
+export const Orange: Story = {
+  args: { color: 'orange' },
 };

@@ -12,6 +12,13 @@ import { cn } from '../lib/cn';
  * color elegido para 3-2-1 — así lo usan hoy fluidez_lectora/turbo/granpaneo/iconic_memory,
  * cada uno con su propia reimplementación del mismo timer; esto la centraliza.
  *
+ * Responsive: el círculo mide 300px salvo que el contenedor sea más angosto, en cuyo caso
+ * se achica dejando siempre 16px de margen de cada lado (`min(300px, 100cqw - 32px)`). Usa
+ * container query units (`cqw`) en vez de `%` porque `%` significa cosas distintas según la
+ * propiedad (ancho del contenedor para `width`/`padding`, alto para `height`, font-size del
+ * padre para `font-size`) — con `cqw` el mismo valor escala igual en todas. Texto, tracking
+ * y padding se re-derivan del diámetro real para no clipear ni perder las proporciones del Figma.
+ *
  * Dueño de su propio timer (como el original de fluidez_lectora): recibe `onComplete`,
  * no hace falta que el consumidor maneje el intervalo a mano.
  */
@@ -33,6 +40,19 @@ const bgByColor = {
   yellow: 'bg-yellow shadow-amarillo',
   orange: 'bg-orange shadow-naranja',
 } as const;
+
+// Proporciones del Figma (base: círculo de 300px) — se re-derivan del tamaño real
+// vía `--countdown-size` para que todo escale junto cuando el contenedor achica el círculo.
+const SIZE = 300;
+const PAD_X = 80; // px-20
+const PAD_Y = 40; // py-10
+const NUMBER_SIZE = 200;
+const NUMBER_TRACKING = 2;
+const YA_SIZE = 128;
+const YA_TRACKING = 1.28;
+
+const CIRCLE_SIZE = `min(${SIZE}px, calc(100cqw - 32px))`;
+const ratio = (px: number) => `calc(var(--countdown-size) * ${px / SIZE})`;
 
 export function Countdown({
   from = 3,
@@ -57,24 +77,36 @@ export function Countdown({
   }, [count]);
 
   return (
-    <div
-      role="timer"
-      aria-live="assertive"
-      className={cn(
-        'flex items-center justify-center size-[300px] rounded-full px-20 py-10 transition-colors duration-300',
-        showYa ? 'bg-green shadow-verde' : bgByColor[color],
-        className,
-      )}
-    >
-      <span
-        key={showYa ? 'ya' : count}
+    // Wrapper que define el "contenedor" para las cqw de abajo: sin esto el propio círculo
+    // no puede consultar su ancho contra sí mismo (sería circular).
+    <div style={{ containerType: 'inline-size' as string, width: '100%' }}>
+      <div
+        role="timer"
+        aria-live="assertive"
+        style={{
+          ['--countdown-size' as string]: CIRCLE_SIZE,
+          width: 'var(--countdown-size)',
+          height: 'var(--countdown-size)',
+          paddingInline: ratio(PAD_X),
+          paddingBlock: ratio(PAD_Y),
+        }}
         className={cn(
-          'font-shantell font-extrabold text-black text-center leading-[1.1] whitespace-nowrap',
-          showYa ? 'text-[128px] tracking-[1.28px]' : 'text-[200px] tracking-[2px]',
+          'flex items-center justify-center rounded-full transition-colors duration-300',
+          showYa ? 'bg-green shadow-verde' : bgByColor[color],
+          className,
         )}
       >
-        {showYa ? '¡YA!' : count}
-      </span>
+        <span
+          key={showYa ? 'ya' : count}
+          style={{
+            fontSize: ratio(showYa ? YA_SIZE : NUMBER_SIZE),
+            letterSpacing: ratio(showYa ? YA_TRACKING : NUMBER_TRACKING),
+          }}
+          className="font-shantell font-extrabold text-black text-center leading-[1.1] whitespace-nowrap"
+        >
+          {showYa ? '¡YA!' : count}
+        </span>
+      </div>
     </div>
   );
 }
