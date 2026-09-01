@@ -13,6 +13,10 @@ import { cn } from '../lib/cn';
  *
  * Composición por slots: <Card><CardHeader/><CardBody/><CardFooter/></Card>.
  * `interactive` agrega estados hover/focus para cards clickeables.
+ *
+ * Spacing/tipografía de los slots ajustados 1:1 contra "Plain card" (archivo
+ * Figma "MESA DE TRABAJO", node 9273:18356): header con gap-4/mb-4, título
+ * Shantell SemiBold 20px, footer con gap-4 y acciones alineadas a la derecha.
  */
 const cardVariants = cva('flex flex-col', {
   variants: {
@@ -54,11 +58,11 @@ export function Card({ surface, radius, padding, interactive, className, ...prop
 }
 
 export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('flex items-center justify-between gap-3 mb-4', className)} {...props} />;
+  return <div className={cn('flex items-start justify-between gap-3 mb-4', className)} {...props} />;
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn('font-shantell text-2xl', className)} {...props} />;
+  return <h3 className={cn('font-shantell font-semibold text-[20px] tracking-[0.2px]', className)} {...props} />;
 }
 
 export function CardBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -66,7 +70,7 @@ export function CardBody({ className, ...props }: React.HTMLAttributes<HTMLDivEl
 }
 
 export function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('flex items-center gap-3 mt-6', className)} {...props} />;
+  return <div className={cn('flex items-center justify-end gap-4 mt-4', className)} {...props} />;
 }
 
 export default Card;
