@@ -31,7 +31,7 @@ import { IconCloseX, IconChevronUp, IconChevronDown } from './designerIcons';
  * apoyada contra el borde de la burbuja porque el riel calza al ras.
  */
 export type TooltipArrow = 'right' | 'bottom' | 'left' | 'top';
-export type TooltipColor = 'orange' | 'white';
+export type TooltipColor = 'orange' | 'white' | 'green';
 
 export interface TooltipProps {
   /** Texto principal (título). */
@@ -60,11 +60,13 @@ export interface TooltipProps {
 const BUBBLE_BG: Record<TooltipColor, string> = {
   orange: 'bg-orange',
   white: 'bg-whitesmoke',
+  green: 'bg-green',
 };
 
 const ARROW_COLOR: Record<TooltipColor, string> = {
   orange: 'text-orange',
   white: 'text-whitesmoke',
+  green: 'text-green',
 };
 
 /** Rotación del glifo (orientado apuntando a la izquierda) por lado — igual que en Figma. */

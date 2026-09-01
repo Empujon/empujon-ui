@@ -98,6 +98,11 @@ export {
   type CircuitNodeItem,
   type CircuitNodeStatus,
 } from './components/CircuitPath';
+export {
+  TrainingCircuitNode,
+  type TrainingCircuitNodeProps,
+  type CircuitAccess,
+} from './components/TrainingCircuitNode';
 export { Modal, type ModalProps } from './components/Modal';
 export {
   DatePicker,
