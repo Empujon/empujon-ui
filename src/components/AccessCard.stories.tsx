@@ -10,10 +10,11 @@ type Story = StoryObj<typeof AccessCard>;
 
 // Los 2 ejes de Figma en un solo grid: `background` (empty/filled) como
 // columnas, con su label — Hover es interacción real, pasá el mouse sobre
-// cada una.
+// cada una. Sin padding propio: el preview de Storybook ya trae 16px de
+// padding en el body por default (el margen de la grilla de la página).
 export const Access: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-8 bg-black p-4">
+    <div className="flex flex-wrap gap-8 bg-black">
       <div className="flex flex-col gap-3">
         <span className="font-inter text-sm text-lightgray">Empty Background</span>
         <AccessCard background="empty" onClick={() => {}} />
