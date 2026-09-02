@@ -13,6 +13,8 @@ export interface CheckboxProps {
   checked: boolean;
   onChange: () => void;
   disabled?: boolean;
+  /** Estado de validación (borde/hover rojo). Se ignora si está marcado o deshabilitado. */
+  error?: boolean;
   ariaLabel?: string;
   size?: 'xs' | 'sm' | 'md';
   /** Tinte del estado marcado. */
@@ -32,6 +34,7 @@ export function Checkbox({
   checked,
   onChange,
   disabled = false,
+  error = false,
   ariaLabel = 'Seleccionar',
   size = 'md',
   tone = 'blue',
@@ -43,18 +46,32 @@ export function Checkbox({
   const sizeBoxClass = size === 'xs' ? 'w-6 h-6' : size === 'sm' ? 'w-7 h-7' : 'w-11 h-11';
 
   let stateClasses: string;
-  if (tone === 'yellow') {
-    if (disabled) {
-      stateClasses = checked ? 'border-divider bg-divider' : 'border-divider bg-transparent';
-    } else if (checked) {
+  if (disabled) {
+    // Sin clases de hover: el checkbox no reacciona al mouse, y el group-hover
+    // del <label> que lo envuelve no debe filtrarse igual (no "se activa").
+    stateClasses = checked ? 'border-divider bg-divider' : 'border-divider bg-transparent';
+  } else if (tone === 'yellow') {
+    if (checked) {
       stateClasses = 'border-yellow bg-yellow hover:border-blue group-hover:border-blue';
     } else {
       stateClasses = 'border-white bg-transparent hover:border-blue group-hover:border-blue';
     }
   } else if (checked) {
-    stateClasses = tone === 'orange' ? 'border-orange bg-orange' : 'border-blue bg-blue';
+    // Al pasar el mouse sobre un checkbox ya marcado, el relleno pasa a celeste
+    // ("hover selected" del Figma) en vez de quedarse en el tinte de marcado.
+    stateClasses =
+      tone === 'orange'
+        ? 'border-orange bg-orange hover:border-blue hover:bg-blue group-hover:border-blue group-hover:bg-blue'
+        : 'border-blue bg-blue';
   } else {
-    stateClasses = 'border-white bg-transparent hover:bg-white/5';
+    stateClasses = 'border-white bg-transparent hover:border-blue hover:bg-white/5 group-hover:border-blue';
+  }
+
+  // El error (Figma node 7287:2903) es un estado de validación, no un tinte: sólo
+  // pisa el borde a rojo en reposo (sin marcar, habilitado) — el hover, el marcado
+  // y el hover-marcado se comportan igual que el estado enabled.
+  if (error && !checked && !disabled) {
+    stateClasses = 'border-red bg-transparent hover:border-blue hover:bg-white/5 group-hover:border-blue';
   }
 
   const disabledClass =
@@ -102,5 +119,6 @@ export const checkboxBlockMeta: UiBlockMeta = {
     size: { control: 'enum', label: 'Tamaño', default: 'md', options: ['xs', 'sm', 'md'] },
     shape: { control: 'enum', label: 'Forma', default: 'square', options: ['square', 'round'] },
     disabled: { control: 'boolean', label: 'Deshabilitado', default: false },
+    error: { control: 'boolean', label: 'Error', default: false },
   },
 };
