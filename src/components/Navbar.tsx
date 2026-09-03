@@ -52,7 +52,7 @@ export function Navbar({
   ...props
 }: NavbarProps) {
   const palette =
-    variant === 'brand' ? 'bg-orange text-black' : 'bg-dark-gray text-white';
+    variant === 'brand' ? 'bg-orange text-black' : 'bg-darker-gray text-white';
 
   return (
     <>
