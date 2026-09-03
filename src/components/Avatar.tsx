@@ -40,11 +40,18 @@ const STUDENT_BODY: Record<'estudiante-1' | 'estudiante-2' | 'estudiante-3' | 'e
   'estudiante-4': IconAvatarEstudiante4,
 };
 
+// `group-hover:text-black` es a propósito en las 4: en StudentCard (Figma ›
+// "Student Card", fila Hover de los 15 nodos) el personaje se pone negro al
+// pasar el mouse sobre la tarjeta contenedora — se nota más en "estudiante-4"
+// porque su celeste (`text-blue`) es el mismo que `hover:bg-blue` de la
+// card y si no fuera negro el dibujo directamente desaparecería, pero el
+// cambio a negro pasa en los 5 themes por igual, no solo en ese caso.
+// Inerte fuera de un ancestro `.group` con hover (Circle/Plain en otro lado).
 const STUDENT_COLOR: Record<'estudiante-1' | 'estudiante-2' | 'estudiante-3' | 'estudiante-4', string> = {
-  'estudiante-1': 'text-green',
-  'estudiante-2': 'text-magenta',
-  'estudiante-3': 'text-yellow',
-  'estudiante-4': 'text-blue',
+  'estudiante-1': 'text-green group-hover:text-black',
+  'estudiante-2': 'text-magenta group-hover:text-black',
+  'estudiante-3': 'text-yellow group-hover:text-black',
+  'estudiante-4': 'text-blue group-hover:text-black',
 };
 
 // "iniciales" no tiene dibujo propio (es texto) pero comparte el mismo patrón
