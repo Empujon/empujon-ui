@@ -1,10 +1,14 @@
 'use client';
 
-// Footer — pie de página presentacional de Empujón (fila de links).
-// Sin lógica: recibe los links por props. La app decide qué links y a dónde.
+// Footer — pie de página presentacional de Empujón.
+// Fiel al Figma "SISTEMA DE DISEÑO" › Footer (node 4037:25707): fila de links,
+// divisor, copyright + botón "Volver arriba". Device=Desktop/Mobile es un
+// único componente responsive (md:), no dos variantes separadas.
 
 import React from 'react';
 import { cn } from '../lib/cn';
+import { Button } from './Button';
+import { IconChevronUp } from './designerIcons';
 
 export interface FooterLink {
   label: string;
@@ -13,6 +17,14 @@ export interface FooterLink {
 
 export interface FooterProps extends React.HTMLAttributes<HTMLElement> {
   links: FooterLink[];
+  /** Texto de copyright. Default: "Empujón © <año actual>. Todos los derechos reservados." */
+  copyright?: string;
+  /** Label del botón "volver arriba". Default 'Volver arriba'. */
+  backToTopLabel?: string;
+  /** Oculta el botón "volver arriba". Default false (visible, como en el Figma). */
+  hideBackToTop?: boolean;
+  /** Click del botón "volver arriba". Default: scroll suave al top de la página. */
+  onBackToTop?: () => void;
   /** Fijo al fondo en desktop (md+). Default true (par visual del header landing). */
   fixed?: boolean;
   /**
@@ -23,29 +35,60 @@ export interface FooterProps extends React.HTMLAttributes<HTMLElement> {
   linkClassName?: string;
 }
 
-export function Footer({ links, fixed = true, linkClassName, className, ...props }: FooterProps) {
+export function Footer({
+  links,
+  copyright,
+  backToTopLabel = 'Volver arriba',
+  hideBackToTop = false,
+  onBackToTop,
+  fixed = true,
+  linkClassName,
+  className,
+  ...props
+}: FooterProps) {
+  const handleBackToTop = () => {
+    if (onBackToTop) {
+      onBackToTop();
+      return;
+    }
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer
       className={cn(
-        'bg-orange text-black py-6 px-6 rounded-t-lg w-full',
+        'bg-orange text-black flex w-full flex-col items-center gap-6 rounded-t-card px-4 py-6 md:px-6',
         fixed && 'static md:fixed md:bottom-0 md:left-1/2 md:-translate-x-1/2 md:w-3/4',
         className,
       )}
       {...props}
     >
-      <div className="flex flex-col items-center gap-4 md:flex-row md:justify-around">
+      <nav className="flex w-full flex-col items-center gap-2 md:flex-row md:justify-start md:gap-20">
         {links.map((l) => (
           <a
             key={l.label}
             href={l.href}
             className={
               linkClassName ??
-              'min-w-[120px] text-center font-inter font-bold transition-all hover:no-underline underline-offset-4 hover:font-shantell'
+              'inline-flex h-11 items-center justify-center whitespace-nowrap font-inter text-label-chico font-semibold text-black hover:underline hover:decoration-wavy hover:underline-offset-4'
             }
           >
             {l.label}
           </a>
         ))}
+      </nav>
+
+      <hr className="h-px w-full shrink-0 border-0 bg-darker-gray" />
+
+      <div className="flex w-full flex-col items-center gap-6 md:flex-row md:justify-between">
+        <p className="font-inter text-label-mini font-medium text-black">
+          {copyright ?? `Empujón © ${new Date().getFullYear()}. Todos los derechos reservados.`}
+        </p>
+        {!hideBackToTop && (
+          <Button variant="primary-light" size="sm" icon={<IconChevronUp />} iconPosition="right" onClick={handleBackToTop}>
+            {backToTopLabel}
+          </Button>
+        )}
       </div>
     </footer>
   );

@@ -7,13 +7,14 @@ const meta: Meta<typeof Footer> = {
   args: {
     fixed: false,
     links: [
-      { label: 'Términos', href: '#' },
+      { label: 'Investigación', href: '#' },
+      { label: 'Centro de ayuda', href: '#' },
+      { label: 'Equipo', href: '#' },
       { label: 'Privacidad', href: '#' },
-      { label: 'Contacto', href: '#' },
     ],
   },
 };
 export default meta;
 type Story = StoryObj<typeof Footer>;
 
-export const Playground: Story = {};
+export const Landing: Story = {};
