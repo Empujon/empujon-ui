@@ -17,7 +17,7 @@ import { cn } from '../lib/cn';
  * `sm:` se fija sin wrap y centrado, como en el frame Desktop.
  */
 export interface TrainerHeaderProps {
-  /** Glifo/logo del microaplicativo, 48×48. */
+  /** Glifo/logo del microaplicativo, 44×44. */
   icon: React.ReactNode;
   /** Título del entrenador, ej. "Entrenador Turbolectura". */
   title: string;
@@ -29,7 +29,7 @@ export interface TrainerHeaderProps {
 export function TrainerHeader({ icon, title, subtitle, className }: TrainerHeaderProps) {
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <div className="relative shrink-0 size-12" aria-hidden="true">
+      <div className="relative shrink-0 size-11" aria-hidden="true">
         {icon}
       </div>
       <div className="flex flex-col items-start min-w-0 flex-1 not-italic sm:flex-none sm:shrink-0 sm:text-center sm:whitespace-nowrap">

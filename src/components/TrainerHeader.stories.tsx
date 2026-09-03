@@ -1,18 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TrainerHeader } from './TrainerHeader';
-
-const PlaceholderIcon = () => (
-  <svg viewBox="0 0 48 48" fill="none" className="size-full" aria-hidden="true">
-    <circle cx="24" cy="24" r="22" fill="#F79045" />
-    <path d="M16 24l6 6 12-14" stroke="#171D17" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+import {
+  IconMiniMedicionDefault,
+  IconMiniTurboDefault,
+  IconMiniFotoflashDefault,
+  IconMiniGranpaneoDefault,
+} from './designerIcons';
 
 const meta: Meta<typeof TrainerHeader> = {
-  title: 'Componentes/TrainerHeader',
+  title: 'Componentes/Header entrenadores',
   component: TrainerHeader,
   args: {
-    icon: <PlaceholderIcon />,
+    icon: <IconMiniTurboDefault className="size-full" />,
     title: 'Entrenador Turbolectura',
     subtitle: 'Estudiante: Eric Bejarano (2do grado)',
   },
@@ -20,6 +19,29 @@ const meta: Meta<typeof TrainerHeader> = {
 export default meta;
 type Story = StoryObj<typeof TrainerHeader>;
 
-export const Playground: Story = {};
+// Figma "titulos entrenadores" (node-id 3821-11683): un ícono Training Circuit
+// Node Mini (status Default) por microaplicativo — cada uno con su glifo y label.
+export const MedicionDeLectura: Story = {
+  args: {
+    icon: <IconMiniMedicionDefault className="size-full" />,
+    title: 'Medición de Lectura',
+  },
+};
+
+export const EntrenadorTurbolectura: Story = {};
+
+export const EntrenadorFotoflash: Story = {
+  args: {
+    icon: <IconMiniFotoflashDefault className="size-full" />,
+    title: 'Entrenador Fotoflash',
+  },
+};
+
+export const EntrenadorGranpaneo: Story = {
+  args: {
+    icon: <IconMiniGranpaneoDefault className="size-full" />,
+    title: 'Entrenador Granpaneo',
+  },
+};
 
 export const SinSubtitulo: Story = { args: { subtitle: undefined } };
