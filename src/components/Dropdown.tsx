@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '../lib/cn';
-import { IconCaretDown, IconCheckMark } from './designerIcons';
+import { IconCaretDown, IconCheckMark, IconPlus } from './designerIcons';
 
 /**
  * Dropdown — trigger tipo píldora + menú (Figma › "Dropdown"). Gap 100% nuevo.
@@ -38,11 +38,13 @@ export interface DropdownProps {
 const CheckboxGlyph = ({ checked }: { checked: boolean }) => (
   <span
     className={cn(
-      'flex size-6 shrink-0 items-center justify-center rounded border-2',
-      checked ? 'bg-orange border-orange' : 'border-whitesmoke bg-transparent',
+      'flex size-6 shrink-0 items-center justify-center border-2',
+      checked
+        ? 'rounded-chico border-orange bg-orange'
+        : 'rounded border-lightgray bg-transparent group-hover:border-darker-gray',
     )}
   >
-    {checked && <IconCheckMark className="size-4 text-[#171D17]" />}
+    {checked && <IconCheckMark className="size-4 text-black" />}
   </span>
 );
 
@@ -76,19 +78,27 @@ export function Dropdown({ label, icon, items, multiselect = false, value, onCha
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         className={cn(
-          'flex h-11 items-center gap-3 rounded-pill border-2 bg-darker-gray px-4',
-          isOpen ? 'border-blue text-blue' : 'border-whitesmoke text-whitesmoke',
+          'group flex h-11 items-center gap-3 rounded-pill border-2 bg-darker-gray px-4 transition-colors',
+          isOpen ? 'border-orange text-orange' : 'border-whitesmoke text-whitesmoke hover:border-blue hover:text-blue',
         )}
       >
         {icon && <span className="size-6 shrink-0">{icon}</span>}
-        <span className="font-inter font-semibold text-[16px] underline whitespace-nowrap">{label}</span>
+        <span
+          className={cn(
+            'font-inter font-semibold text-[16px] tracking-[0.16px] whitespace-nowrap',
+            !isOpen &&
+              'group-hover:[text-decoration-line:underline] group-hover:[text-decoration-style:wavy] group-hover:underline-offset-2',
+          )}
+        >
+          {label}
+        </span>
         <IconCaretDown className={cn('size-4 shrink-0 transition-transform', isOpen && 'rotate-180')} />
       </button>
 
       {isOpen && (
         <div
           role="listbox"
-          className="absolute left-0 top-[calc(100%+2px)] z-10 flex min-w-[223px] flex-col items-start overflow-hidden rounded-[16px] bg-darker-gray py-2 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.3),0px_2px_8px_1px_rgba(0,0,0,0.1)]"
+          className="absolute right-0 top-[calc(100%+2px)] z-10 flex min-w-[223px] flex-col items-start overflow-hidden rounded-[16px] bg-darker-gray py-2 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.3),0px_2px_8px_1px_rgba(0,0,0,0.1)]"
         >
           {items.map((item) => {
             const isSelected = value.includes(item.value);
@@ -100,7 +110,7 @@ export function Dropdown({ label, icon, items, multiselect = false, value, onCha
                 aria-selected={isSelected}
                 onClick={() => toggleItem(item.value)}
                 className={cn(
-                  'flex w-full items-center gap-2 px-4 py-3 text-left font-inter font-semibold text-[16px] tracking-[0.16px] transition-colors',
+                  'group flex w-full items-center gap-2 px-4 py-3 text-left font-inter font-semibold text-[16px] tracking-[0.16px] transition-colors',
                   isSelected && !multiselect ? 'text-orange' : 'text-whitesmoke hover:bg-blue hover:text-black',
                 )}
               >
@@ -116,7 +126,7 @@ export function Dropdown({ label, icon, items, multiselect = false, value, onCha
               onClick={actionItem.onClick}
               className="flex w-full items-center gap-2 px-4 py-3 text-left font-inter font-semibold text-[16px] tracking-[0.16px] text-whitesmoke hover:bg-blue hover:text-black"
             >
-              {actionItem.icon ?? <span className="size-6 shrink-0 text-center leading-6">+</span>}
+              {actionItem.icon ?? <IconPlus className="size-6 shrink-0" />}
               {actionItem.label}
             </button>
           )}

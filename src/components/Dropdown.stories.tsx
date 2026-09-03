@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Dropdown } from './Dropdown';
+import { IconHome } from './designerIcons';
 
 const ITEMS = [
   { value: 'empujon-school', label: 'Empujón School' },
@@ -11,12 +12,13 @@ const meta: Meta<typeof Dropdown> = { title: 'Componentes/Dropdown', component: 
 export default meta;
 type Story = StoryObj<typeof Dropdown>;
 
-export const Playground: Story = {
+export const Default: Story = {
   render: () => {
     const [value, setValue] = useState<string[]>(['empujon-school']);
     return (
       <Dropdown
         label="Empujón School"
+        icon={<IconHome />}
         items={ITEMS}
         value={value}
         onChange={setValue}
