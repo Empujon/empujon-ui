@@ -153,7 +153,7 @@ export function Estampita({
         className={cn(
           'whitespace-nowrap text-center text-[16px] font-semibold tracking-[0.16px] underline decoration-wavy decoration-[15%]',
           'font-inter',
-          style === 'agregar' && (disabled ? '!font-shantell' : 'group-hover:font-shantell'),
+          style === 'agregar' && disabled && '!font-shantell',
           disabled ? 'text-divider' : 'text-whitesmoke group-hover:text-blue',
         )}
       >

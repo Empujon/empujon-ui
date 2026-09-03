@@ -48,7 +48,7 @@ export function AccessCard({
       )}
     >
       <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <span className="font-inter font-semibold text-[20px] leading-[1.3] text-orange group-hover:font-shantell group-hover:text-blue group-hover:underline group-hover:decoration-wavy">
+        <span className="font-inter font-semibold text-[20px] leading-[1.3] text-orange group-hover:text-blue group-hover:underline group-hover:decoration-wavy">
           {title}
         </span>
         <span className="font-inter font-semibold text-[16px] tracking-[0.16px] text-lightgray">{description}</span>

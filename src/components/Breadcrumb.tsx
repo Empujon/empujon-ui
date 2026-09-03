@@ -73,10 +73,11 @@ export interface BreadcrumbProps {
   className?: string;
 }
 
-/** Hover de los segmentos tipo "link" (Inter): el label toma la fuente y el
- *  subrayado ondulado de un botón (font-shantell + wavy underline), igual que
- *  el ítem actual — es, ante todo, un botón. */
-const LINK_HOVER = 'hover:font-shantell hover:text-blue hover:underline hover:decoration-wavy hover:underline-offset-[6px]';
+/** Hover de los segmentos tipo "link" (Inter): el label toma el subrayado
+ *  ondulado de un botón (wavy underline), igual que el ítem actual — es, ante
+ *  todo, un botón. La fuente ya NO cambia a Shantell en hover (decisión de
+ *  diseño revertida: hover nunca cambia de familia tipográfica). */
+const LINK_HOVER = 'hover:text-blue hover:underline hover:decoration-wavy hover:underline-offset-[6px]';
 
 export function Breadcrumb({ items, showHomeIcon = true, className }: BreadcrumbProps) {
   return (
@@ -198,7 +199,7 @@ function BreadcrumbDropdownSegment({ item, dropdown, isCurrent }: DropdownSegmen
           isOpen
             ? 'text-orange'
             : bodyInteractive
-              ? cn('cursor-pointer text-whitesmoke hover:text-blue', !isCurrent && 'hover:font-shantell')
+              ? 'cursor-pointer text-whitesmoke hover:text-blue'
               : 'cursor-default text-whitesmoke',
         )}
       >
