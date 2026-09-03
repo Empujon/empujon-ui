@@ -29,7 +29,7 @@ export const Search = React.forwardRef<HTMLInputElement, SearchProps>(function S
   return (
     <div
       className={cn(
-        'group flex h-11 w-full items-center gap-3 rounded-[16px] border-2 pl-4 pr-2 transition-colors',
+        'group flex h-11 w-full max-w-[328px] items-center gap-3 rounded-[16px] border-2 pl-4 pr-2 transition-colors',
         disabled
           ? 'bg-darker-gray border-divider cursor-not-allowed'
           : isFocused
