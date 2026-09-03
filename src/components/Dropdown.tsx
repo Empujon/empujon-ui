@@ -87,7 +87,7 @@ export function Dropdown({ label, icon, items, multiselect = false, value, onCha
           className={cn(
             'font-inter font-semibold text-[16px] tracking-[0.16px] whitespace-nowrap',
             !isOpen &&
-              'group-hover:[text-decoration-line:underline] group-hover:[text-decoration-style:wavy] group-hover:underline-offset-2',
+              'group-hover:font-shantell group-hover:leading-[32px] group-hover:tracking-normal group-hover:[text-decoration-line:underline] group-hover:[text-decoration-style:wavy] group-hover:underline-offset-2',
           )}
         >
           {label}
