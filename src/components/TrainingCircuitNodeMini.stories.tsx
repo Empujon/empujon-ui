@@ -41,7 +41,7 @@ const GRID_STYLE: React.CSSProperties = { gridTemplateColumns: '16rem repeat(4, 
 // versión chica y plana de los glifos del circuito, sin el chrome de tarjeta
 // del casillero grande — 4 apps × 4 statuses + 2 genéricos (Waiting/Complete).
 // Cada ícono ya trae su paleta fija por status, no hay hover/active acá.
-export const CasillerosMinimal: Story = {
+export const CircuitNodeMinimal: Story = {
   render: () => (
     <div className="flex flex-col gap-4 bg-black p-10">
       <div className={GRID} style={GRID_STYLE}>

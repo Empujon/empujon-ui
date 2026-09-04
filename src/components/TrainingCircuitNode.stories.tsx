@@ -19,7 +19,8 @@ type Story = StoryObj<typeof TrainingCircuitNode>;
 // Hover es interacción real — pasá el mouse. El "state: toggle" de Figma es el
 // Interactive Tooltip real (`Tooltip.tsx`): clickeá un nodo interactivo para
 // abrirlo/cerrarlo (Locked no reacciona, no tiene nada para mostrar).
-export const Casillero: Story = {
+export const TrainingCircuitNodeStory: Story = {
+  name: 'Training Circuit Node',
   render: () => (
     <div className="flex flex-col gap-8 bg-black p-10">
       <Row label="Elemento Bloqueado (aún no se ha abierto cadena)">
@@ -67,6 +68,16 @@ export const Casillero: Story = {
           appName="Medición de lectura"
           statusText="Inicial - Completada"
         />
+      </Row>
+      {/* Casilleros vacíos: no son un `access` más del componente interactivo — no
+          tienen ilustración, hover, ni click (son el hueco del circuito entre
+          elementos reales). Mismo tamaño/grosor de borde (104px, border-2,
+          rounded-[16px]) que TrainingCircuitNode, como marca de posición nomás. */}
+      <Row label="Casillero vacío (camino ya recorrido)">
+        <div className="size-[104px] shrink-0 rounded-[16px] border-2 border-divider bg-darker-gray" />
+      </Row>
+      <Row label="Casillero vacío (camino sin recorrer)">
+        <div className="size-[104px] shrink-0 rounded-[16px] border-2 border-divider bg-black" />
       </Row>
     </div>
   ),
