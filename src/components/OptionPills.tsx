@@ -107,8 +107,12 @@ export function OptionPills({
             onClick={handleSubmit}
             disabled={selectedValues.size === 0}
             className={cn(
-              'flex items-center gap-2 bg-orange text-black font-inter font-semibold py-2.5 px-4 h-11 rounded-full text-base leading-6 tracking-[0.16px] transition-all',
-              selectedValues.size === 0 ? 'opacity-40 cursor-not-allowed' : 'hover:brightness-110 cursor-pointer',
+              // Disabled: mismo criterio que Button primary-dark (bg-gray-700 +
+              // text-divider) en vez del opacity-40 que atenuaba el naranja/negro.
+              'flex items-center gap-2 font-inter font-semibold py-2.5 px-4 h-11 rounded-full text-base leading-6 tracking-[0.16px] transition-all',
+              selectedValues.size === 0
+                ? 'bg-gray-700 text-divider cursor-not-allowed'
+                : 'bg-orange text-black hover:brightness-110 cursor-pointer',
             )}
           >
             {submitLabel}
