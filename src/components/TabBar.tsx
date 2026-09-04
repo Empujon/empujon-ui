@@ -37,7 +37,9 @@ export function TabBar({ tabs, value, onChange, className }: TabBarProps) {
             onClick={() => onChange(tab.value)}
             className={cn(
               'flex h-11 shrink-0 items-center justify-center whitespace-nowrap px-4 font-inter font-semibold text-[16px] tracking-[0.16px] transition-colors',
-              isSelected ? 'border-b-[3px] border-orange text-orange' : 'border-b-[3px] border-transparent text-white',
+              isSelected
+                ? 'border-b-[3px] border-orange text-orange'
+                : 'border-b-[3px] border-transparent text-white hover:text-blue',
             )}
           >
             {tab.label}
