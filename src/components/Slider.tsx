@@ -53,7 +53,7 @@ export function Slider(props: SliderProps) {
   const hiPct = ((hi - min) / (max - min)) * 100;
 
   return (
-    <div className={cn('flex flex-col gap-2 w-full', className)}>
+    <div className={cn('flex flex-col gap-2 w-full max-w-[680px]', className)}>
       <div className="flex gap-4 items-center w-full">
         <label
           htmlFor={id}
