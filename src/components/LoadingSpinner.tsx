@@ -54,18 +54,20 @@ export interface LoadingSpinnerProps {
 
 export function LoadingSpinner({ ready, className }: LoadingSpinnerProps) {
   if (ready) {
+    // viewBox con padding = strokeWidth/2 (3px) para que el anillo blanco de las puntas
+    // no quede cortado por el borde del SVG (el path toca 0 y 160 en varios puntos).
     return (
-      <svg viewBox="0 0 160 160" fill="none" className={cn('size-40', className)} aria-hidden="true">
+      <svg viewBox="-3 -3 166 166" fill="none" className={cn('size-40', className)} aria-hidden="true">
         <path d={EXITO_PATH} fill="#53F745" stroke="#F4F5F5" strokeWidth={6} strokeLinejoin="round" />
       </svg>
     );
   }
 
   return (
-    <svg viewBox="0 0 160 160" fill="none" className={cn('size-40', className)} role="status" aria-label="Cargando">
-      {/* Capa base: todo negro-900, siempre visible detrás de las capas verdes. */}
+    <svg viewBox="-2 -2 164 164" fill="none" className={cn('size-40', className)} role="status" aria-label="Cargando">
+      {/* Capa base: gray-600 (apagado pero visible sobre el fondo negro), siempre detrás de las capas verdes. */}
       {RIPPLE_ALL.map((d, i) => (
-        <path key={`base-${i}`} d={d} fill="#171D17" />
+        <path key={`base-${i}`} d={d} fill="#4D584F" />
       ))}
       {/* Capa verde del centro. */}
       <path
