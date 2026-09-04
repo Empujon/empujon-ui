@@ -10,6 +10,6 @@ export const TextAreaStory: Story = {
   name: 'Text Area',
   render: () => {
     const [value, setValue] = useState('');
-    return <TextArea label="Comentario" value={value} onChange={setValue} placeholder="Escribí acá..." />;
+    return <TextArea label="Comentario" value={value} onChange={setValue} placeholder="Escribe acá..." />;
   },
 };
