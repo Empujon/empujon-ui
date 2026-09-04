@@ -13,14 +13,3 @@ export const SwitchStory: Story = {
     return <Switch checked={checked} onChange={setChecked} label="Repetir hasta terminar el texto" />;
   },
 };
-
-export const Estados: Story = {
-  render: () => (
-    <div className="flex flex-col gap-4">
-      <Switch checked={false} onChange={() => {}} label="Off" />
-      <Switch checked={true} onChange={() => {}} label="On" />
-      <Switch checked={false} onChange={() => {}} label="Off deshabilitado" disabled />
-      <Switch checked={true} onChange={() => {}} label="On deshabilitado" disabled />
-    </div>
-  ),
-};
