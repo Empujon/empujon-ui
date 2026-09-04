@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from './Input';
+import { TextInputEditable } from './TextInputEditable';
 
 const meta: Meta<typeof Input> = { title: 'Componentes/Form', component: Input };
 export default meta;
@@ -10,6 +11,7 @@ export const TextInput: Story = {
   name: 'Text input',
   render: () => {
     const [value, setValue] = useState('');
+    const [editableValue, setEditableValue] = useState('luna');
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
         <div className="flex flex-col gap-2">
@@ -27,6 +29,10 @@ export const TextInput: Story = {
         <div className="flex flex-col gap-2">
           <span className="font-inter text-xs text-white/60">Read only</span>
           <Input label="Nombre" value="Rocío" onChange={() => {}} readOnly />
+        </div>
+        <div className="flex flex-col gap-2">
+          <span className="font-inter text-xs text-white/60">Text Input (Editable)</span>
+          <TextInputEditable label="Martin Perez" value={editableValue} onSave={setEditableValue} />
         </div>
       </div>
     );
