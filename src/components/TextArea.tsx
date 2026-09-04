@@ -42,14 +42,14 @@ export function TextArea({
     if (disabled) {
       stateClass = 'border-2 border-transparent bg-darker-gray/50 text-darker-gray/50 placeholder:text-darker-gray/50 cursor-not-allowed';
     } else if (error) {
-      stateClass = 'border-2 border-red bg-black text-white placeholder:text-divider emp-placeholder-fill focus:border-red';
+      stateClass = 'border-2 border-red bg-black text-whitesmoke placeholder:text-divider emp-placeholder-fill focus:border-red';
     } else if (readOnly) {
-      stateClass = 'border-2 border-transparent bg-black text-white cursor-default';
+      stateClass = 'border-2 border-transparent bg-black text-whitesmoke cursor-default';
     } else {
-      stateClass = 'border-2 border-lgray bg-black text-white placeholder:text-divider emp-placeholder-fill focus:border-blue';
+      stateClass = 'border-2 border-lgray bg-black text-whitesmoke placeholder:text-divider emp-placeholder-fill focus:border-blue';
     }
     return (
-      <div className={cn('flex flex-col gap-2', className)}>
+      <div className={cn('flex flex-col gap-2 w-full max-w-[680px]', className)}>
         <label className="font-inter font-bold text-white">{label}</label>
         <textarea
           value={value}
@@ -58,9 +58,9 @@ export function TextArea({
           rows={rows}
           readOnly={readOnly}
           disabled={disabled}
-          className={cn('w-full px-4 py-2.5 rounded-[16px] font-inter text-base focus:outline-none transition-colors resize-none', stateClass)}
+          className={cn('w-full px-4 py-2.5 rounded-[16px] font-inter text-label-chico focus:outline-none transition-colors resize-none', stateClass)}
           style={{
-            WebkitTextFillColor: disabled ? undefined : '#E3F2E3',
+            WebkitTextFillColor: disabled ? undefined : '#F4F5F5',
             WebkitBoxShadow: disabled ? undefined : '0 0 0 1000px #171D17 inset',
           }}
         />
@@ -72,7 +72,7 @@ export function TextArea({
   }
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
+    <div className={cn('flex flex-col gap-2 w-full max-w-[680px]', className)}>
       <label className="text-white text-sm font-semibold">
         {label}
         {error && <span className="text-magenta ml-2 font-normal">{error}</span>}

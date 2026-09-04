@@ -68,7 +68,7 @@ export function Select({
   }
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
+    <div className={cn('flex flex-col gap-2 w-full max-w-[680px]', className)}>
       <label className="text-white text-sm font-semibold">
         {label}
         {error && <span className="text-magenta ml-2 font-normal">{error}</span>}
@@ -78,7 +78,7 @@ export function Select({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className={cn(
-            'w-full px-4 py-1.5 border-2 rounded-2xl text-base appearance-none pr-10 font-shantell font-bold focus:outline-none transition-colors',
+            'w-full px-4 py-1.5 border-2 rounded-2xl text-label-chico appearance-none pr-10 font-inter font-bold focus:outline-none transition-colors',
             error
               ? 'bg-transparent border-magenta text-white/70'
               : saved && value
@@ -94,7 +94,7 @@ export function Select({
             </option>
           ))}
         </select>
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-current">
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white">
           <Chevron className="w-4 h-4" />
         </div>
       </div>
@@ -181,11 +181,11 @@ function NeutralSelect({
   if (disabled) {
     triggerClass = 'border-2 border-transparent bg-darker-gray/50 text-darker-gray/50 cursor-not-allowed';
   } else if (error) {
-    triggerClass = 'border-2 border-red bg-black text-white';
+    triggerClass = 'border-2 border-red bg-black';
   } else if (isOpen) {
-    triggerClass = 'border-2 border-blue bg-black text-white';
+    triggerClass = 'border-2 border-blue bg-black';
   } else {
-    triggerClass = 'border-2 border-lgray bg-black text-white';
+    triggerClass = 'border-2 border-lgray bg-black';
   }
 
   const handlePick = (v: string) => {
@@ -194,7 +194,7 @@ function NeutralSelect({
   };
 
   return (
-    <div ref={containerRef} className={cn('flex flex-col gap-2', className)}>
+    <div ref={containerRef} className={cn('flex flex-col gap-2 w-full max-w-[680px]', className)}>
       <label className="font-inter font-bold text-white">{label}</label>
       <div className="relative">
         <button
@@ -204,10 +204,10 @@ function NeutralSelect({
           disabled={disabled}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
-          className={cn('w-full flex items-center justify-between px-4 h-[44px] rounded-[16px] font-inter text-base text-left focus:outline-none transition-colors', triggerClass)}
+          className={cn('w-full flex items-center justify-between px-4 h-[44px] rounded-[16px] font-inter text-label-chico text-left focus:outline-none transition-colors', triggerClass)}
         >
-          <span className="truncate">{selected ? selected.label : placeholder}</span>
-          <Chevron className={cn('w-4 h-4 flex-shrink-0 transition-transform', isOpen && 'rotate-180')} />
+          <span className={cn('truncate', !disabled && (selected ? 'text-whitesmoke' : 'text-divider'))}>{selected ? selected.label : placeholder}</span>
+          <Chevron className={cn('w-4 h-4 flex-shrink-0 transition-transform', disabled ? 'text-darker-gray/50' : 'text-white', isOpen && 'rotate-180')} />
         </button>
       </div>
 

@@ -603,7 +603,7 @@ export const DatePicker: React.FC<DatePickerProps> = (props) => {
   };
 
   return (
-    <div className={`flex flex-col gap-2 ${className}`} ref={containerRef}>
+    <div className={`flex flex-col gap-2 w-full max-w-[680px] ${className}`} ref={containerRef}>
       <label
         className={
           variant === 'neutral'
@@ -624,18 +624,18 @@ export const DatePicker: React.FC<DatePickerProps> = (props) => {
           type="button"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
-          className={`w-full px-4 pr-10 border-2 text-base text-left
+          className={`w-full px-4 pr-10 border-2 text-left
             focus:outline-none transition-colors flex items-center justify-between
             disabled:cursor-not-allowed disabled:opacity-60
             ${variant === 'neutral'
-              ? 'h-[44px] rounded-[16px] font-inter'
-              : 'py-1.5 rounded-2xl font-shantell font-bold'}
+              ? 'h-[44px] rounded-[16px] font-inter text-label-chico'
+              : 'py-1.5 rounded-2xl font-shantell font-bold text-base'}
             ${error
               ? variant === 'neutral'
-                ? `bg-black border-red ${displayValue ? 'text-white' : 'text-divider'}`
+                ? `bg-black border-red ${displayValue ? 'text-whitesmoke' : 'text-divider'}`
                 : 'bg-transparent border-magenta text-white/70'
               : variant === 'neutral'
-                ? `bg-black border-lgray ${displayValue ? 'text-white' : 'text-divider'}`
+                ? `bg-black border-lgray ${displayValue ? 'text-whitesmoke' : 'text-divider'}`
                 : saved && displayValue
                   ? 'bg-white border-gray/50 text-black'
                   : `bg-transparent focus:border-green ${displayValue ? 'text-white/70 border-blue' : 'text-white border-white'}`}`}

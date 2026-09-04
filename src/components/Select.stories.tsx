@@ -8,20 +8,26 @@ const OPTIONS = [
   { value: 'c', label: 'Opción C' },
 ];
 
-const meta: Meta<typeof Select> = { title: 'Componentes/Select', component: Select };
+const meta: Meta<typeof Select> = { title: 'Componentes/Form', component: Select };
 export default meta;
 type Story = StoryObj<typeof Select>;
 
-export const Neutral: Story = {
+export const SelectStory: Story = {
+  name: 'Select',
   render: () => {
-    const [value, setValue] = useState('');
-    return <Select label="Elegí una opción" value={value} onChange={setValue} options={OPTIONS} variant="neutral" />;
-  },
-};
-
-export const Legacy: Story = {
-  render: () => {
-    const [value, setValue] = useState('');
-    return <Select label="Elegí una opción" value={value} onChange={setValue} options={OPTIONS} variant="default" />;
+    const [neutralValue, setNeutralValue] = useState('');
+    const [legacyValue, setLegacyValue] = useState('');
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div className="flex flex-col gap-2">
+          <span className="font-inter text-xs text-white/60">Select</span>
+          <Select label="Elegí una opción" value={neutralValue} onChange={setNeutralValue} options={OPTIONS} variant="neutral" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <span className="font-inter text-xs text-white/60">SelectLegacy</span>
+          <Select label="Elegí una opción" value={legacyValue} onChange={setLegacyValue} options={OPTIONS} variant="default" />
+        </div>
+      </div>
+    );
   },
 };

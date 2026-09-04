@@ -51,17 +51,17 @@ export function Input({
   if (variant === 'neutral') {
     let stateClass: string;
     if (disabled) {
-      stateClass = 'border-2 border-transparent bg-darker-gray/50 text-darker-gray/50 placeholder:text-darker-gray/50 cursor-not-allowed';
+      stateClass = 'border-2 border-gray-700 bg-divider text-gray-700 placeholder:text-gray-700 cursor-not-allowed';
     } else if (error) {
-      stateClass = 'border-2 border-red bg-black text-white placeholder:text-divider emp-placeholder-fill focus:border-red';
+      stateClass = 'border-2 border-red bg-black text-red placeholder:text-divider emp-placeholder-fill focus:border-red';
     } else if (readOnly) {
-      stateClass = 'border-2 border-transparent bg-black text-white cursor-default';
+      stateClass = 'border-2 border-transparent bg-black text-whitesmoke cursor-default';
     } else {
-      stateClass = 'border-2 border-lgray bg-black text-white placeholder:text-divider emp-placeholder-fill focus:border-blue';
+      stateClass = 'border-2 border-lgray bg-black text-whitesmoke placeholder:text-divider emp-placeholder-fill focus:border-blue';
     }
     return (
-      <div className={cn('flex flex-col gap-2', className)}>
-        <label className="font-inter font-bold text-white">{label}</label>
+      <div className={cn('flex flex-col gap-2 w-full max-w-[680px]', className)}>
+        <label className={cn('font-inter font-bold', disabled ? 'text-divider' : 'text-white')}>{label}</label>
         <input
           type={type}
           value={value}
@@ -70,21 +70,26 @@ export function Input({
           readOnly={readOnly}
           disabled={disabled}
           maxLength={maxLength}
-          className={cn('w-full px-4 h-[44px] rounded-[16px] font-inter text-base focus:outline-none transition-colors', stateClass)}
+          className={cn('w-full px-4 h-[44px] rounded-[16px] font-inter text-label-chico focus:outline-none transition-colors', stateClass)}
           style={{
-            WebkitTextFillColor: disabled ? undefined : '#E3F2E3',
+            // Solo se fuerza con texto tipeado: -webkit-text-fill-color pinta
+            // TODO el texto del input (también el placeholder) en WebKit, así
+            // que forzarlo sin condición pisaba `placeholder:text-divider` y
+            // el placeholder se veía blanco en vez de gris500. Tiene que matchear
+            // el color de `stateClass` (rojo en error) o vuelve a pisarlo.
+            WebkitTextFillColor: disabled || !value ? undefined : error ? '#F74553' : '#F4F5F5',
             WebkitBoxShadow: disabled ? undefined : '0 0 0 1000px #171D17 inset',
           }}
         />
         {(error || helper) && (
-          <p className={cn('font-inter text-xs', error ? 'text-red' : 'text-white')}>{error || helper}</p>
+          <p className={cn('font-inter text-label-mini', error ? 'text-red' : disabled ? 'text-divider' : 'text-white')}>{error || helper}</p>
         )}
       </div>
     );
   }
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
+    <div className={cn('flex flex-col gap-2 w-full max-w-[680px]', className)}>
       <label className="text-white text-sm font-semibold">
         {label}
         {error && <span className="text-magenta ml-2 font-normal">{error}</span>}

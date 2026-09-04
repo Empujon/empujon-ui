@@ -523,7 +523,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   const toLabel = r.to ? formatDisplayDate(r.to, locale.months) : '';
 
   return (
-    <div className={`flex flex-col gap-2 ${className}`} ref={containerRef}>
+    <div className={`flex flex-col gap-2 w-full max-w-[680px] ${className}`} ref={containerRef}>
       {label && (
         <label className="font-inter font-bold text-white">{label}</label>
       )}
@@ -539,12 +539,12 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             type="button"
             onClick={() => !disabled && setIsOpen((o) => !o)}
             disabled={disabled}
-            className={`flex-1 w-full md:w-auto h-[44px] px-4 border-2 rounded-[16px] font-inter text-base text-left
+            className={`w-full md:flex-1 md:w-auto h-[44px] px-4 border-2 rounded-[16px] font-inter text-label-chico text-left
               focus:outline-none transition-colors flex items-center
-              disabled:cursor-not-allowed disabled:opacity-60 text-white
+              disabled:cursor-not-allowed disabled:opacity-60
               ${error ? 'bg-black border-red' : 'bg-black border-lgray'}`}
           >
-            <span className="truncate">{fromLabel || resolvedFromPlaceholder}</span>
+            <span className={`truncate ${fromLabel ? 'text-whitesmoke' : 'text-divider'}`}>{fromLabel || resolvedFromPlaceholder}</span>
           </button>
 
           {/* Arrow glyph between the inputs. Source asset is
@@ -555,19 +555,19 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             aria-hidden
             className="flex-shrink-0 flex items-center justify-center self-center"
           >
-            <ArrowGlyph className="w-5 h-5 rotate-90 md:rotate-180" />
+            <ArrowGlyph className="w-5 h-5 -rotate-90 md:rotate-180" />
           </span>
 
           <button
             type="button"
             onClick={() => !disabled && setIsOpen((o) => !o)}
             disabled={disabled}
-            className={`flex-1 w-full md:w-auto h-[44px] px-4 border-2 rounded-[16px] font-inter text-base text-left
+            className={`w-full md:flex-1 md:w-auto h-[44px] px-4 border-2 rounded-[16px] font-inter text-label-chico text-left
               focus:outline-none transition-colors flex items-center
-              disabled:cursor-not-allowed disabled:opacity-60 text-white
+              disabled:cursor-not-allowed disabled:opacity-60
               ${error ? 'bg-black border-red' : 'bg-black border-lgray'}`}
           >
-            <span className="truncate">{toLabel || resolvedToPlaceholder}</span>
+            <span className={`truncate ${toLabel ? 'text-whitesmoke' : 'text-divider'}`}>{toLabel || resolvedToPlaceholder}</span>
           </button>
         </div>
 
