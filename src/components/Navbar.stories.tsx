@@ -67,7 +67,10 @@ function NavLink({ children }: { children: React.ReactNode }) {
 
 function LogoutRow() {
   return (
-    <button type="button" className="flex items-center gap-2 font-inter font-semibold text-label-medio text-whitesmoke underline underline-offset-2 shrink-0">
+    <button
+      type="button"
+      className="flex items-center gap-2 font-inter font-semibold text-label-medio text-whitesmoke underline underline-offset-2 shrink-0 transition-colors duration-200 hover:text-blue active:text-orange"
+    >
       <IconLogout className="size-8" />
       Cerrar sesión
     </button>
