@@ -10,12 +10,12 @@ const meta: Meta<typeof ProfileCard> = {
     name: 'Santiago Saoia',
     subtitle: '4to A (Empujón school)',
     accountStatus: { label: 'Cuenta activa', statusLabel: 'Al día' },
-    // El avatar de Figma para esta card no es una instancia del componente
-    // Avatar (es un frame propio) — se aproxima con Avatar shape="plain" +
-    // override de borde/radio, mismo criterio que la foto de Student Card.
-    avatar: (
-      <Avatar shape="plain" character="estudiante-2" size={104} className="rounded-[10.4px] border-2 border-magenta" />
-    ),
+    // Mismo avatar que Student Card (shape="plain", fondo transparente, sin
+    // marco propio) — antes tenía un marco cuadrado con borde magenta que no
+    // es consistente con el resto de la familia de Cards. El hover a negro
+    // sale gratis de `Avatar` (`STUDENT_COLOR` ya trae `group-hover:text-black`
+    // para los 4 personajes), esta card ya tiene la clase `group` + hover real.
+    avatar: <Avatar shape="plain" character="estudiante-3" size={104} className="bg-transparent" />,
   },
 };
 export default meta;
