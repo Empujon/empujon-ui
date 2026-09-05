@@ -83,7 +83,7 @@ export function Select({
               ? 'bg-transparent border-magenta text-white/70'
               : saved && value
                 ? 'bg-white border-gray/50 text-black'
-                : cn('bg-transparent focus:border-green', value ? 'text-white/70 border-blue' : 'text-white border-white'),
+                : cn('bg-transparent focus:border-blue', value ? 'text-white/70 border-blue' : 'text-white border-white'),
           )}
           style={{ backgroundImage: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
         >
