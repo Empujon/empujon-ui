@@ -40,6 +40,7 @@ export {
   IconEnojo,
   IconAburrimiento,
 } from './components/emotionIcons';
+export { ScrollBar, type ScrollBarProps } from './components/ScrollBar';
 export { Slider, type SliderProps } from './components/Slider';
 export { Switch, type SwitchProps } from './components/Switch';
 export {
