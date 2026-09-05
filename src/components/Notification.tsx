@@ -77,12 +77,14 @@ export function Notification({
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <p className="font-shantell font-semibold text-xl text-whitesmoke">{title}</p>
-        {meta && <p className="font-inter font-semibold text-sm text-lgray tracking-[0.14px]">{meta}</p>}
+        {meta && (
+          <p className="font-inter font-semibold text-sm leading-[1.5] text-lgray tracking-[0.14px]">{meta}</p>
+        )}
         {actionLabel && (
           <button
             type="button"
             onClick={onAction}
-            className="self-start font-inter font-semibold text-base text-blue underline underline-offset-2 hover:no-underline"
+            className="self-start font-inter font-semibold text-base tracking-[0.16px] text-blue underline underline-offset-2 hover:no-underline"
           >
             {actionLabel}
           </button>

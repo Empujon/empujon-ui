@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Notification } from './Notification';
 import { Card } from './Card';
 
-const meta: Meta = { title: 'Componentes/Notificaciones' };
+const meta: Meta = { title: 'Componentes/Notifications' };
 export default meta;
 type Story = StoryObj;
 
