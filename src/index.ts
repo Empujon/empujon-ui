@@ -20,6 +20,7 @@ export {
 } from './components/Card';
 export { Notification, type NotificationProps } from './components/Notification';
 export { Countdown, type CountdownProps } from './components/Countdown';
+export { TimerButton, type TimerButtonProps } from './components/TimerButton';
 export { TrainerHeader, type TrainerHeaderProps } from './components/TrainerHeader';
 export {
   EmotionSelector,
