@@ -11,9 +11,11 @@ import { cn } from '../lib/cn';
  * acá el ícono va a la izquierda y un texto libre a la derecha — para usarse como
  * opción de respuesta (ej. "¿cómo pasaban los minutos?" → "Desaparecían muy lento").
  *
- * Ícono a 88px (no 100% del alto disponible) para que respire dentro de la tarjeta,
- * mismo criterio que el resto de la lib con los glifos (ver
- * `figma-icon-hitbox-sizing`) — ajustado 1:1 con Figma tras su feedback de margen.
+ * El ícono ocupa 66px dentro de un slot de 88px (mismo criterio que el resto de la
+ * lib con los glifos, ver `figma-icon-hitbox-sizing`) — el slot fija el margen contra
+ * la tarjeta, y forzar el tamaño del `<svg>` (en vez de dejarlo en su tamaño
+ * intrínseco) evita que íconos con distinto viewBox/relación de aspecto (ej. el de
+ * Cansancio, más alto que ancho por el "zzz") se vean más grandes o chicos entre sí.
  *
  * Estados 1:1 con Figma: Default = transparente + borde blanco-100. Hover = fondo
  * gray-700 (real `:hover`, no variante separada — mismo criterio que el resto de la
@@ -47,8 +49,8 @@ export function EmotionCard({ icon, label, selected = false, onClick, className 
         className,
       )}
     >
-      <span className="relative size-[88px] shrink-0" aria-hidden="true">
-        {icon}
+      <span className="relative flex size-[88px] shrink-0 items-center justify-center" aria-hidden="true">
+        <span className="[&>svg]:size-[66px]">{icon}</span>
       </span>
       <span
         className={cn(
