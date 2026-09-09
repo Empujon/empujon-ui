@@ -11,11 +11,15 @@ import { cn } from '../lib/cn';
  * acá el ícono va a la izquierda y un texto libre a la derecha — para usarse como
  * opción de respuesta (ej. "¿cómo pasaban los minutos?" → "Desaparecían muy lento").
  *
- * El ícono ocupa 66px dentro de un slot de 88px (mismo criterio que el resto de la
- * lib con los glifos, ver `figma-icon-hitbox-sizing`) — el slot fija el margen contra
- * la tarjeta, y forzar el tamaño del `<svg>` (en vez de dejarlo en su tamaño
- * intrínseco) evita que íconos con distinto viewBox/relación de aspecto (ej. el de
- * Cansancio, más alto que ancho por el "zzz") se vean más grandes o chicos entre sí.
+ * El ícono vive en un slot fijo de 88px (mismo criterio que el resto de la lib con
+ * los glifos, ver `figma-icon-hitbox-sizing`) que fija el margen contra la tarjeta,
+ * pero NO fuerza un tamaño único al ícono — en Figma cada glifo tiene su propio
+ * padding dentro del hitbox (ej. Cansancio ocupa ~94% de alto, Confianza ~75%), así
+ * que quien consume el componente pasa el ícono con su propio alto vía className
+ * (ej. `className="h-[66px] w-auto"`) para calzar 1:1 con Figma — ver los ejemplos
+ * en `EmotionCard.stories.tsx`. Sin una altura explícita el `<svg>` cae en su tamaño
+ * intrínseco del navegador (ancho = 100% del slot, alto derivado del viewBox), que
+ * puede desbordar el slot en glifos con relación de aspecto distinta a 1:1.
  *
  * Estados 1:1 con Figma: Default = transparente + borde blanco-100. Hover = fondo
  * gray-700 (real `:hover`, no variante separada — mismo criterio que el resto de la
@@ -50,7 +54,7 @@ export function EmotionCard({ icon, label, selected = false, onClick, className 
       )}
     >
       <span className="relative flex size-[88px] shrink-0 items-center justify-center" aria-hidden="true">
-        <span className="[&>svg]:size-[66px]">{icon}</span>
+        {icon}
       </span>
       <span
         className={cn(

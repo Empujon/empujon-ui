@@ -46,15 +46,18 @@ export const Acostado: Story = {
         Pasá el cursor para ver el hover, hacé clic para seleccionar
       </p>
       <div className="flex flex-col gap-3">
+        {/* Alto de cada ícono 1:1 con Figma (no es el mismo para las dos: cada glifo
+            trae su propio padding dentro del hitbox de 88px) — ancho auto para
+            preservar su relación de aspecto nativa. */}
         <DemoCard
           label="Desaparecían muy lento"
-          icon={<IconCansancio />}
-          selectedIcon={<IconCansancioSeleccionado />}
+          icon={<IconCansancio className="h-[83px] w-auto" />}
+          selectedIcon={<IconCansancioSeleccionado className="h-[83px] w-auto" />}
         />
         <DemoCard
           label="Iban a buen ritmo"
-          icon={<IconConfianza />}
-          selectedIcon={<IconConfianzaSeleccionado />}
+          icon={<IconConfianza className="h-[66px] w-auto" />}
+          selectedIcon={<IconConfianzaSeleccionado className="h-[66px] w-auto" />}
         />
       </div>
     </div>
