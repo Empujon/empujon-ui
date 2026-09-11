@@ -11,6 +11,7 @@ import {
   IconAvatarCirclePhotoRing,
   IconAvatarDocente,
   IconAvatarDocenteCircleFrame,
+  IconAvatarConsentPending,
 } from './designerIcons';
 
 /**
@@ -30,8 +31,22 @@ import {
  * `src` (foto real) se mantiene para el caso "con foto"; `children` sin
  * `character` sigue siendo el fallback libre para cualquier contenido fuera
  * del catálogo.
+ *
+ * `character="consentimiento-pendiente"` (Figma › "Student Card" › "Modo=Falta
+ * consentimiento") es un caso aparte: el placeholder que reemplaza la foto
+ * real cuando todavía no hay consentimiento para mostrarla. A diferencia de
+ * los demás personajes, el SVG ya trae su propio fondo negro-900 y borde rojo
+ * horneados adentro (no participa del sistema bg/border por `shape`) — fijo,
+ * no varía por `shape`/`borderColor`/theme.
  */
-export type AvatarCharacter = 'estudiante-1' | 'estudiante-2' | 'estudiante-3' | 'estudiante-4' | 'docente' | 'iniciales';
+export type AvatarCharacter =
+  | 'estudiante-1'
+  | 'estudiante-2'
+  | 'estudiante-3'
+  | 'estudiante-4'
+  | 'docente'
+  | 'iniciales'
+  | 'consentimiento-pendiente';
 
 const STUDENT_BODY: Record<'estudiante-1' | 'estudiante-2' | 'estudiante-3' | 'estudiante-4', React.FC<{ className?: string }>> = {
   'estudiante-1': IconAvatarEstudiante1,
@@ -98,7 +113,8 @@ export function Avatar({
   const hasBorder = !isPlain;
   const isDocente = character === 'docente';
   const isIniciales = character === 'iniciales';
-  const isStudent = !!character && character !== 'docente' && character !== 'iniciales';
+  const isConsentPending = character === 'consentimiento-pendiente';
+  const isStudent = !!character && !isDocente && !isIniciales && !isConsentPending;
 
   // Proporción tomada del asset real a tamaño de referencia (72px): el cuerpo
   // (estudiante o docente, misma medida) es 34×48 — se escala según `size`
@@ -109,7 +125,11 @@ export function Avatar({
   // festoneado — el contenedor no necesita bg/border propios en ese caso. Solo
   // el fallback genérico (`children` sin `character` ni `src`) sigue usando el
   // bg/border genéricos (círculo liso) de siempre.
-  const hasCircleFrame = isCircle && (!!character || !!src);
+  const hasCircleFrame = isCircle && !isConsentPending && (!!character || !!src);
+  // El glyph de "consentimiento-pendiente" también trae su propio fondo+borde
+  // horneados adentro del SVG (no depende de `shape`) — mismo motivo que
+  // `hasCircleFrame` para no duplicar bg/border en el contenedor genérico.
+  const bypassContainerChrome = hasCircleFrame || isConsentPending;
 
   let containerBg = 'bg-black';
   let containerBorder = hasBorder ? (borderColor === 'black' ? 'border-2 border-black' : 'border-2 border-whitesmoke') : '';
@@ -141,20 +161,27 @@ export function Avatar({
     <div
       className={cn(
         'relative flex shrink-0 items-center justify-center',
-        hasCircleFrame ? '' : 'overflow-hidden',
-        hasCircleFrame ? '' : isCircle ? 'rounded-full' : 'rounded-[20px]',
-        !hasCircleFrame && containerBg,
-        !hasCircleFrame && containerBorder,
+        bypassContainerChrome ? '' : 'overflow-hidden',
+        bypassContainerChrome ? '' : isCircle ? 'rounded-full' : 'rounded-[20px]',
+        !bypassContainerChrome && containerBg,
+        !bypassContainerChrome && containerBorder,
         className,
       )}
       style={{ width: size, height: size }}
     >
+      {/* Sin `relative z-10` a propósito: ese patrón es para competir con el
+          aro/fondo de ESTE MISMO Avatar (ver src/character de abajo), pero acá
+          no hay nada más adentro con qué competir. Si le pongo z-index, gana
+          por stacking-context a lo que StudentCard superponga desde AFUERA
+          (el badge de atención), aunque venga después en el DOM — eso rompía
+          el badge, quedaba tapado por el avatar. */}
+      {isConsentPending && <IconAvatarConsentPending className="size-full" />}
       {hasCircleFrame && !src && (
         isDocente
           ? <IconAvatarDocenteCircleFrame className="absolute inset-0 size-full" />
           : <IconAvatarCircleFrame className={cn('absolute inset-0 size-full', isIniciales ? INICIALES_COLOR : STUDENT_COLOR[character as keyof typeof STUDENT_COLOR])} />
       )}
-      {src && isCircle ? (
+      {isConsentPending ? null : src && isCircle ? (
         <>
           <svg viewBox="0 0 72 72" className="relative size-full" role="img" aria-label={alt}>
             <defs>

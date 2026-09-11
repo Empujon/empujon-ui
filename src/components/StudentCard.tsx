@@ -3,11 +3,13 @@
 import React from 'react';
 import { cn } from '../lib/cn';
 import { StatusLabel } from './StatusLabel';
+import { IconAttentionMark } from './designerIcons';
 
 /**
  * StudentCard — tarjeta de estudiante (Figma › "Cards" › "Student Card", node
- * 6914:2101). 3 estados × 5 themes × 2 modos, medido 1:1 contra los 30 nodos
- * del set (15 "Modo=Monitoreo" + 15 "Modo=Actividad grupal").
+ * 6914:2101). Medido 1:1 contra los 33 nodos del set: 3 estados × 5 themes ×
+ * 2 modos (15 "Modo=Monitoreo" + 15 "Modo=Actividad grupal") + 3 estados ×
+ * 1 theme del tercer modo ("Modo=Falta consentimiento", solo Theme=Photo).
  *
  * `mode: 'monitoring'` (default) — el color de la barra de progreso y el
  * label de estado derivan de los datos reales, no del "theme" cosmético del
@@ -27,6 +29,18 @@ import { StatusLabel } from './StatusLabel';
  * código no cambia nunca — confirmado comparando los nodos Default/Hover/
  * Active de "Modo=Actividad grupal" en Figma.
  *
+ * `mode: 'consent-pending'` (Figma: "Modo=Falta consentimiento", solo existe
+ * para Theme=Photo — tiene sentido: es precisamente el caso en que no se
+ * puede mostrar la foto real todavía). `avatar` sigue siendo prop libre —
+ * normalmente `<Avatar character="consentimiento-pendiente" />`, el
+ * placeholder fijo de Figma (silueta gris-500 + borde rojo), y esta card le
+ * suma el badge de atención encima (ese sí es parte del modo, no del
+ * avatar). Es la única variante donde la card NO cambia de fondo en hover
+ * (confirmado: Default/Hover/Active de este modo tienen los 3 el mismo
+ * `bg-darker-gray` en Figma) — solo el link "Falta consentimiento" pasa de
+ * rojo a celeste en hover, y vuelve a rojo en active (ahí lo que cambia es
+ * el borde, a celeste, igual que el resto de la familia).
+ *
  * Hover/Active son interacción real (`hover:`/`active:`), mismo criterio que
  * Button/SquareButton — no hay prop de "seleccionado". Active redeclara bg y
  * border-color explícitamente porque durante un click real el mouse sigue
@@ -35,7 +49,12 @@ import { StatusLabel } from './StatusLabel';
  */
 type StudentCardBaseProps = {
   name: string;
-  /** Avatar/ilustración (no se bundlea, ver componente `Avatar`). */
+  /**
+   * Avatar/ilustración (no se bundlea, ver componente `Avatar`). En
+   * `mode="consent-pending"` normalmente es `<Avatar character="consentimiento-pendiente" />`
+   * (el placeholder fijo de Figma para cuando falta el consentimiento), pero
+   * queda como prop libre por si el consumidor necesita otro contenido ahí.
+   */
   avatar: React.ReactNode;
   onClick?: () => void;
   className?: string;
@@ -54,7 +73,14 @@ type StudentCardGroupActivityProps = StudentCardBaseProps & {
   code: string;
 };
 
-export type StudentCardProps = StudentCardMonitoringProps | StudentCardGroupActivityProps;
+type StudentCardConsentPendingProps = StudentCardBaseProps & {
+  mode: 'consent-pending';
+};
+
+export type StudentCardProps =
+  | StudentCardMonitoringProps
+  | StudentCardGroupActivityProps
+  | StudentCardConsentPendingProps;
 
 const ACTIVITY_LABEL = { active: 'En actividad', waiting: 'Esperando' } as const;
 const ACTIVITY_TEXT_CLASS = { active: 'text-green', waiting: 'text-yellow' } as const;
@@ -67,6 +93,7 @@ const ACTIVITY_ACTIVE_DOT_CLASS = { active: 'group-active:bg-green', waiting: 'g
 
 export function StudentCard(props: StudentCardProps) {
   const { name, avatar, onClick, className } = props;
+  const isConsentPending = props.mode === 'consent-pending';
 
   return (
     <button
@@ -74,15 +101,34 @@ export function StudentCard(props: StudentCardProps) {
       onClick={onClick}
       className={cn(
         'group flex h-[224px] w-[152px] flex-col items-center justify-center gap-2 rounded-2xl border-[3px] border-transparent bg-darker-gray px-2 py-4 transition-colors duration-200 ease-in-out active:duration-[0ms]',
-        'hover:bg-blue active:border-blue active:bg-darker-gray',
+        'active:border-blue',
+        !isConsentPending && 'hover:bg-blue active:bg-darker-gray',
         className,
       )}
     >
-      <span className="size-[72px] shrink-0">{avatar}</span>
-      <span className="font-shantell font-medium text-[16px] text-whitesmoke text-center group-hover:text-black group-hover:underline group-hover:decoration-wavy group-active:text-whitesmoke group-active:no-underline">
+      <span className="relative size-[72px] shrink-0">
+        {avatar}
+        {isConsentPending && (
+          <span className="absolute bottom-0 right-0 flex size-4 items-center justify-center rounded-full bg-red">
+            <IconAttentionMark className="size-3" />
+          </span>
+        )}
+      </span>
+      <span
+        className={cn(
+          'font-shantell font-medium text-[16px] text-center',
+          isConsentPending
+            ? 'text-divider'
+            : 'text-whitesmoke group-hover:text-black group-hover:underline group-hover:decoration-wavy group-active:text-whitesmoke group-active:no-underline',
+        )}
+      >
         {name}
       </span>
-      {props.mode === 'group-activity' ? (
+      {isConsentPending ? (
+        <span className="font-inter font-medium text-sm leading-[1.3] tracking-[0.14px] text-red underline group-hover:text-blue group-active:text-red">
+          Falta consentimiento
+        </span>
+      ) : props.mode === 'group-activity' ? (
         <>
           <span
             className={cn(

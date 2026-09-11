@@ -19,10 +19,14 @@ type Story = StoryObj<typeof StudentCard>;
 // `progress`/`status`, no del theme. Hover y Active se prueban pasando el
 // mouse/clickeando cada card: son interacción real, no variantes aparte.
 //
-// Dos filas, un "modo" cada una (Figma agregó `Modo=Actividad grupal` junto
-// al `Modo=Monitoreo` original, mismos 5 themes × 3 estados): la fila de
-// arriba es el uso de siempre (progreso + status); la de abajo es la card
-// durante una actividad grupal en vivo (pill de actividad + código de sala).
+// Tres filas, un "modo" cada una: Monitoreo (uso de siempre, progreso +
+// status) y Actividad grupal (pill de actividad + código de sala) traen los
+// 5 themes de Figma; Falta consentimiento en Figma solo existe para
+// Theme=Photo (tiene sentido: es cuando la foto real no se puede mostrar
+// todavía) — una sola card alcanza para mostrarla, no hay 5 themes que
+// recorrer. `avatar` sigue siendo prop normal; acá se le pasa
+// `<Avatar character="consentimiento-pendiente" />`, el placeholder fijo
+// del catálogo (silueta gris-500 + borde rojo).
 export const Student: Story = {
   render: () => (
     <div className="flex flex-col gap-8">
@@ -93,6 +97,14 @@ export const Student: Story = {
           avatar={<Avatar shape="border" src={FOTO_URL} alt="Juana Molina" className="border-magenta bg-transparent" />}
           activityStatus="waiting"
           code="flor"
+        />
+      </Row>
+      <Row label="Falta consentimiento">
+        <StudentCard
+          mode="consent-pending"
+          name="Lucas Cabrera"
+          avatar={<Avatar character="consentimiento-pendiente" />}
+          onClick={() => {}}
         />
       </Row>
     </div>
