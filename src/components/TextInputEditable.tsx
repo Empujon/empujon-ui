@@ -61,7 +61,12 @@ export function TextInputEditable({
   };
 
   return (
-    <div className={cn('flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full max-w-[680px]', className)}>
+    // Sin max-width propio: el ancho lo pone el contenedor. En el Figma la
+    // fila mide 680 porque su bloque mide 680, no porque el componente se
+    // tope ahí — y con el tope adentro la fila no llegaba al borde de un
+    // contenedor más ancho, rompiendo la alineación con el resto de la
+    // sección.
+    <div className={cn('flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full', className)}>
       <span className="md:flex-1 md:min-w-0 md:max-w-[300px] truncate font-inter font-semibold text-label-chico text-lightgray">
         {label}
       </span>
