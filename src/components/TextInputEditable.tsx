@@ -61,8 +61,13 @@ export function TextInputEditable({
   };
 
   return (
-    <div className={cn('flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full max-w-[680px]', className)}>
-      <span className="md:flex-1 md:min-w-0 md:max-w-[300px] truncate font-inter font-semibold text-label-chico text-lightgray">
+    // Sin max-width propio: el ancho lo pone el contenedor. En el Figma la
+    // fila mide 680 porque su bloque mide 680, no porque el componente se
+    // tope ahí — y con el tope adentro la fila no llegaba al borde de un
+    // contenedor más ancho, rompiendo la alineación con el resto de la
+    // sección.
+    <div className={cn('flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full', className)}>
+      <span className="md:w-[300px] md:shrink-0 truncate font-inter font-semibold text-label-chico text-lightgray">
         {label}
       </span>
 
@@ -70,10 +75,17 @@ export function TextInputEditable({
           se apila DEBAJO del label (mismo criterio que DateRangePicker con
           su breakpoint md), así el nombre nunca queda a 0 de ancho ni los
           botones se salen de la pantalla. */}
-      <div className="flex items-center gap-4">
+      {/* flex-1: este grupo se estira hasta el borde derecho del contenedor.
+          Sin esto el label (que sí crecía) se llevaba el sobrante y los
+          botones quedaban cortos, sin alinear con el resto de la sección. */}
+      <div className="flex flex-1 items-center gap-4 min-w-0">
         <div
           className={cn(
-            'flex-1 min-w-[270px] h-[44px] px-4 rounded-[16px] bg-darker-gray flex items-center transition-colors',
+            // El mínimo de 270px es del Figma, pero sólo desde md: en un
+            // viewport de 390 la fila (270 + 2×44 + gaps) pedía 390px sobre
+            // 358 disponibles y los botones se salían por la derecha, que
+            // es justo lo que el apilado del label venía a evitar.
+            'flex-1 min-w-0 md:min-w-[270px] h-[44px] px-4 rounded-[16px] bg-darker-gray flex items-center transition-colors',
             editing && 'border-2 border-blue',
           )}
         >

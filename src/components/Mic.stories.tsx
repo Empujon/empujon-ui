@@ -9,7 +9,7 @@ export default meta;
 type Story = StoryObj<typeof Mic>;
 
 const ESTADOS = [
-  { legend: 'Idle (sin permiso / sin escuchar)', listening: false },
+  { legend: 'Idle (sin permiso / sin escuchar)', listening: false, level: undefined },
   { legend: 'Escuchando — nivel muy bajo (rojo)', listening: true, level: 0.05 },
   { legend: 'Escuchando — nivel óptimo (verde)', listening: true, level: 0.4 },
   { legend: 'Escuchando — nivel saturado (rojo)', listening: true, level: 0.95 },
