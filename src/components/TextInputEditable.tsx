@@ -70,10 +70,14 @@ export function TextInputEditable({
           se apila DEBAJO del label (mismo criterio que DateRangePicker con
           su breakpoint md), así el nombre nunca queda a 0 de ancho ni los
           botones se salen de la pantalla. */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 min-w-0">
         <div
           className={cn(
-            'flex-1 min-w-[270px] h-[44px] px-4 rounded-[16px] bg-darker-gray flex items-center transition-colors',
+            // El mínimo de 270px es del Figma, pero sólo desde md: en un
+            // viewport de 390 la fila (270 + 2×44 + gaps) pedía 390px sobre
+            // 358 disponibles y los botones se salían por la derecha, que
+            // es justo lo que el apilado del label venía a evitar.
+            'flex-1 min-w-0 md:min-w-[270px] h-[44px] px-4 rounded-[16px] bg-darker-gray flex items-center transition-colors',
             editing && 'border-2 border-blue',
           )}
         >
