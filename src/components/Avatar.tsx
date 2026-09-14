@@ -71,7 +71,10 @@ const STUDENT_COLOR: Record<'estudiante-1' | 'estudiante-2' | 'estudiante-3' | '
 
 // "iniciales" no tiene dibujo propio (es texto) pero comparte el mismo patrón
 // de color festoneado que un estudiante — Figma lo fija en verde siempre.
-const INICIALES_COLOR = 'text-green';
+// Mismo `group-hover:text-black` que STUDENT_COLOR y por la misma razón: es
+// otro avatar "sin foto" (ilustración/texto, no foto subida), así que
+// StudentCard lo pone negro en hover igual que a los 4 personajes.
+const INICIALES_COLOR = 'text-green group-hover:text-black';
 
 // Contorno festoneado/ondulado (el mismo de IconAvatarCircleFrame, en su
 // versión "relleno" a 72×72) — Figma lo usa para recortar la foto en Style
