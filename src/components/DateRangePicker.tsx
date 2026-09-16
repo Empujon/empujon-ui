@@ -211,7 +211,7 @@ const HeaderDropdown: React.FC<{
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKey}
           aria-label={label}
-          className={`bg-transparent border-b border-white text-white text-sm font-bold text-center focus:outline-none focus:border-green ${widthClass}`}
+          className={`bg-transparent border-b border-white text-white text-sm font-bold text-center focus:outline-none focus:border-blue ${widthClass}`}
         />
       ) : (
         <button

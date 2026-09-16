@@ -77,6 +77,7 @@ export function Select({
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
           className={cn(
             'w-full px-4 py-1.5 border-2 rounded-2xl text-label-chico appearance-none pr-10 font-inter font-bold focus:outline-none transition-colors',
             error
@@ -84,6 +85,7 @@ export function Select({
               : saved && value
                 ? 'bg-white border-gray/50 text-black'
                 : cn('bg-transparent focus:border-blue', value ? 'text-white/70 border-blue' : 'text-white border-white'),
+            disabled && 'opacity-50 cursor-not-allowed',
           )}
           style={{ backgroundImage: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
         >
@@ -98,6 +100,15 @@ export function Select({
           <Chevron className="w-4 h-4" />
         </div>
       </div>
+      {/* El texto auxiliar: la variante `neutral` ya lo mostraba y ésta —la
+          que se usa por omisión— aceptaba la prop y la ignoraba, así que el
+          consumidor la pasaba y no veía nada (reportado por Roci, 16/09).
+          A diferencia de NeutralSelect acá el `error` ya sale al lado del
+          label, así que abajo va SÓLO el helper: repetirlo lo mostraría dos
+          veces en la misma pantalla. */}
+      {helper && (
+        <p className="font-inter text-xs text-white">{helper}</p>
+      )}
     </div>
   );
 }

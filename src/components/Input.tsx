@@ -107,7 +107,10 @@ export function Input({
             ? 'bg-transparent border-magenta text-white/70'
             : saved && value
               ? 'bg-white border-gray/50 text-black'
-              : cn('bg-transparent focus:border-green', value ? 'text-white/70 border-blue' : 'text-white border-white'),
+              // Celeste en foco, igual que Select/TextArea/DatePicker. Antes
+              // era verde y convivía con el celeste del Select en el mismo
+              // formulario: dos colores para el mismo estado (Roci, 16/09).
+              : cn('bg-transparent focus:border-blue', value ? 'text-white/70 border-blue' : 'text-white border-white'),
           readOnly && 'cursor-default opacity-70',
         )}
       />
