@@ -24,17 +24,6 @@ export const SelectStory: Story = {
           <Select label="Elegí una opción" value={neutralValue} onChange={setNeutralValue} options={OPTIONS} variant="neutral" />
         </div>
         <div className="flex flex-col gap-2">
-          <span className="font-inter text-xs text-white/60">Con texto auxiliar</span>
-          <Select
-            label="Elegí una opción"
-            value={neutralValue}
-            onChange={setNeutralValue}
-            options={OPTIONS}
-            variant="neutral"
-            helper="Podés cambiar esto más adelante"
-          />
-        </div>
-        <div className="flex flex-col gap-2">
           <span className="font-inter text-xs text-white/60">SelectLegacy</span>
           <Select label="Elegí una opción" value={legacyValue} onChange={setLegacyValue} options={OPTIONS} variant="default" />
         </div>
