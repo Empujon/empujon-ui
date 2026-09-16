@@ -248,7 +248,7 @@ const HeaderDropdown: React.FC<{
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKey}
           aria-label={label}
-          className={`bg-transparent border-b border-white text-white text-sm font-bold text-center focus:outline-none focus:border-green ${widthClass}`}
+          className={`bg-transparent border-b border-white text-white text-sm font-bold text-center focus:outline-none focus:border-blue ${widthClass}`}
         />
       ) : (
         <button
@@ -638,7 +638,7 @@ export const DatePicker: React.FC<DatePickerProps> = (props) => {
                 ? `bg-black border-lgray ${displayValue ? 'text-whitesmoke' : 'text-divider'}`
                 : saved && displayValue
                   ? 'bg-white border-gray/50 text-black'
-                  : `bg-transparent focus:border-green ${displayValue ? 'text-white/70 border-blue' : 'text-white border-white'}`}`}
+                  : `bg-transparent focus:border-blue ${displayValue ? 'text-white/70 border-blue' : 'text-white border-white'}`}`}
         >
           <span>{displayValue ? formatDisplayDate(displayValue, locale.months) : placeholder}</span>
         </button>
