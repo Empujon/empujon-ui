@@ -103,11 +103,19 @@ function MobileMenuItem({ children, onClick }: { children: React.ReactNode; onCl
 export function CurtainMenu({ items, adminItems = [], footer, open = true, className }: CurtainMenuProps) {
   return (
     <div
+      // CICATRIZ (Gabriel, 16/09): "toco la hamburguesa y se abre los settings".
+      // Este menú no se desmonta —sólo se desvanece— así que cerrado seguía
+      // siendo clickeable: el botón invisible de Ajustes quedaba justo debajo
+      // de la hamburguesa y se comía el click. Le pasaba a cualquier rol.
+      // `pointer-events-none` lo saca del camino mientras está cerrado, y
+      // `aria-hidden` evita que un lector de pantalla anuncie un menú que no
+      // está.
       className={cn(
         'w-full flex flex-col gap-6 transition-opacity duration-200',
-        open ? 'opacity-100' : 'opacity-0',
+        open ? 'opacity-100' : 'opacity-0 pointer-events-none',
         className,
       )}
+      aria-hidden={!open}
     >
       {/* Desktop: grilla de tarjetas */}
       <div className="hidden md:flex flex-wrap justify-center gap-6">
