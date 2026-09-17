@@ -4,18 +4,13 @@
 //
 // SIN lógica de roles/auth/navegación: recibe los items ya resueltos por props.
 // Empujón calcula (según login + RoleGrant) qué items van y a dónde, y los pasa.
-// Pensado para ir directo en el slot `menu` del Navbar (el mismo `md:` — 768px
-// — que ya usa Navbar para el corte Desktop/Mobile de este Header).
 //
-// Fiel al Figma "SISTEMA DE DISEÑO" › Header (node 7414:3329) y a su
-// "header menu button" (node 6147:4722, estados Default/Hover/Active/Focus):
-// - `items`: entradas primarias (tarjeta blanca 160px en desktop, lista en mobile).
-// - `adminItems`: entradas secundarias — misma tarjeta, con borde celeste fijo.
+// - `items`: entradas primarias (tarjeta verde en desktop, lista en mobile).
+// - `adminItems`: entradas secundarias (tarjeta translúcida en desktop).
 // - `footer`: slot inferior (empujón inyecta el botón "Cerrar sesión").
 //
-// El icono de cada item es un ReactNode (empujón inyecta su <Image>/<svg>, ya
-// en `currentColor` para heredar el color del botón en cada estado), o una
-// letra de fallback si no hay icono.
+// El icono de cada item es un ReactNode (empujón inyecta su <Image>/<svg>), o
+// una letra de fallback si no hay icono.
 
 import React from 'react';
 import { cn } from '../lib/cn';
@@ -31,7 +26,7 @@ export interface CurtainMenuItem {
 
 export interface CurtainMenuProps {
   items: CurtainMenuItem[];
-  /** Entradas secundarias (panel admin) — misma tarjeta, con borde celeste fijo. */
+  /** Entradas secundarias (panel admin), estilo translúcido. */
   adminItems?: CurtainMenuItem[];
   /** Slot inferior (típicamente el botón de logout). */
   footer?: React.ReactNode;
@@ -42,61 +37,9 @@ export interface CurtainMenuProps {
 
 function LetterIcon({ letter }: { letter: string }) {
   return (
-    <div className="size-12 flex items-center justify-center font-shantell font-bold text-3xl">
+    <div className="w-8 h-8 lg:w-12 lg:h-12 flex items-center justify-center font-shantell font-bold text-black text-2xl lg:text-3xl">
       {letter}
     </div>
-  );
-}
-
-// "header menu button": blanca por default, celeste en hover, oscura+borde
-// celeste en activo (texto/ícono pasan a blanco), borde celeste en foco. El
-// borde transparente se reserva siempre para que el foco/admin no corran el
-// layout al aparecer.
-function MenuButton({
-  icon,
-  letter,
-  label,
-  onClick,
-  admin = false,
-}: {
-  icon?: React.ReactNode;
-  letter?: string;
-  label: string;
-  onClick?: () => void;
-  admin?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        'w-40 h-40 shrink-0 rounded-3xl flex flex-col items-center justify-center gap-2.5 py-8',
-        'bg-whitesmoke text-black border-[3px] transition-colors duration-200',
-        'hover:bg-blue active:bg-darker-gray active:text-whitesmoke active:border-blue',
-        'focus-visible:outline-none focus-visible:border-blue',
-        admin ? 'border-blue' : 'border-transparent',
-      )}
-    >
-      <span className="size-12 flex items-center justify-center">
-        {icon ?? <LetterIcon letter={letter || '?'} />}
-      </span>
-      <span className="font-inter font-semibold text-label-medio text-center">{label}</span>
-    </button>
-  );
-}
-
-function MobileMenuItem({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        'h-11 w-full flex items-center justify-center font-inter font-semibold text-label-chico text-whitesmoke',
-        'hover:[text-decoration-line:underline] hover:[text-decoration-style:wavy] hover:underline-offset-4',
-      )}
-    >
-      {children}
-    </button>
   );
 }
 
@@ -105,46 +48,66 @@ export function CurtainMenu({ items, adminItems = [], footer, open = true, class
     <div
       // CICATRIZ (Gabriel, 16/09): "toco la hamburguesa y se abre los settings".
       // Este menú no se desmonta —sólo se desvanece— así que cerrado seguía
-      // siendo clickeable: el botón invisible de Ajustes quedaba justo debajo
-      // de la hamburguesa y se comía el click. Le pasaba a cualquier rol.
-      // `pointer-events-none` lo saca del camino mientras está cerrado, y
-      // `aria-hidden` evita que un lector de pantalla anuncie un menú que no
-      // está.
+      // siendo clickeable: el botón invisible de Ajustes quedaba bajo la
+      // hamburguesa y se comía el click. Le pasaba a cualquier rol.
       className={cn(
-        'w-full flex flex-col gap-6 transition-opacity duration-200',
+        'w-full flex flex-col items-center justify-center pt-20 pb-4 transition-opacity duration-200',
         open ? 'opacity-100' : 'opacity-0 pointer-events-none',
         className,
       )}
       aria-hidden={!open}
     >
-      {/* Desktop: grilla de tarjetas */}
-      <div className="hidden md:flex flex-wrap justify-center gap-6">
+      {/* Desktop: grid de tarjetas */}
+      <div className="hidden md:grid grid-cols-5 gap-x-4 lg:gap-x-6 gap-y-4">
         {items.map((item, index) => (
-          <MenuButton key={index} icon={item.icon} letter={item.letter} label={item.label} onClick={item.onClick} />
+          <button
+            key={index}
+            onClick={item.onClick}
+            className="bg-[#E5F5E0] hover:bg-blue rounded-2xl w-24 h-24 lg:w-32 lg:h-32 flex flex-col items-center justify-center transition-colors duration-200 shadow-sm p-2"
+          >
+            <div className="relative w-8 h-8 lg:w-12 lg:h-12 mb-2 lg:mb-3 flex items-center justify-center">
+              {item.icon ?? <LetterIcon letter={item.letter || '?'} />}
+            </div>
+            <span className="text-black font-bold text-sm lg:text-base text-center leading-tight px-1">
+              {item.label}
+            </span>
+          </button>
         ))}
         {adminItems.map((item, index) => (
-          <MenuButton
+          <button
             key={`admin-${index}`}
-            icon={item.icon}
-            letter={item.letter}
-            label={item.label}
             onClick={item.onClick}
-            admin
-          />
+            className="bg-[#E5F5E0] border-2 border-blue hover:bg-blue rounded-2xl w-24 h-24 lg:w-32 lg:h-32 flex flex-col items-center justify-center transition-colors duration-200 shadow-sm p-2"
+          >
+            <div className="relative w-8 h-8 lg:w-12 lg:h-12 mb-2 lg:mb-3 flex items-center justify-center">
+              {item.icon ?? (
+                <span className="text-black font-extrabold text-2xl lg:text-3xl">{item.letter}</span>
+              )}
+            </div>
+            <span className="text-black font-bold text-sm lg:text-base text-center leading-tight px-1">
+              {item.label}
+            </span>
+          </button>
         ))}
       </div>
 
-      {/* Mobile: lista de texto */}
-      <div className="flex flex-col md:hidden">
+      {/* Mobile: lista */}
+      <div className="md:hidden flex flex-col space-y-6 items-center w-full px-6">
         {[...items, ...adminItems].map((item, index) => (
-          <MobileMenuItem key={index} onClick={item.onClick}>
+          <button
+            key={index}
+            onClick={item.onClick}
+            className="text-white font-bold text-xl underline decoration-wavy underline-offset-[6px]"
+          >
             {item.label}
-          </MobileMenuItem>
+          </button>
         ))}
       </div>
 
       {/* Slot inferior (logout) */}
-      {footer != null && <div className="w-full flex justify-center md:justify-end">{footer}</div>}
+      {footer != null && (
+        <div className="w-full mt-24 px-6 flex justify-center md:justify-end">{footer}</div>
+      )}
     </div>
   );
 }
