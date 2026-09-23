@@ -86,9 +86,13 @@ export { Estampita, type EstampitaProps } from './components/Estampita';
 export {
   TableStudentRow,
   TableHeader,
+  TableHeaderAddButton,
+  TableHeaderSelector,
   TableFooter,
   type TableStudentRowProps,
   type TableHeaderProps,
+  type TableHeaderAddButtonProps,
+  type TableHeaderSelectorProps,
   type TableFooterProps,
 } from './components/Table';
 export { ChatBubble, ChatInputBar, type ChatBubbleProps, type ChatInputBarProps } from './components/Chat';
