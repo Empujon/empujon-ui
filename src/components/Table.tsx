@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { cn } from '../lib/cn';
-import { Checkbox } from './Checkbox';
 import { Select, type SelectOption } from './Select';
 import { Search } from './Search';
 import {
@@ -24,9 +23,8 @@ import {
  * Default/Hover son interacción real (hover del mouse) y Selected/HoverSelected
  * salen de `selected` + ese mismo hover — no hay prop `state`.
  *
- * El grupo es nombrado (`group/row`) a propósito: Checkbox reacciona a un
- * `group-hover` sin nombre (se pone celeste), y en esta fila el checkbox sin
- * marcar tiene que seguir blanco aunque la fila esté en hover.
+ * El grupo es nombrado (`group/row`) para que ningún `group-hover` sin nombre
+ * de un componente anidado reaccione al hover de la fila.
  */
 type StudentCharacter = 'estudiante-1' | 'estudiante-2' | 'estudiante-3' | 'estudiante-4';
 
@@ -171,12 +169,22 @@ export function TableStudentRow({
           // Sin esto el click en el checkbox llegaría también a la fila y lo marcaría dos veces (= no cambia).
           onClick={(e) => e.stopPropagation()}
         >
-          <Checkbox
-            checked={selected}
-            onChange={() => onToggleSelect?.()}
-            ariaLabel={`Elegir a ${name}`}
-            className="h-10 w-10 rounded-[8px]"
-          />
+          {/* Mismo cuadro que el "Elegir" del header (44px, radio 16, tilde negro sobre
+              celeste), no el Checkbox general de la librería: pedido de Rocío 2026-09-23,
+              solo para la tabla. */}
+          <span className="relative flex size-11 items-center justify-center">
+            <input
+              type="checkbox"
+              checked={selected}
+              onChange={() => onToggleSelect?.()}
+              aria-label={`Elegir a ${name}`}
+              className={cn(
+                'absolute inset-0 cursor-pointer appearance-none rounded-[16px] border-2 transition-colors',
+                selected ? 'border-blue bg-blue' : 'border-lightgray bg-transparent',
+              )}
+            />
+            {selected && <IconCheck className="pointer-events-none relative size-8 text-black" />}
+          </span>
         </div>
       )}
     </div>
