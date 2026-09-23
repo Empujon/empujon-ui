@@ -242,8 +242,10 @@ function NeutralSelect({
                     role="option"
                     aria-selected={isActive}
                     onClick={() => handlePick(opt.value)}
+                    title={opt.label}
                     className={cn(
-                      'w-full text-left px-4 py-2 font-inter text-base transition-colors whitespace-nowrap bg-black hover:text-black hover:bg-blue active:bg-orange active:text-black',
+                      // truncate (no whitespace-nowrap solo): el panel mide lo mismo que el trigger, así que un label largo se corta con "…" igual que arriba.
+                      'w-full text-left px-4 py-2 font-inter text-base transition-colors truncate bg-black hover:text-black hover:bg-blue active:bg-orange active:text-black',
                       isActive ? 'text-orange underline decoration-solid underline-offset-4' : 'text-white',
                     )}
                   >
