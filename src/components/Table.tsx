@@ -64,6 +64,8 @@ export interface TableStudentRowProps {
   selected?: boolean;
   /** Se llama al hacer click en cualquier parte de la fila (o en el checkbox). */
   onToggleSelect?: () => void;
+  /** Click en el aviso de consentimiento (Pending/RequiresAction). Independiente de elegir la fila. */
+  onConsentClick?: () => void;
   className?: string;
 }
 
@@ -76,6 +78,7 @@ export function TableStudentRow({
   selectable = true,
   selected = false,
   onToggleSelect,
+  onConsentClick,
   className,
 }: TableStudentRowProps) {
   const isActive = status === 'active';
@@ -86,7 +89,8 @@ export function TableStudentRow({
   // Active → fondo gris-oscuro-800 y personaje a color; en hover el fondo pasa a
   // negro-900 y el personaje a celeste. Pending/RequiresAction → personaje
   // gris-500 con borde amarillo/rojo; solo en HoverSelected el borde y el
-  // personaje se ponen celestes (en Hover a secas se quedan igual).
+  // personaje se ponen celestes. Pedido de Rocío (2026-09-23): en Hover a secas
+  // el personaje también pasa a celeste; el borde se queda amarillo/rojo.
   const avatarClasses = isActive
     ? 'bg-darker-gray group-hover/row:bg-black'
     : cn(
@@ -96,7 +100,7 @@ export function TableStudentRow({
       );
   const bodyClasses = isActive
     ? cn(STUDENT_COLOR[character], 'group-hover/row:text-blue')
-    : cn('text-divider', selected && 'group-hover/row:text-blue');
+    : 'text-divider group-hover/row:text-blue';
 
   return (
     <div
@@ -127,7 +131,7 @@ export function TableStudentRow({
       </span>
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 font-inter font-semibold">
-        <div className={cn('flex gap-2 text-[20px] whitespace-nowrap', isActive ? 'text-whitesmoke group-hover/row:text-blue' : 'text-divider')}>
+        <div className={cn('flex gap-2 text-[20px] whitespace-nowrap', isActive ? 'text-whitesmoke group-hover/row:text-blue' : 'text-divider group-hover/row:text-blue')}>
           <p className="truncate leading-[1.4] tracking-[0.2px]">{name}</p>
           {course && (
             <p className={cn('shrink-0 leading-[1.3]', isActive ? 'text-lightgray group-hover/row:text-blue' : 'text-gray-600')}>
@@ -135,17 +139,25 @@ export function TableStudentRow({
             </p>
           )}
         </div>
-        {text && (
-          <p
+        {text && isActive && (
+          <p className="text-[16px] leading-6 tracking-[0.16px] text-lightgray group-hover/row:text-whitesmoke">{text}</p>
+        )}
+        {text && !isActive && (
+          // El aviso de consentimiento es su propio click (no elige la fila): el
+          // hover de la fila no lo toca, solo el hover sobre el texto mismo.
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onConsentClick?.();
+            }}
             className={cn(
-              'text-[16px] leading-6 tracking-[0.16px]',
-              isActive && 'text-lightgray group-hover/row:text-whitesmoke',
-              status === 'pending' && 'text-yellow group-hover/row:text-blue group-hover/row:underline',
-              status === 'requires-action' && 'text-red group-hover/row:text-blue group-hover/row:underline',
+              'self-start text-left text-[16px] leading-6 tracking-[0.16px] transition-colors hover:text-blue hover:underline',
+              status === 'pending' ? 'text-yellow' : 'text-red',
             )}
           >
             {text}
-          </p>
+          </button>
         )}
       </div>
 
