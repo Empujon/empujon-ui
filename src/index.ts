@@ -84,14 +84,12 @@ export { ProfileCard, type ProfileCardProps } from './components/ProfileCard';
 export { FeedbackChip, type FeedbackChipProps } from './components/FeedbackChip';
 export { Estampita, type EstampitaProps } from './components/Estampita';
 export {
-  TableRow,
+  TableStudentRow,
   TableHeader,
   TableFooter,
-  NotificationTable,
-  type TableRowProps,
+  type TableStudentRowProps,
   type TableHeaderProps,
   type TableFooterProps,
-  type NotificationTableProps,
 } from './components/Table';
 export { ChatBubble, ChatInputBar, type ChatBubbleProps, type ChatInputBarProps } from './components/Chat';
 export {

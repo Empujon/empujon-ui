@@ -3,66 +3,166 @@
 import React from 'react';
 import { cn } from '../lib/cn';
 
+import { Checkbox } from './Checkbox';
+import {
+  IconAvatarEstudiante1,
+  IconAvatarEstudiante2,
+  IconAvatarEstudiante3,
+  IconAvatarEstudiante4,
+  IconAttentionMark,
+  IconPendingDots,
+} from './designerIcons';
+
 /**
- * Table — primitivas de tabla de gestión (Figma › "Table"). Gap 100% nuevo, pero
- * ADVERTENCIA: la implementación real que ya existe en `empujon/frontend`
- * (`StudentManageRow.tsx`, `ManagementListHeader.tsx`, `ActionsFooter.tsx`) es mucho
- * más rica — deriva un meta-estado rojo/amarillo/verde a partir de varios campos de
- * dominio (consentimiento, actividad, etc), algo que no tiene sentido generalizar acá
- * sin ese contexto de producto. Estas son primitivas genéricas (fila con
- * avatar+título+status+acciones, header, footer) para casos más simples — NO
- * reemplazan esa implementación.
+ * Table (Gestión) — Figma › "Table (Gestión)", section 7414:6899.
+ *
+ * `TableStudentRow` es la fila de estudiante (Figma › "Table Student Row",
+ * frame 6034:1224: 3 Status × 4 State). Status viene por prop; de los 4 State,
+ * Default/Hover son interacción real (hover del mouse) y Selected/HoverSelected
+ * salen de `selected` + ese mismo hover — no hay prop `state`.
+ *
+ * El grupo es nombrado (`group/row`) a propósito: Checkbox reacciona a un
+ * `group-hover` sin nombre (se pone celeste), y en esta fila el checkbox sin
+ * marcar tiene que seguir blanco aunque la fila esté en hover.
  */
-export interface TableRowProps {
-  avatar?: React.ReactNode;
-  title: string;
-  subtitle?: string;
+type StudentCharacter = 'estudiante-1' | 'estudiante-2' | 'estudiante-3' | 'estudiante-4';
+
+const STUDENT_BODY: Record<StudentCharacter, React.FC<{ className?: string }>> = {
+  'estudiante-1': IconAvatarEstudiante1,
+  'estudiante-2': IconAvatarEstudiante2,
+  'estudiante-3': IconAvatarEstudiante3,
+  'estudiante-4': IconAvatarEstudiante4,
+};
+
+const STUDENT_COLOR: Record<StudentCharacter, string> = {
+  'estudiante-1': 'text-green',
+  'estudiante-2': 'text-magenta',
+  'estudiante-3': 'text-yellow',
+  'estudiante-4': 'text-blue',
+};
+
+const CONSENT_TEXT = {
+  pending: 'Consentimiento pendiente de respuesta',
+  'requires-action': 'No consintió',
+} as const;
+
+export interface TableStudentRowProps {
+  name: string;
+  /** Curso, al lado del nombre (Figma: "- Escalas B"). */
+  course?: string;
+  /** Active = consintió; Pending = consentimiento sin responder; RequiresAction = no consintió. */
   status?: 'active' | 'pending' | 'requires-action';
+  /** Texto de abajo del nombre en Active (ej. "Última actividad: Hace 1 semana"). En Pending/RequiresAction ese lugar lo ocupa el aviso de consentimiento. */
+  activity?: string;
+  /** Personaje del avatar. */
+  character?: StudentCharacter;
+  /** Muestra el checkbox de selección (aparece en hover o si está elegida). */
   selectable?: boolean;
   selected?: boolean;
   onToggleSelect?: () => void;
-  actions?: React.ReactNode;
   onClick?: () => void;
   className?: string;
 }
 
-const statusPip = {
-  active: 'bg-green',
-  pending: 'bg-yellow',
-  'requires-action': 'bg-red',
-} as const;
+export function TableStudentRow({
+  name,
+  course,
+  status = 'active',
+  activity,
+  character = 'estudiante-2',
+  selectable = true,
+  selected = false,
+  onToggleSelect,
+  onClick,
+  className,
+}: TableStudentRowProps) {
+  const isActive = status === 'active';
+  const Body = STUDENT_BODY[character];
+  const text = isActive ? activity : CONSENT_TEXT[status];
 
-export function TableRow({ avatar, title, subtitle, status, selectable, selected, onToggleSelect, actions, onClick, className }: TableRowProps) {
+  // Avatar por estado (Figma cambia el instance "estudiante" en cada variante):
+  // Active → fondo gris-oscuro-800 y personaje a color; en hover el fondo pasa a
+  // negro-900 y el personaje a celeste. Pending/RequiresAction → personaje
+  // gris-500 con borde amarillo/rojo; solo en HoverSelected el borde y el
+  // personaje se ponen celestes (en Hover a secas se quedan igual).
+  const avatarClasses = isActive
+    ? 'bg-darker-gray group-hover/row:bg-black'
+    : cn(
+        'bg-black ring-2',
+        status === 'pending' ? 'ring-yellow' : 'ring-red',
+        selected && 'group-hover/row:ring-blue',
+      );
+  const bodyClasses = isActive
+    ? cn(STUDENT_COLOR[character], 'group-hover/row:text-blue')
+    : cn('text-divider', selected && 'group-hover/row:text-blue');
+
   return (
     <div
       onClick={onClick}
       className={cn(
-        'group flex w-full items-center gap-4 rounded-2xl border-2 p-3 transition-colors',
-        selected ? 'border-blue bg-darker-gray' : 'border-transparent hover:bg-darker-gray',
+        'group/row flex w-full items-center gap-6 rounded-[24px] border-2 py-[14px] pl-[14px] transition-colors',
+        selected ? 'border-blue' : 'border-transparent hover:bg-darker-gray',
         onClick && 'cursor-pointer',
         className,
       )}
     >
-      {selectable && (
-        <input
-          type="checkbox"
-          checked={!!selected}
-          onChange={onToggleSelect}
-          onClick={(e) => e.stopPropagation()}
-          className="size-5 accent-orange"
-        />
-      )}
-      {avatar && (
-        <span className="relative shrink-0 size-11">
-          <span className="block size-11 overflow-hidden rounded-[20px]">{avatar}</span>
-          {status && <span className={cn('absolute -right-0.5 -top-0.5 size-3 rounded-full border-2 border-black', statusPip[status])} />}
+      <span className="relative size-[72px] shrink-0">
+        <span className={cn('flex size-full items-center justify-center rounded-[20px] transition-colors', avatarClasses)}>
+          {/* 40×56 (el viewBox entero), no los 34×48 de Avatar: medido en el asset de esta fila. */}
+          <Body className={cn('h-14 w-10 transition-colors', bodyClasses)} />
         </span>
-      )}
-      <div className="flex-1 min-w-0">
-        <p className="truncate font-inter font-semibold text-[16px] text-whitesmoke">{title}</p>
-        {subtitle && <p className="truncate font-inter font-medium text-[14px] text-lightgray">{subtitle}</p>}
+        {!isActive && (
+          <span
+            className={cn(
+              'absolute bottom-0 right-0 flex size-4 items-center justify-center rounded-full',
+              status === 'pending' ? 'bg-yellow' : 'bg-red',
+            )}
+          >
+            {status === 'pending' ? <IconPendingDots className="size-3" /> : <IconAttentionMark className="size-3" />}
+          </span>
+        )}
+      </span>
+
+      <div className="flex min-w-0 flex-1 flex-col gap-2 font-inter font-semibold">
+        <div className={cn('flex gap-2 text-[20px] whitespace-nowrap', isActive ? 'text-whitesmoke group-hover/row:text-blue' : 'text-divider')}>
+          <p className="truncate leading-[1.4] tracking-[0.2px]">{name}</p>
+          {course && (
+            <p className={cn('shrink-0 leading-[1.3]', isActive ? 'text-lightgray group-hover/row:text-blue' : 'text-gray-600')}>
+              - {course}
+            </p>
+          )}
+        </div>
+        {text && (
+          <p
+            className={cn(
+              'text-[16px] leading-6 tracking-[0.16px]',
+              isActive && 'text-lightgray group-hover/row:text-whitesmoke',
+              status === 'pending' && 'text-yellow group-hover/row:text-blue group-hover/row:underline',
+              status === 'requires-action' && 'text-red group-hover/row:text-blue group-hover/row:underline',
+            )}
+          >
+            {text}
+          </p>
+        )}
       </div>
-      {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+
+      {selectable && (
+        <div
+          className={cn(
+            '-mr-0.5 flex w-[104px] shrink-0 items-center justify-center',
+            // Sin hover no se puede descubrir el checkbox — en pantallas táctiles queda siempre visible.
+            !selected && 'invisible group-hover/row:visible group-focus-within/row:visible [@media(hover:none)]:visible',
+          )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Checkbox
+            checked={selected}
+            onChange={() => onToggleSelect?.()}
+            ariaLabel={`Elegir a ${name}`}
+            className="h-10 w-10 rounded-[8px]"
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -103,24 +203,4 @@ export function TableFooter({ children, className }: TableFooterProps) {
   );
 }
 
-export interface NotificationTableProps {
-  variant: 'success' | 'warning';
-  message: string;
-  className?: string;
-}
-
-export function NotificationTable({ variant, message, className }: NotificationTableProps) {
-  return (
-    <div
-      className={cn(
-        'flex w-full items-center gap-3 rounded-2xl p-4 font-inter font-semibold text-[16px]',
-        variant === 'success' ? 'bg-green text-black' : 'bg-yellow text-black',
-        className,
-      )}
-    >
-      {message}
-    </div>
-  );
-}
-
-export default TableRow;
+export default TableStudentRow;
