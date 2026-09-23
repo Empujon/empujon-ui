@@ -534,12 +534,12 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             Both inputs open the SAME calendar — we don't track which
             side was clicked because the picker always edits the same
             shared range. */}
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3" ref={triggerRef}>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3" ref={triggerRef}>
           <button
             type="button"
             onClick={() => !disabled && setIsOpen((o) => !o)}
             disabled={disabled}
-            className={`w-full md:flex-1 md:w-auto h-[44px] px-4 border-2 rounded-[16px] font-inter text-label-chico text-left
+            className={`w-full sm:flex-1 sm:w-auto h-[44px] px-4 border-2 rounded-[16px] font-inter text-label-chico text-left
               focus:outline-none transition-colors flex items-center
               disabled:cursor-not-allowed disabled:opacity-60
               ${error ? 'bg-black border-red' : 'bg-black border-lgray'}`}
@@ -555,14 +555,14 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             aria-hidden
             className="flex-shrink-0 flex items-center justify-center self-center"
           >
-            <ArrowGlyph className="w-5 h-5 -rotate-90 md:rotate-180" />
+            <ArrowGlyph className="w-5 h-5 -rotate-90 sm:rotate-180" />
           </span>
 
           <button
             type="button"
             onClick={() => !disabled && setIsOpen((o) => !o)}
             disabled={disabled}
-            className={`w-full md:flex-1 md:w-auto h-[44px] px-4 border-2 rounded-[16px] font-inter text-label-chico text-left
+            className={`w-full sm:flex-1 sm:w-auto h-[44px] px-4 border-2 rounded-[16px] font-inter text-label-chico text-left
               focus:outline-none transition-colors flex items-center
               disabled:cursor-not-allowed disabled:opacity-60
               ${error ? 'bg-black border-red' : 'bg-black border-lgray'}`}

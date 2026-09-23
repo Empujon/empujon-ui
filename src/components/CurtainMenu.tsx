@@ -58,7 +58,7 @@ export function CurtainMenu({ items, adminItems = [], footer, open = true, class
       aria-hidden={!open}
     >
       {/* Desktop: grid de tarjetas */}
-      <div className="hidden md:grid grid-cols-5 gap-x-4 lg:gap-x-6 gap-y-4">
+      <div className="hidden sm:grid grid-cols-5 gap-x-4 lg:gap-x-6 gap-y-4">
         {items.map((item, index) => (
           <button
             key={index}
@@ -92,7 +92,7 @@ export function CurtainMenu({ items, adminItems = [], footer, open = true, class
       </div>
 
       {/* Mobile: lista */}
-      <div className="md:hidden flex flex-col space-y-6 items-center w-full px-6">
+      <div className="sm:hidden flex flex-col space-y-6 items-center w-full px-6">
         {[...items, ...adminItems].map((item, index) => (
           <button
             key={index}
@@ -106,7 +106,7 @@ export function CurtainMenu({ items, adminItems = [], footer, open = true, class
 
       {/* Slot inferior (logout) */}
       {footer != null && (
-        <div className="w-full mt-24 px-6 flex justify-center md:justify-end">{footer}</div>
+        <div className="w-full mt-24 px-6 flex justify-center sm:justify-end">{footer}</div>
       )}
     </div>
   );

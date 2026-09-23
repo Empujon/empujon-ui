@@ -87,8 +87,8 @@ type Story = StoryObj<typeof Navbar>;
 // Fiel al Figma "SISTEMA DE DISEÑO" › node 7414:3329 "Header". Un solo Navbar
 // responsive por story (no una versión desktop y otra mobile aparte): el
 // quiebre Desktop/Mobile de Figma es el breakpoint `md` (768px) — el mismo
-// que usa `CurtainMenu` para pasar de grilla a lista (`hidden md:flex` /
-// `md:hidden`) — así que el layout cambia solo. Cambiá el ancho del viewport
+// que usa `CurtainMenu` para pasar de grilla a lista (`hidden sm:flex` /
+// `sm:hidden`) — así que el layout cambia solo. Cambiá el ancho del viewport
 // (toolbar "Viewport" de Storybook, o el borde del panel) para verlo pasar de
 // mobile a desktop.
 //
@@ -158,7 +158,7 @@ function HeaderLoggedOut() {
         logo={<LogoFull className="h-14 w-auto" />}
         actions={
           <>
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-4">
               <NavLink>¿Cómo funciona?</NavLink>
               <NavLink>¿Quiénes somos?</NavLink>
               <NavLink>Contacto</NavLink>
@@ -166,7 +166,7 @@ function HeaderLoggedOut() {
             </div>
             <button
               type="button"
-              className="md:hidden"
+              className="sm:hidden"
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
             >
@@ -179,7 +179,7 @@ function HeaderLoggedOut() {
           </>
         }
         menu={
-          <div className="md:hidden flex flex-col gap-6">
+          <div className="sm:hidden flex flex-col gap-6">
             <div className="flex flex-col">
               <NavLink>¿Cómo funciona?</NavLink>
               <NavLink>¿Quiénes somos?</NavLink>

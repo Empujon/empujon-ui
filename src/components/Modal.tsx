@@ -78,7 +78,7 @@ const Modal: React.FC<ModalProps> & {
           )}
         >
           {(headerSlot || title || !hideClose) && (
-            <div className="flex items-start gap-4 p-6 md:p-8 pb-4 md:pb-5 flex-shrink-0">
+            <div className="flex items-start gap-4 p-6 sm:p-8 pb-4 sm:pb-5 flex-shrink-0">
               {headerSlot ? (
                 <div className="flex-1 min-w-0">{headerSlot}</div>
               ) : (
@@ -138,7 +138,7 @@ const ModalContent: React.FC<SlotProps> = ({ children, className }) => (
 
 /** Fila de acciones sticky al fondo de la card. */
 const ModalActions: React.FC<SlotProps> = ({ children, className }) => (
-  <div className={cn('flex-shrink-0 px-6 md:px-8 py-4 md:py-5 flex justify-end gap-3', className)}>
+  <div className={cn('flex-shrink-0 px-6 sm:px-8 py-4 sm:py-5 flex justify-end gap-3', className)}>
     {children}
   </div>
 );

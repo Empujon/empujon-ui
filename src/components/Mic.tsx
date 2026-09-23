@@ -37,7 +37,7 @@ export function Mic({ listening, level, barsCount = 30, className }: MicProps) {
   return (
     <div
       className={cn(
-        'flex h-10 w-full max-w-sm shrink-0 items-center gap-3 rounded-pill bg-darker-gray px-3 md:h-12 md:px-4',
+        'flex h-10 w-full max-w-sm shrink-0 items-center gap-3 rounded-pill bg-darker-gray px-3 sm:h-12 sm:px-4',
         className,
       )}
     >

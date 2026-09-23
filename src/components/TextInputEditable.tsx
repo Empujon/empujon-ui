@@ -66,8 +66,8 @@ export function TextInputEditable({
     // tope ahí — y con el tope adentro la fila no llegaba al borde de un
     // contenedor más ancho, rompiendo la alineación con el resto de la
     // sección.
-    <div className={cn('flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full', className)}>
-      <span className="md:w-[300px] md:shrink-0 truncate font-inter font-semibold text-label-chico text-lightgray">
+    <div className={cn('flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full', className)}>
+      <span className="sm:w-[300px] sm:shrink-0 truncate font-inter font-semibold text-label-chico text-lightgray">
         {label}
       </span>
 
@@ -81,11 +81,11 @@ export function TextInputEditable({
       <div className="flex flex-1 items-center gap-4 min-w-0">
         <div
           className={cn(
-            // El mínimo de 270px es del Figma, pero sólo desde md: en un
+            // El mínimo de 270px es del Figma, pero sólo desde sm: en un
             // viewport de 390 la fila (270 + 2×44 + gaps) pedía 390px sobre
             // 358 disponibles y los botones se salían por la derecha, que
             // es justo lo que el apilado del label venía a evitar.
-            'flex-1 min-w-0 md:min-w-[270px] h-[44px] px-4 rounded-[16px] bg-darker-gray flex items-center transition-colors',
+            'flex-1 min-w-0 sm:min-w-[270px] h-[44px] px-4 rounded-[16px] bg-darker-gray flex items-center transition-colors',
             editing && 'border-2 border-blue',
           )}
         >

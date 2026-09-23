@@ -3,7 +3,7 @@
 // Footer — pie de página presentacional de Empujón.
 // Fiel al Figma "SISTEMA DE DISEÑO" › Footer (node 4037:25707): fila de links,
 // divisor, copyright + botón "Volver arriba". Device=Desktop/Mobile es un
-// único componente responsive (md:), no dos variantes separadas.
+// único componente responsive (sm:), no dos variantes separadas.
 
 import React from 'react';
 import { cn } from '../lib/cn';
@@ -57,13 +57,13 @@ export function Footer({
   return (
     <footer
       className={cn(
-        'bg-orange text-black flex w-full flex-col items-center gap-6 rounded-t-card px-4 py-6 md:px-6',
-        fixed && 'static md:fixed md:bottom-0 md:left-1/2 md:-translate-x-1/2 md:w-3/4',
+        'bg-orange text-black flex w-full flex-col items-center gap-6 rounded-t-card px-4 py-6 sm:px-6',
+        fixed && 'static sm:fixed sm:bottom-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-3/4',
         className,
       )}
       {...props}
     >
-      <nav className="flex w-full flex-col items-center gap-2 md:flex-row md:justify-start md:gap-20">
+      <nav className="flex w-full flex-col items-center gap-2 sm:flex-row sm:justify-start sm:gap-20">
         {links.map((l) => (
           <a
             key={l.label}
@@ -80,7 +80,7 @@ export function Footer({
 
       <hr className="h-px w-full shrink-0 border-0 bg-darker-gray" />
 
-      <div className="flex w-full flex-col items-center gap-6 md:flex-row md:justify-between">
+      <div className="flex w-full flex-col items-center gap-6 sm:flex-row sm:justify-between">
         <p className="font-inter text-label-mini font-medium text-black">
           {copyright ?? `Empujón © ${new Date().getFullYear()}. Todos los derechos reservados.`}
         </p>

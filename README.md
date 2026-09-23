@@ -62,6 +62,13 @@ npm run storybook   # vitrina de componentes en :6007
 npm run typecheck
 ```
 
+### Breakpoint mobile / desktop
+
+El paso de mobile a desktop es **640px**: usar siempre el prefijo `sm:` de Tailwind
+(mobile-first; sin prefijo = mobile, `sm:` = Figma "Device=Desktop"). No usar `md:`
+(768px) para ese corte. `lg:` (1024px) queda solo para un tercer tamaño cuando el
+diseño lo pide (ej. CurtainMenu).
+
 ## Publicar
 
 ```bash

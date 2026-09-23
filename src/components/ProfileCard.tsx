@@ -9,7 +9,7 @@ import { IconCheckMark } from './designerIcons';
  * ProfileCard — card resumen de perfil (Figma › "Cards" › "Student Profile
  * Card", node 7701:1507). 2 layouts × 2 states medidos 1:1 contra los 4 nodos
  * del component set — pero los 2 layouts NO son un prop: es un solo markup
- * que cambia por breakpoint (`md:`), mobile-first, mismo criterio que
+ * que cambia por breakpoint (`sm:`), mobile-first, mismo criterio que
  * Footer/TrainerHeader en esta misma librería:
  *
  * - Base (mobile, Figma "Device=Mobile"): fila, avatar a la izquierda, ancho
@@ -17,7 +17,7 @@ import { IconCheckMark } from './designerIcons';
  *   propio: sigue el margen de 16px por lado de la grilla de la plataforma,
  *   que pone el contenedor de la página (no esta card). Si esta card se monta
  *   directo bajo `<body>` sin ese contenedor, se va a ver pegada a los bordes.
- * - `md:` (Figma "Device=Desktop"): columna, avatar arriba centrado, 320px fijo.
+ * - `sm:` (Figma "Device=Desktop"): columna, avatar arriba centrado, 320px fijo.
  *
  * Ninguna app consumidora necesita leer el viewport con JS ni elegir layout
  * a mano — la card responde sola al resize, sin flash de layout incorrecto.
@@ -56,13 +56,13 @@ export function ProfileCard({ avatar, name, subtitle, accountStatus, onClick, cl
     <Comp
       onClick={onClick}
       className={cn(
-        'group flex w-full flex-row items-center gap-6 rounded-card bg-darker-gray p-4 text-left transition-colors duration-200 ease-in-out md:w-80 md:flex-col md:p-6',
+        'group flex w-full flex-row items-center gap-6 rounded-card bg-darker-gray p-4 text-left transition-colors duration-200 ease-in-out sm:w-80 sm:flex-col sm:p-6',
         onClick && 'hover:bg-blue',
         className,
       )}
     >
       <span className="size-[104px] shrink-0">{avatar}</span>
-      <div className="flex min-w-0 flex-1 flex-col gap-2 md:w-full md:flex-none">
+      <div className="flex min-w-0 flex-1 flex-col gap-2 sm:w-full sm:flex-none">
         <span
           className={cn(
             'font-shantell font-semibold text-[20px] tracking-[0.2px] text-whitesmoke',

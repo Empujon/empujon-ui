@@ -173,7 +173,7 @@ export function TableStudentRow({
 // ── Header ────────────────────────────────────────────────────────────────────
 // Figma › "Table Header" (6878:2270), "Table Header Add Button" (6832:3382) y
 // "Table Header Selector" (6832:3379). Device=Desktop/Mobile es un único
-// componente responsive (md:), como Footer: en mobile los filtros se apilan.
+// componente responsive (sm:), como Footer: en mobile los filtros se apilan.
 
 const HEADER_LABEL = 'font-inter font-semibold text-[16px] leading-[1.5] tracking-[0.16px] whitespace-nowrap pb-2 transition-colors';
 const HEADER_TILE = 'group/tile flex w-[104px] shrink-0 flex-col items-center justify-center rounded-[24px] p-4 transition-colors';
@@ -287,13 +287,13 @@ export function TableHeader({
   className,
 }: TableHeaderProps) {
   return (
-    <div className={cn('flex w-full items-start pb-6 md:items-center', className)}>
+    <div className={cn('flex w-full items-start pb-6 sm:items-center', className)}>
       <TableHeaderAddButton onClick={onAdd} />
-      <div className="flex min-w-0 flex-1 flex-col gap-5 py-4 md:h-[108px] md:flex-row md:items-end md:gap-4 md:px-2">
-        <Select variant="neutral" label="Filtrar por" options={filterOptions} value={filterValue} onChange={onFilterChange} className="min-w-0 md:flex-1" />
-        <Select variant="neutral" label="Ordenar por" options={sortOptions} value={sortValue} onChange={onSortChange} className="min-w-0 md:flex-1" />
+      <div className="flex min-w-0 flex-1 flex-col gap-5 py-4 sm:h-[108px] sm:flex-row sm:items-end sm:gap-4 sm:px-2">
+        <Select variant="neutral" label="Filtrar por" options={filterOptions} value={filterValue} onChange={onFilterChange} className="min-w-0 sm:flex-1" />
+        <Select variant="neutral" label="Ordenar por" options={sortOptions} value={sortValue} onChange={onSortChange} className="min-w-0 sm:flex-1" />
         {/* Envuelto: con flex-basis 0 el padding+borde propio de Search (28px) se sumaba y lo dejaba más ancho que los Select. */}
-        <div className="min-w-0 md:flex-1">
+        <div className="min-w-0 sm:flex-1">
           <Search value={searchValue} onChange={onSearchChange} placeholder={searchPlaceholder} className="max-w-none" />
         </div>
       </div>
