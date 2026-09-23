@@ -84,13 +84,13 @@ export function TableStudentRow({
   const text = isActive ? activity : CONSENT_TEXT[status];
 
   // Avatar por estado (Figma cambia el instance "estudiante" en cada variante):
-  // Active → fondo gris-oscuro-800 y personaje a color; en hover el fondo pasa a
-  // negro-900 y el personaje a celeste. Pending/RequiresAction → personaje
+  // Active → fondo gris-oscuro-800 siempre (también en hover, pedido de Rocío
+  // 2026-09-23) y personaje a color; en hover el personaje pasa a celeste. Pending/RequiresAction → personaje
   // gris-500 con borde amarillo/rojo; solo en HoverSelected el borde y el
   // personaje se ponen celestes. Pedido de Rocío (2026-09-23): en Hover a secas
   // el personaje también pasa a celeste; el borde se queda amarillo/rojo.
   const avatarClasses = isActive
-    ? 'bg-darker-gray group-hover/row:bg-black'
+    ? 'bg-darker-gray'
     : cn(
         'bg-black ring-2',
         status === 'pending' ? 'ring-yellow' : 'ring-red',
