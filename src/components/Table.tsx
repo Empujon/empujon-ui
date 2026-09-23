@@ -62,8 +62,8 @@ export interface TableStudentRowProps {
   /** Muestra el checkbox de selección (aparece en hover o si está elegida). */
   selectable?: boolean;
   selected?: boolean;
+  /** Se llama al hacer click en cualquier parte de la fila (o en el checkbox). */
   onToggleSelect?: () => void;
-  onClick?: () => void;
   className?: string;
 }
 
@@ -76,7 +76,6 @@ export function TableStudentRow({
   selectable = true,
   selected = false,
   onToggleSelect,
-  onClick,
   className,
 }: TableStudentRowProps) {
   const isActive = status === 'active';
@@ -101,11 +100,12 @@ export function TableStudentRow({
 
   return (
     <div
-      onClick={onClick}
+      // Toda la fila elige/desmarca; el teclado lo resuelve el checkbox de adentro.
+      onClick={selectable ? onToggleSelect : undefined}
       className={cn(
         'group/row flex w-full items-center gap-6 rounded-[24px] border-2 py-[14px] pl-[14px] transition-colors',
         selected ? 'border-blue' : 'border-transparent hover:bg-darker-gray',
-        onClick && 'cursor-pointer',
+        selectable && 'cursor-pointer',
         className,
       )}
     >
@@ -156,6 +156,7 @@ export function TableStudentRow({
             // Sin hover no se puede descubrir el checkbox — en pantallas táctiles queda siempre visible.
             !selected && 'invisible group-hover/row:visible group-focus-within/row:visible [@media(hover:none)]:visible',
           )}
+          // Sin esto el click en el checkbox llegaría también a la fila y lo marcaría dos veces (= no cambia).
           onClick={(e) => e.stopPropagation()}
         >
           <Checkbox
