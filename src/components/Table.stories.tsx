@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useArgs } from '@storybook/preview-api';
-import { TableStudentRow, TableHeader, TableHeaderAddButton, TableHeaderSelector } from './Table';
+import { TableStudentRow, TableHeader } from './Table';
 
 const meta: Meta = { title: 'Componentes/Table' };
 export default meta;
@@ -67,24 +67,4 @@ export const Header: StoryObj<typeof TableHeader> = {
       </div>
     );
   },
-};
-
-export const HeaderSelector: StoryObj<typeof TableHeaderSelector> = {
-  name: 'Header Selector',
-  args: { total: 23, selectedCount: 0, disabled: false },
-  render: function Render(args) {
-    const [, updateArgs] = useArgs();
-    return (
-      <TableHeaderSelector
-        {...args}
-        onToggleSelectAll={() => updateArgs({ selectedCount: args.selectedCount >= args.total ? 0 : args.total })}
-      />
-    );
-  },
-};
-
-export const HeaderAddButton: StoryObj<typeof TableHeaderAddButton> = {
-  name: 'Header Add Button',
-  args: { label: 'Agregar' },
-  render: (args) => <TableHeaderAddButton {...args} />,
 };

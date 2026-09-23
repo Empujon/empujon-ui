@@ -289,7 +289,7 @@ export function TableHeader({
   return (
     <div className={cn('flex w-full items-start pb-6 md:items-center', className)}>
       <TableHeaderAddButton onClick={onAdd} />
-      <div className="flex min-w-0 flex-1 flex-col gap-5 py-4 md:h-[108px] md:flex-row md:items-end md:gap-4">
+      <div className="flex min-w-0 flex-1 flex-col gap-5 py-4 md:h-[108px] md:flex-row md:items-end md:gap-4 md:px-2">
         <Select variant="neutral" label="Filtrar por" options={filterOptions} value={filterValue} onChange={onFilterChange} className="min-w-0 md:flex-1" />
         <Select variant="neutral" label="Ordenar por" options={sortOptions} value={sortValue} onChange={onSortChange} className="min-w-0 md:flex-1" />
         {/* Envuelto: con flex-basis 0 el padding+borde propio de Search (28px) se sumaba y lo dejaba más ancho que los Select. */}
