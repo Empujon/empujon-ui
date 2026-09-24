@@ -180,6 +180,14 @@ export function StudentCard(props: StudentCardProps) {
       <span
         className={cn(
           'relative size-[80px] shrink-0 rounded-[20px]',
+          // El avatar en sí es transparente (deja ver el fondo de la card
+          // detrás, ver Avatar.tsx) — pero Pending/Unavailable en Figma
+          // traen un fondo negro-900 propio, fijo, detrás del aro (no
+          // reacciona a hover/active de la card). Se lo pone acá, no en
+          // `avatar`, para no afectar a los otros 4 modos (Circuit on
+          // track/behind, Free, Group activity), que sí dejan ver el fondo
+          // de la card a través del avatar.
+          (mode === 'pending' || mode === 'unavailable') && 'bg-black',
           mode === 'pending' && 'ring-2 ring-yellow',
           mode === 'unavailable' && 'ring-2 ring-red',
         )}

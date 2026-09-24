@@ -36,7 +36,7 @@ type Story = StoryObj<typeof StudentCard>;
 //     `active:` — la card no reacciona al mouse en absoluto). Solo su tag
 //     "No disponible" tiene hover propio (mismo criterio que el botón de
 //     Pending).
-const AVATAR = <Avatar shape="plain" character="estudiante-1" size={80} />;
+const AVATAR = <Avatar shape="plain" character="estudiante-1" size={80} className="bg-transparent" />;
 
 export const Student: Story = {
   render: () => (
