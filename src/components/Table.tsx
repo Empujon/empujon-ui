@@ -401,7 +401,13 @@ export interface TableFooterProps {
 export function TableFooter({ actions, className }: TableFooterProps) {
   return (
     <div className={cn('w-full rounded-t-[24px] bg-darker-gray', className)}>
-      <div className="hidden items-center justify-center gap-10 px-10 sm:flex">
+      {/* justify-evenly + maxWidth = n·120 + (n+1)·40: al ancho completo da exactamente el
+          px-40 / gap-40 del Figma, y cuando el espacio no alcanza (justo arriba de 640px) los
+          espacios se achican en vez de cortar botones. */}
+      <div
+        className="mx-auto hidden items-center justify-evenly sm:flex"
+        style={{ maxWidth: actions.length * 120 + (actions.length + 1) * 40 }}
+      >
         {actions.map((a) => {
           const { label, icon: Icon, filled: Filled } = FOOTER_ICONS[a.action];
           return (
@@ -411,11 +417,12 @@ export function TableFooter({ actions, className }: TableFooterProps) {
               onClick={a.onClick}
               disabled={a.disabled}
               className={cn(
-                'group/act flex size-[120px] shrink-0 flex-col items-center justify-center gap-2 rounded-t-[12.308px] transition-colors',
+                // Se achica (min-w-0) solo si ni sin espacios entran; el label no se corta (nowrap, visible).
+                'group/act flex h-[120px] min-w-0 max-w-[120px] flex-1 flex-col items-center justify-center gap-2 rounded-t-[12.308px] transition-colors',
                 !a.disabled && 'hover:bg-blue active:bg-transparent',
               )}
             >
-              <span className="relative size-[61.538px]">
+              <span className="relative size-[61.538px] shrink-0">
                 <Icon
                   className={cn(
                     'absolute inset-0 size-full',
@@ -428,7 +435,7 @@ export function TableFooter({ actions, className }: TableFooterProps) {
               </span>
               <span
                 className={cn(
-                  'font-inter font-semibold text-[12.308px] leading-[18.462px] tracking-[0.1231px] text-center',
+                  'whitespace-nowrap font-inter font-semibold text-[12.308px] leading-[18.462px] tracking-[0.1231px] text-center',
                   a.disabled ? 'text-gray-600' : 'text-whitesmoke group-hover/act:text-black group-active/act:text-orange',
                 )}
               >

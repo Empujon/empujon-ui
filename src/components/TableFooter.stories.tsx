@@ -11,7 +11,6 @@ export const Footer: StoryObj<typeof TableFooter> = {
   args: {
     actions: [
       { action: 'editar' },
-      { action: 'mensajes' },
       { action: 'mover' },
       { action: 'consentimiento' },
       { action: 'informes' },
