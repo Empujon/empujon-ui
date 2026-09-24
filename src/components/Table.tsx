@@ -62,6 +62,8 @@ export interface TableStudentRowProps {
   selected?: boolean;
   /** Se llama al hacer click en cualquier parte de la fila (o en el checkbox). */
   onToggleSelect?: () => void;
+  /** Click en el nombre (ej. abrir el perfil). Si se pasa, el click en el nombre no elige la fila. */
+  onNameClick?: () => void;
   /** Click en el aviso de consentimiento (Pending/RequiresAction). Independiente de elegir la fila. */
   onConsentClick?: () => void;
   className?: string;
@@ -76,6 +78,7 @@ export function TableStudentRow({
   selectable = true,
   selected = false,
   onToggleSelect,
+  onNameClick,
   onConsentClick,
   className,
 }: TableStudentRowProps) {
@@ -129,8 +132,26 @@ export function TableStudentRow({
       </span>
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 font-inter font-semibold">
-        <div className={cn('flex gap-2 text-[20px] whitespace-nowrap', isActive ? 'text-whitesmoke group-hover/row:text-blue' : 'text-divider group-hover/row:text-blue')}>
-          <p className="truncate leading-[1.4] tracking-[0.2px]">{name}</p>
+        <div className="flex gap-2 text-[20px] whitespace-nowrap">
+          {/* Figma (2026-09-24): con hover en la fila el nombre queda blanco (en
+              Pending/RequiresAction elegida sigue gris); "Hover on name" lo pasa a
+              celeste con el subrayado de enlace/grande (Inter Medium, ondulado 15%). */}
+          <button
+            type="button"
+            onClick={(e) => {
+              if (!onNameClick) return;
+              e.stopPropagation();
+              onNameClick();
+            }}
+            className={cn(
+              // pb-1/-mb-1: `truncate` corta lo que sobresale y el ondulado de 3px quedaba recortado abajo.
+              'min-w-0 truncate pb-1 -mb-1 text-left leading-[1.4] tracking-[0.2px] transition-colors',
+              isActive ? 'text-whitesmoke' : cn('text-divider', !selected && 'group-hover/row:text-whitesmoke'),
+              'hover:font-medium hover:tracking-normal hover:!text-blue hover:underline hover:decoration-wavy hover:decoration-[15%] hover:[text-decoration-skip-ink:none] hover:[text-underline-position:from-font]',
+            )}
+          >
+            {name}
+          </button>
           {course && (
             <p className={cn('shrink-0 leading-[1.3]', isActive ? 'text-lightgray group-hover/row:text-blue' : 'text-gray-600')}>
               - {course}
