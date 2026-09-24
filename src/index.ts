@@ -94,6 +94,8 @@ export {
   type TableHeaderAddButtonProps,
   type TableHeaderSelectorProps,
   type TableFooterProps,
+  type TableFooterItem,
+  type TableFooterAction,
 } from './components/Table';
 export { ChatBubble, ChatInputBar, type ChatBubbleProps, type ChatInputBarProps } from './components/Chat';
 export {

@@ -13,6 +13,24 @@ import {
   IconCheck,
   IconPendingDots,
   IconPlus,
+  IconAccionEditar,
+  IconAccionEditarFilled,
+  IconAccionMensajes,
+  IconAccionMensajesFilled,
+  IconAccionMover,
+  IconAccionMoverFilled,
+  IconAccionConsentimiento,
+  IconAccionConsentimientoFilled,
+  IconAccionInformes,
+  IconAccionInformesFilled,
+  IconAccionEliminar,
+  IconAccionEliminarFilled,
+  IconGlifoEditar,
+  IconGlifoMensajes,
+  IconGlifoMover,
+  IconGlifoConsentimiento,
+  IconGlifoInformes,
+  IconGlifoEliminar,
 } from './designerIcons';
 
 /**
@@ -344,15 +362,103 @@ export function TableHeader({
   );
 }
 
+// ── Footer ────────────────────────────────────────────────────────────────────
+// Figma › "Table Footer" (6034:567), "Action Button" (6228:9060) y "Table Footer
+// Buttons Mobile" (6850:1973). Responsive con sm:, como el header: en desktop una
+// barra de Action Buttons de 120px; en mobile una lista con hover celeste.
+//
+// Action Button: Default = ícono de contorno; Hover = fondo celeste + ícono filled
+// negro; Active (mientras se aprieta) = ícono filled y label naranja sin fondo;
+// Disabled = gris-oscuro-600. Figma apunta todos los "Icon Filled" a "mensajes
+// filled" (quedó sin cambiar en las instancias): acá cada acción usa el suyo.
+
+export type TableFooterAction = 'editar' | 'mensajes' | 'mover' | 'consentimiento' | 'informes' | 'eliminar';
+
+type IconFC = React.FC<{ className?: string }>;
+
+const FOOTER_ICONS: Record<TableFooterAction, { label: string; icon: IconFC; filled: IconFC; glyph: IconFC }> = {
+  editar: { label: 'Editar', icon: IconAccionEditar, filled: IconAccionEditarFilled, glyph: IconGlifoEditar },
+  mensajes: { label: 'Mensajes', icon: IconAccionMensajes, filled: IconAccionMensajesFilled, glyph: IconGlifoMensajes },
+  mover: { label: 'Mover', icon: IconAccionMover, filled: IconAccionMoverFilled, glyph: IconGlifoMover },
+  consentimiento: { label: 'Consentimiento', icon: IconAccionConsentimiento, filled: IconAccionConsentimientoFilled, glyph: IconGlifoConsentimiento },
+  informes: { label: 'Informes', icon: IconAccionInformes, filled: IconAccionInformesFilled, glyph: IconGlifoInformes },
+  eliminar: { label: 'Eliminar', icon: IconAccionEliminar, filled: IconAccionEliminarFilled, glyph: IconGlifoEliminar },
+};
+
+export interface TableFooterItem {
+  action: TableFooterAction;
+  /** Por defecto, el nombre de la acción ("Editar", "Mover"…). */
+  label?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+}
+
 export interface TableFooterProps {
-  children: React.ReactNode;
+  actions: TableFooterItem[];
   className?: string;
 }
 
-export function TableFooter({ children, className }: TableFooterProps) {
+export function TableFooter({ actions, className }: TableFooterProps) {
   return (
-    <div className={cn('flex w-full items-center justify-center gap-4 rounded-2xl bg-darker-gray p-4', className)}>
-      {children}
+    <div className={cn('w-full rounded-t-[24px] bg-darker-gray', className)}>
+      <div className="hidden items-center justify-center gap-10 px-10 sm:flex">
+        {actions.map((a) => {
+          const { label, icon: Icon, filled: Filled } = FOOTER_ICONS[a.action];
+          return (
+            <button
+              key={a.action}
+              type="button"
+              onClick={a.onClick}
+              disabled={a.disabled}
+              className={cn(
+                'group/act flex size-[120px] shrink-0 flex-col items-center justify-center gap-2 rounded-t-[12.308px] transition-colors',
+                !a.disabled && 'hover:bg-blue active:bg-transparent',
+              )}
+            >
+              <span className="relative size-[61.538px]">
+                <Icon
+                  className={cn(
+                    'absolute inset-0 size-full',
+                    a.disabled ? 'text-gray-600' : 'text-whitesmoke group-hover/act:hidden group-active/act:hidden',
+                  )}
+                />
+                {!a.disabled && (
+                  <Filled className="absolute inset-0 hidden size-full text-black group-hover/act:block group-active/act:block group-active/act:text-orange" />
+                )}
+              </span>
+              <span
+                className={cn(
+                  'font-inter font-semibold text-[12.308px] leading-[18.462px] tracking-[0.1231px] text-center',
+                  a.disabled ? 'text-gray-600' : 'text-whitesmoke group-hover/act:text-black group-active/act:text-orange',
+                )}
+              >
+                {a.label ?? label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex flex-col py-1 sm:hidden">
+        {actions.map((a) => {
+          const { label, glyph: Glyph } = FOOTER_ICONS[a.action];
+          return (
+            <button
+              key={a.action}
+              type="button"
+              onClick={a.onClick}
+              disabled={a.disabled}
+              className={cn(
+                'flex w-full items-center gap-4 rounded-[16px] px-6 py-3 text-left font-inter font-semibold text-[16px] leading-6 tracking-[0.16px] transition-colors',
+                a.disabled ? 'text-gray-600' : 'text-whitesmoke hover:bg-blue hover:text-black',
+              )}
+            >
+              <Glyph className="size-8 shrink-0" />
+              {a.label ?? label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
