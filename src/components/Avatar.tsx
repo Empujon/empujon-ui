@@ -11,8 +11,6 @@ import {
   IconAvatarCirclePhotoRing,
   IconAvatarDocente,
   IconAvatarDocenteCircleFrame,
-  IconAvatarConsentPending,
-  IconAvatarMeasurementPending,
 } from './designerIcons';
 
 /**
@@ -33,15 +31,11 @@ import {
  * `character` sigue siendo el fallback libre para cualquier contenido fuera
  * del catálogo.
  *
- * `character="consentimiento-pendiente"` (Figma › "Student Card" › "Modo=
- * Unavailable", antes "Falta consentimiento") y `character="medicion-
- * pendiente"` ("Modo=Measurement pending") son casos aparte: placeholders
- * fijos que reemplazan la foto real cuando el estudiante no puede mostrar su
- * avatar todavía (falta consentimiento / falta iniciar una medición). Mismo
- * glifo base, solo cambia el color del borde (rojo/amarillo) — a diferencia
- * de los demás personajes, el SVG ya trae su propio fondo negro-900 y borde
- * horneados adentro (no participa del sistema bg/border por `shape`) — fijo,
- * no varía por `shape`/`borderColor`/theme.
+ * Nota: los modos "Pending"/"Unavailable" de `StudentCard` NO tienen acá un
+ * `character` propio — muestran el mismo avatar real del estudiante que
+ * cualquier otro modo (pedido explícito de Rocío: "que sea el mismo avatar
+ * que en todas las demás"), StudentCard es quien le agrega el aro de color
+ * + badge por encima, no `Avatar`.
  */
 export type AvatarCharacter =
   | 'estudiante-1'
@@ -49,9 +43,7 @@ export type AvatarCharacter =
   | 'estudiante-3'
   | 'estudiante-4'
   | 'docente'
-  | 'iniciales'
-  | 'consentimiento-pendiente'
-  | 'medicion-pendiente';
+  | 'iniciales';
 
 const STUDENT_BODY: Record<'estudiante-1' | 'estudiante-2' | 'estudiante-3' | 'estudiante-4', React.FC<{ className?: string }>> = {
   'estudiante-1': IconAvatarEstudiante1,
@@ -121,10 +113,7 @@ export function Avatar({
   const hasBorder = !isPlain;
   const isDocente = character === 'docente';
   const isIniciales = character === 'iniciales';
-  const isConsentPending = character === 'consentimiento-pendiente';
-  const isMeasurementPending = character === 'medicion-pendiente';
-  const isFixedPlaceholder = isConsentPending || isMeasurementPending;
-  const isStudent = !!character && !isDocente && !isIniciales && !isFixedPlaceholder;
+  const isStudent = !!character && !isDocente && !isIniciales;
 
   // Proporción tomada del asset real a tamaño de referencia (72px): el cuerpo
   // (estudiante o docente, misma medida) es 34×48 — se escala según `size`
@@ -135,11 +124,7 @@ export function Avatar({
   // festoneado — el contenedor no necesita bg/border propios en ese caso. Solo
   // el fallback genérico (`children` sin `character` ni `src`) sigue usando el
   // bg/border genéricos (círculo liso) de siempre.
-  const hasCircleFrame = isCircle && !isFixedPlaceholder && (!!character || !!src);
-  // Los glyphs "pendiente" también traen su propio fondo+borde horneados
-  // adentro del SVG (no dependen de `shape`) — mismo motivo que
-  // `hasCircleFrame` para no duplicar bg/border en el contenedor genérico.
-  const bypassContainerChrome = hasCircleFrame || isFixedPlaceholder;
+  const hasCircleFrame = isCircle && (!!character || !!src);
 
   let containerBg = 'bg-black';
   let containerBorder = hasBorder ? (borderColor === 'black' ? 'border-2 border-black' : 'border-2 border-whitesmoke') : '';
@@ -171,28 +156,20 @@ export function Avatar({
     <div
       className={cn(
         'relative flex shrink-0 items-center justify-center',
-        bypassContainerChrome ? '' : 'overflow-hidden',
-        bypassContainerChrome ? '' : isCircle ? 'rounded-full' : 'rounded-[20px]',
-        !bypassContainerChrome && containerBg,
-        !bypassContainerChrome && containerBorder,
+        hasCircleFrame ? '' : 'overflow-hidden',
+        hasCircleFrame ? '' : isCircle ? 'rounded-full' : 'rounded-[20px]',
+        !hasCircleFrame && containerBg,
+        !hasCircleFrame && containerBorder,
         className,
       )}
       style={{ width: size, height: size }}
     >
-      {/* Sin `relative z-10` a propósito: ese patrón es para competir con el
-          aro/fondo de ESTE MISMO Avatar (ver src/character de abajo), pero acá
-          no hay nada más adentro con qué competir. Si le pongo z-index, gana
-          por stacking-context a lo que StudentCard superponga desde AFUERA
-          (el badge de atención), aunque venga después en el DOM — eso rompía
-          el badge, quedaba tapado por el avatar. */}
-      {isConsentPending && <IconAvatarConsentPending className="size-full" />}
-      {isMeasurementPending && <IconAvatarMeasurementPending className="size-full" />}
       {hasCircleFrame && !src && (
         isDocente
           ? <IconAvatarDocenteCircleFrame className="absolute inset-0 size-full" />
           : <IconAvatarCircleFrame className={cn('absolute inset-0 size-full', isIniciales ? INICIALES_COLOR : STUDENT_COLOR[character as keyof typeof STUDENT_COLOR])} />
       )}
-      {isFixedPlaceholder ? null : src && isCircle ? (
+      {src && isCircle ? (
         <>
           <svg viewBox="0 0 72 72" className="relative size-full" role="img" aria-label={alt}>
             <defs>

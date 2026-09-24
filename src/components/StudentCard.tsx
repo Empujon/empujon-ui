@@ -29,37 +29,55 @@ import { IconAttentionMark, IconPendingDots } from './designerIcons';
  * agregado yo sin base real en una versión anterior; el Mode description de
  * Figma solo menciona "En actividad".
  *
- * `mode: 'measurement-pending'` (nuevo) — el estudiante necesita que le
- * inicien una medición antes de poder seguir. `avatar` es siempre el
- * placeholder fijo `<Avatar character="medicion-pendiente" />` (borde/badge
- * amarillo, ícono de 3 puntos) — la card le suma el badge, no el avatar.
- * Nombre atenuado (gris-500) siempre. A diferencia de TODOS los demás modos,
- * la card acá NO reacciona a hover/active salvo el borde celeste al quedar
- * seleccionada: ni fondo, ni nombre, ni el tag "Iniciar medición" cambian —
- * mismo layout `justify-between` que Free.
+ * `mode: 'pending'` (Figma: "Modo=Measurement pending", nuevo) — el
+ * estudiante necesita que le inicien una medición antes de poder seguir.
+ * `avatar` es el MISMO avatar real del estudiante que en cualquier otro modo
+ * (no un placeholder aparte — pedido explícito de Rocío: "que sea el mismo
+ * avatar que en todas las demás"); esta card le suma por encima un aro
+ * amarillo (`ring-2 ring-yellow`, mismo mecanismo que `TableStudentRow`) +
+ * badge de 3 puntos. La card reacciona a hover/active como cualquier modo
+ * normal (fondo celeste + nombre negro subrayado en hover, revierte en
+ * active). Mismo layout `justify-between` que Free. "Iniciar medición" es un
+ * `<button>` real con su PROPIO hover (`hover:`, no `group-hover:` — cambia
+ * solo al pasar el mouse por encima del botón mismo, no con el hover de toda
+ * la card: amarillo/negro idle → negro/celeste en su hover) y su propio
+ * click (`onStartMeasurement`), independiente del click de la card entera
+ * (`onClick`, ej. abrir el perfil): activa la medición ahí mismo, sin entrar
+ * al perfil. Por eso el elemento raíz deja de ser un `<button>` real en este
+ * modo — un `<button>` no puede anidar otro — y pasa a `<div role="button">`
+ * con su propio manejo de teclado (Enter/Space), igual de accesible. El
+ * `group` de la card en este modo está NOMBRADO (`group/card`, no `group` a
+ * secas): el avatar usa `group-hover:text-black` (ver Avatar.tsx) sin
+ * nombre, y como `:hover` de CSS también aplica al ancestro mientras el
+ * mouse está sobre un hijo, un `group` sin nombrar haría que el avatar se
+ * pusiera negro también al hacer hover en "Iniciar medición" (no solo en la
+ * card) — nombrando el group y usando `group-hover/card:`/`group-active/card:`
+ * solo en el nombre se corta esa cadena.
  *
  * `mode: 'unavailable'` (antes "consent-pending"/"Falta consentimiento") —
- * el estudiante no puede participar. `avatar` normalmente
- * `<Avatar character="consentimiento-pendiente" />` (borde/badge rojo, ícono
- * de atención) + nombre atenuado fijo. El tag "No disponible" arranca gris
- * apagado y en hover Y active (los dos, no solo hover) pasa a celeste +
- * subrayado — a diferencia de los demás tags, no vuelve al look idle en
- * active. El fondo de la card sí cambia a celeste en hover, como el resto.
+ * el estudiante no puede participar. `avatar` también es el mismo avatar
+ * real (aro rojo + badge de atención encima, mismo mecanismo que Pending) +
+ * nombre atenuado fijo. A diferencia de TODOS los demás modos, la card
+ * entera NO es cliqueable (no hay `onClick` en la raíz) ni reacciona al
+ * mouse — es un `<div>` sin fondo/borde interactivo. Lo único cliqueable es
+ * el tag "No disponible" mismo: es un `<button>` real (cursor de mano
+ * automático, mismo criterio que "Iniciar medición" en Pending) con su
+ * PROPIO hover (`hover:`, no `group-hover:`) que lo pasa de gris apagado a
+ * celeste + subrayado, y su propio `onClick`.
  *
  * Hover/Active son interacción real (`hover:`/`active:`), mismo criterio que
  * Button/SquareButton — no hay prop de "seleccionado". Active redeclara bg y
  * border-color explícitamente porque durante un click real el mouse sigue
  * sobre la card mientras está presionada, así que hover Y active matchean al
- * mismo tiempo (excepto en `unavailable`, donde el tag deliberadamente NO
- * revierte).
+ * mismo tiempo. Excepción: `unavailable` no tiene card clickeable ni active
+ * — ver arriba.
  */
 type StudentCardBaseProps = {
   name: string;
   /**
-   * Avatar/ilustración (no se bundlea, ver componente `Avatar`). En
-   * `mode="unavailable"` normalmente `<Avatar character="consentimiento-pendiente" />`
-   * y en `mode="measurement-pending"` `<Avatar character="medicion-pendiente" />`
-   * — los placeholders fijos de Figma — pero queda como prop libre.
+   * Avatar/ilustración (no se bundlea, ver componente `Avatar`) — el mismo
+   * en los 6 modos, incluidos `pending`/`unavailable`: esos dos le agregan un
+   * aro de color + badge por encima, pero no cambian qué avatar se muestra.
    */
   avatar: React.ReactNode;
   onClick?: () => void;
@@ -81,52 +99,93 @@ type StudentCardGroupActivityProps = StudentCardBaseProps & {
   code: string;
 };
 
-type StudentCardMeasurementPendingProps = StudentCardBaseProps & {
-  mode: 'measurement-pending';
+type StudentCardPendingProps = StudentCardBaseProps & {
+  mode: 'pending';
+  /** Click en el tag "Iniciar medición" — independiente de `onClick` (el de la card entera). */
+  onStartMeasurement?: () => void;
 };
 
-type StudentCardUnavailableProps = StudentCardBaseProps & {
+type StudentCardUnavailableProps = Omit<StudentCardBaseProps, 'onClick'> & {
   mode: 'unavailable';
+  /** Click en el tag "No disponible" — la card entera no es cliqueable, solo este tag. */
+  onClick?: () => void;
 };
 
 export type StudentCardProps =
   | StudentCardCircuitProps
   | StudentCardFreeProps
   | StudentCardGroupActivityProps
-  | StudentCardMeasurementPendingProps
+  | StudentCardPendingProps
   | StudentCardUnavailableProps;
 
 export function StudentCard(props: StudentCardProps) {
-  const { name, avatar, onClick, className } = props;
+  const { name, avatar, className } = props;
+  const onClick = 'onClick' in props ? props.onClick : undefined;
   const mode = props.mode;
 
-  // Los 2 modos "placeholder" (avatar fijo, no ilustración real) comparten
-  // nombre atenuado siempre y badge sobre el avatar — pero se comportan
-  // distinto entre sí en hover/active, ver comentarios más abajo.
-  const isPlaceholderAvatar = mode === 'measurement-pending' || mode === 'unavailable';
-  // Único modo cuya card no reacciona nunca al mouse (ni fondo, ni nada
-  // adentro) — confirmado comparando Default/Hover/Active en Figma: los 3
-  // tienen el mismo `bg-darker-gray`.
-  const isStatic = mode === 'measurement-pending';
-  // Free y Measurement pending reparten avatar/name/tag a los bordes de la
-  // card (`justify-between`, sin gap) en vez de agruparlos al medio.
-  const isSpread = mode === 'free' || mode === 'measurement-pending';
+  // Único modo con nombre atenuado fijo (no reacciona al mouse) — `pending`
+  // tiene nombre normal (blanco, hover negro subrayado como el resto).
+  const isDimmedName = mode === 'unavailable';
+  // Free y Pending reparten avatar/name/tag a los bordes de la card
+  // (`justify-between`, sin gap) en vez de agruparlos al medio.
+  const isSpread = mode === 'free' || mode === 'pending';
+  // `pending` anida un click propio ("Iniciar medición") adentro del click de
+  // la card — un <button> no puede contener otro <button>, así que acá la
+  // raíz pasa a <div role="button"> con su propio Enter/Space.
+  const isPending = mode === 'pending';
+  // `unavailable` no es cliqueable: la card entera no reacciona al mouse
+  // (ni fondo, ni active) — un <div> sin ningún manejador. Solo el tag "No
+  // disponible" tiene su propio hover, ver más abajo.
+  const isUnavailable = mode === 'unavailable';
+  const Comp = isPending || isUnavailable ? 'div' : 'button';
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <Comp
+      role={isPending ? 'button' : undefined}
+      tabIndex={isPending && onClick ? 0 : undefined}
+      onKeyDown={
+        isPending
+          ? (e: React.KeyboardEvent) => {
+              if (!onClick) return;
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+      onClick={isUnavailable ? undefined : onClick}
       className={cn(
-        'group flex h-[224px] w-[152px] flex-col items-center rounded-2xl border-[3px] border-transparent bg-darker-gray px-2 py-4 transition-colors duration-200 ease-in-out active:duration-[0ms]',
+        'flex h-[224px] w-[152px] flex-col items-center rounded-2xl border-[3px] border-transparent bg-darker-gray px-2 py-4 transition-colors duration-200 ease-in-out active:duration-[0ms]',
         isSpread ? 'justify-between' : 'gap-2 justify-center',
-        'active:border-blue',
-        !isStatic && 'hover:bg-blue active:bg-darker-gray',
+        // Sin `group` en `unavailable`: la card no es cliqueable y no debe
+        // reaccionar al mouse — si tuviera `group`, el avatar (que usa
+        // `group-hover:text-black` para los otros modos) igual se pondría
+        // negro con solo pasar el mouse por la card, aunque no le pusiera
+        // `hover:bg-blue` acá. El aro/badge no dependen de `group`.
+        // `pending` usa un `group/card` NOMBRADO (no `group` a secas): tiene
+        // un <button> anidado ("Iniciar medición") con su propio hover, y
+        // `:hover` en CSS también aplica al ancestro mientras el mouse está
+        // sobre ese hijo — con `group` a secas, el avatar (que usa
+        // `group-hover:text-black`, ver Avatar.tsx) se pondría negro también
+        // al pasar el mouse por el botón, no solo por la card. Nombrando el
+        // group acá y usando `group-hover/card:`/`group-active/card:` solo en
+        // el nombre (no en el avatar, que no tiene variante nombrada) se
+        // corta esa cadena: el avatar ya no matchea ningún `group-hover:`.
+        isPending && 'group/card hover:bg-blue active:border-blue active:bg-darker-gray',
+        !isPending && !isUnavailable && 'group hover:bg-blue active:border-blue active:bg-darker-gray',
         className,
       )}
     >
-      <span className="relative size-[80px] shrink-0">
+      <span
+        className={cn(
+          'relative size-[80px] shrink-0 rounded-[20px]',
+          mode === 'pending' && 'ring-2 ring-yellow',
+          mode === 'unavailable' && 'ring-2 ring-red',
+        )}
+      >
         {avatar}
-        {mode === 'measurement-pending' && (
+        {mode === 'pending' && (
           <span className="absolute bottom-0 right-0 flex size-[17.78px] items-center justify-center rounded-full bg-yellow">
             <IconPendingDots className="size-[11.73px]" />
           </span>
@@ -140,9 +199,11 @@ export function StudentCard(props: StudentCardProps) {
       <span
         className={cn(
           'font-shantell font-medium text-[16px] text-center',
-          isPlaceholderAvatar
+          isDimmedName
             ? 'text-divider'
-            : 'text-whitesmoke group-hover:text-black group-hover:underline group-hover:decoration-wavy group-active:text-whitesmoke group-active:no-underline',
+            : isPending
+              ? 'text-whitesmoke group-hover/card:text-black group-hover/card:underline group-hover/card:decoration-wavy group-active/card:text-whitesmoke group-active/card:no-underline'
+              : 'text-whitesmoke group-hover:text-black group-hover:underline group-hover:decoration-wavy group-active:text-whitesmoke group-active:no-underline',
         )}
       >
         {name}
@@ -162,16 +223,30 @@ export function StudentCard(props: StudentCardProps) {
             <span className="text-orange">{props.code}</span>
           </span>
         </>
-      ) : mode === 'measurement-pending' ? (
-        <span className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full bg-yellow px-2 font-inter font-medium text-sm leading-[1.5] tracking-[0.14px] text-black">
+      ) : mode === 'pending' ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            // Propio click, no el de la card entera (que abriría el perfil) —
+            // por eso este sí es un <button> real anidado en el <div
+            // role="button"> de arriba, y por eso corta la propagación.
+            e.stopPropagation();
+            props.onStartMeasurement?.();
+          }}
+          className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full bg-yellow px-2 font-inter font-medium text-sm leading-[1.5] tracking-[0.14px] text-black transition-colors duration-200 ease-in-out hover:bg-black hover:text-blue"
+        >
           Iniciar medición
-        </span>
+        </button>
       ) : (
-        <span className="flex min-h-px flex-[1_0_0] items-center justify-center rounded-2xl bg-darker-gray text-center font-inter font-medium text-sm leading-[1.3] tracking-[0.14px] text-divider no-underline group-hover:bg-transparent group-hover:text-blue group-hover:underline group-active:bg-transparent group-active:text-blue group-active:underline">
+        <button
+          type="button"
+          onClick={onClick}
+          className="flex min-h-px flex-[1_0_0] items-center justify-center rounded-2xl text-center font-inter font-medium text-sm leading-[1.3] tracking-[0.14px] text-divider no-underline transition-colors duration-200 ease-in-out hover:text-blue hover:underline"
+        >
           No disponible
-        </span>
+        </button>
       )}
-    </button>
+    </Comp>
   );
 }
 
