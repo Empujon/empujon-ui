@@ -14,7 +14,7 @@ import { IconAttentionMark, IconPendingDots } from './designerIcons';
  * componente en Figma. El avatar pasó de 72px a 80px en el proceso.
  *
  * `mode: 'circuit-on-track' | 'circuit-behind'` — progreso real: barra +
- * `progress` ("n/total") + tag "Al día" (verde) / "Con retraso" (rojo).
+ * `progress` ("n/total") + tag "Al día" (verde) / "Con demora" (rojo).
  *
  * `mode: 'free'` — modo libre, sin circuito: sin barra de progreso, tag
  * "Modo libre" (neutral). Ojo: el layout NO es el mismo que los demás
@@ -279,7 +279,7 @@ function StudentCardCircuit({
           {progress.current}/{progress.total}
         </span>
       </div>
-      <StatusLabel variant={behind ? 'error' : 'success'}>{behind ? 'Con retraso' : 'Al día'}</StatusLabel>
+      <StatusLabel variant={behind ? 'error' : 'success'}>{behind ? 'Con demora' : 'Al día'}</StatusLabel>
     </>
   );
 }
