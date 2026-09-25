@@ -75,6 +75,12 @@ export { StudentCard, type StudentCardProps } from './components/StudentCard';
 export { RoundButton, type RoundButtonProps } from './components/RoundButton';
 export { IconButton, type IconButtonProps } from './components/IconButton';
 export { CardActionButton, type CardActionButtonProps } from './components/CardActionButton';
+export {
+  WeeklyProgress,
+  weeklyProgressCopy,
+  type WeeklyProgressProps,
+  type WeeklyProgressCopy,
+} from './components/WeeklyProgress';
 export { CardButton, type CardButtonProps } from './components/CardButton';
 export { SquareButton, type SquareButtonProps } from './components/SquareButton';
 export { ImageCard, type ImageCardProps } from './components/ImageCard';
