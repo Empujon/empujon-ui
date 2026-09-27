@@ -65,7 +65,8 @@
     "vite": "^6.4.3"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "tag": "release-0.10"
   },
   "repository": {
     "type": "git",
