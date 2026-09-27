@@ -15,7 +15,7 @@ import { IconAttentionMark } from './designerIcons';
  * label de estado derivan de los datos reales, no del "theme" cosmético del
  * avatar: sin avance (`current === 0`) → "Sin empezar" (neutral, barra
  * blanca); con avance y a tiempo → "Al día" (verde); con avance y atrasado →
- * "Con retraso" (rojo). Deducido cruzando los 5 ejemplos de Figma
+ * "Con demora" (rojo). Deducido cruzando los 5 ejemplos de Figma
  * (Verde/Rosa/Amarillo/Azul/Foto son solo la ilustración del avatar —
  * Amarillo y Foto comparten "Sin empezar" pese a temas distintos, lo que
  * confirma que el estado no depende del theme).
@@ -167,7 +167,7 @@ function StudentCardMonitoring({
   const started = progress.current > 0;
   const fillColor = !started ? 'bg-whitesmoke' : status === 'delayed' ? 'bg-red' : 'bg-green';
   const pct = progress.total > 0 ? Math.min(100, (progress.current / progress.total) * 100) : 0;
-  const statusText = !started ? 'Sin empezar' : status === 'delayed' ? 'Con retraso' : 'Al día';
+  const statusText = !started ? 'Sin empezar' : status === 'delayed' ? 'Con demora' : 'Al día';
   const statusVariant = !started ? 'neutral' : status === 'delayed' ? 'error' : 'success';
 
   return (
