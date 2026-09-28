@@ -49,3 +49,34 @@ export const Mobile: Story = {
     </div>
   ),
 };
+
+// "Actividades pendientes" (Figma 1761:32348): los 5 escenarios de las notas.
+export const Pendientes: Story = {
+  render: () => (
+    <div className="flex w-[328px] flex-col gap-6">
+      {[
+        { label: 'Todavía no hizo ninguna de las pendientes', total: 3, completed: 0 },
+        { label: 'Hizo alguna', total: 3, completed: 1 },
+        { label: 'Completó todas las pendientes', total: 3, completed: 3 },
+        { label: 'Mínimo (1)', total: 1, completed: 0 },
+        { label: 'Máximo (5)', total: 5, completed: 2 },
+      ].map(({ label, total, completed }) => (
+        <div key={label} className="flex flex-col gap-2">
+          <span className="text-xs font-inter text-white/60">{label}</span>
+          <WeeklyProgress variant="pending" total={total} completed={completed} />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+// Bloque completo del perfil con pendientes (1761:32491): pendientes arriba y
+// "Tu semana" apagada abajo, separados 24px.
+export const ConPendientes: Story = {
+  render: () => (
+    <div className="flex w-[328px] flex-col gap-6">
+      <WeeklyProgress variant="pending" total={3} completed={0} />
+      <WeeklyProgress variant="disabled" total={3} completed={0} />
+    </div>
+  ),
+};

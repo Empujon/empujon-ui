@@ -78,8 +78,11 @@ export { CardActionButton, type CardActionButtonProps } from './components/CardA
 export {
   WeeklyProgress,
   weeklyProgressCopy,
+  pendingProgressCopy,
+  disabledProgressCopy,
   type WeeklyProgressProps,
   type WeeklyProgressCopy,
+  type WeeklyProgressVariant,
 } from './components/WeeklyProgress';
 export { CardButton, type CardButtonProps } from './components/CardButton';
 export { SquareButton, type SquareButtonProps } from './components/SquareButton';

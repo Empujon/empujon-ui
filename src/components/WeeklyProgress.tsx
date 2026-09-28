@@ -5,23 +5,33 @@ import { cn } from '../lib/cn';
 import { IconCheckBadge, IconTresPuntitos } from './designerIcons';
 
 /**
- * WeeklyProgress — "Tu semana" del sistema de recompensas (Figma HAND-OFF ›
- * "Handoff - Version Simplificada", card "recompensas" 1718:31229 desktop /
- * 1718:31253 mobile). Un paso por actividad de la semana (1 a 5): verde con
- * check si está hecha, gris con tres puntitos si falta.
+ * WeeklyProgress — card del sistema de recompensas (Figma HAND-OFF).
  *
- * Los textos salen de las "Notas para desarrolladores" (1718:31099), que
- * definen 4 escenarios — ver `weeklyProgressCopy`.
+ * Tres variantes, cada una con su frame:
+ *
+ * - `week` — "Tu semana" (Handoff - Version Simplificada, 1718:31229 /
+ *   mobile 1718:31253). Borde gris-oscuro-600; pasos hechos en verde,
+ *   pendientes en gris-500. Textos: notas 1718:31099.
+ * - `pending` — "Actividades pendientes" (Handoff - Version Actividades
+ *   pendientes, 1761:32493 / mobile 1761:32530). Borde amarillo; pasos
+ *   pendientes en amarillo con los puntitos en negro-900. Textos: notas
+ *   1761:32348.
+ * - `disabled` — "Tu semana" apagada mientras hay pendientes (1761:32507 /
+ *   mobile 1761:32544). Fondo gris-oscuro-800 sin borde, todo en gris, sólo
+ *   la línea de estado.
  *
  * El título de sección ("Progreso") NO es parte del componente: vive en la
  * página, igual que en el Figma, donde está afuera de la card.
  */
+export type WeeklyProgressVariant = 'week' | 'pending' | 'disabled';
+
 export interface WeeklyProgressProps {
-  /** Meta de la semana: cantidad de actividades (1 a 5 en el Figma). */
+  /** Cantidad de actividades (1 a 5 en el Figma). */
   total: number;
-  /** Actividades ya completadas esta semana. Se acota a [0, total]. */
+  /** Actividades ya completadas. Se acota a [0, total]. */
   completed: number;
-  /** Título de la card. Default "Tu semana". */
+  variant?: WeeklyProgressVariant;
+  /** Título de la card. Default según la variante. */
   title?: string;
   className?: string;
 }
@@ -29,14 +39,16 @@ export interface WeeklyProgressProps {
 export interface WeeklyProgressCopy {
   /** Línea de estado (Inter 14). */
   status: string;
-  /** Cuántas faltan — va en Shantell Regular dentro de la línea de meta. `null` si ya cumplió. */
+  /** Número que va en Shantell Regular dentro de la segunda línea. `null` si no lleva. */
   remaining: number | null;
-  /** Resto de la línea de meta (Shantell SemiBold). */
+  /** Segunda línea (Shantell SemiBold). Vacía en `disabled`. */
   goal: string;
 }
 
+const activities = (n: number) => (n === 1 ? 'actividad' : 'actividades');
+
 /**
- * Los 4 escenarios de las notas del Figma, más el caso intermedio general:
+ * Textos de "Tu semana" (notas 1718:31099):
  *
  * | caso              | estado                                     | meta                                      |
  * |-------------------|--------------------------------------------|-------------------------------------------|
@@ -44,14 +56,10 @@ export interface WeeklyProgressCopy {
  * | parcial           | Completaste {c} de {t} actividad{es}.      | {X} más y llegás a tu meta de la semana.  |
  * | todas (t > 1)     | Completaste todas las actividades.         | ¡Cumpliste tu meta semanal!               |
  * | meta de 1, hecha  | Completaste 1 de 1 actividad.              | ¡Cumpliste tu meta semanal!               |
- *
- * El plural de "actividad" depende del total ("de 5 actividades", "de 1
- * actividad"), como en el nodo `Completaste {{X}} de {{X}} actividad{{es}}.`
  */
 export function weeklyProgressCopy(total: number, completed: number): WeeklyProgressCopy {
   const t = Math.max(1, Math.floor(total));
   const c = Math.max(0, Math.min(t, Math.floor(completed)));
-  const noun = t === 1 ? 'actividad' : 'actividades';
 
   if (c >= t) {
     return {
@@ -61,73 +69,130 @@ export function weeklyProgressCopy(total: number, completed: number): WeeklyProg
     };
   }
   return {
-    status: c === 0 ? 'Todavía no completaste ninguna actividad.' : `Completaste ${c} de ${t} ${noun}.`,
+    status: c === 0 ? 'Todavía no completaste ninguna actividad.' : `Completaste ${c} de ${t} ${activities(t)}.`,
     remaining: t - c,
     goal: ' más y llegás a tu meta de la semana.',
   };
 }
 
+/**
+ * Textos de "Actividades pendientes" (notas 1761:32348):
+ *
+ * | caso          | estado                                                  | segunda línea                               |
+ * |---------------|---------------------------------------------------------|---------------------------------------------|
+ * | faltan r      | Tienes {r} actividad{es} pendiente{s} de semanas anteriores. | Complétalas para activar tu semana actual. |
+ * | todas hechas  | Completaste todas las actividades.                      | Ahora puedes continuar con tu semana.       |
+ *
+ * {r} son las que FALTAN (no el total): con 5 pasos y 2 hechos dice "Tienes 3".
+ */
+export function pendingProgressCopy(total: number, completed: number): WeeklyProgressCopy {
+  const t = Math.max(1, Math.floor(total));
+  const c = Math.max(0, Math.min(t, Math.floor(completed)));
+  if (c >= t) {
+    return { status: 'Completaste todas las actividades.', remaining: null, goal: 'Ahora puedes continuar con tu semana.' };
+  }
+  const r = t - c;
+  return {
+    status: `Tienes ${r} ${activities(r)} ${r === 1 ? 'pendiente' : 'pendientes'} de semanas anteriores.`,
+    remaining: null,
+    goal: 'Complétalas para activar tu semana actual.',
+  };
+}
+
+/** "Tu semana" apagada (1761:32519): sólo la línea de estado, siempre con números. */
+export function disabledProgressCopy(total: number, completed: number): WeeklyProgressCopy {
+  const t = Math.max(1, Math.floor(total));
+  const c = Math.max(0, Math.min(t, Math.floor(completed)));
+  return { status: `Completaste ${c} de ${t} ${activities(t)}.`, remaining: null, goal: '' };
+}
+
+// Colores por variante (tokens del preset; los que no son token van literales
+// con su nombre del Figma).
+const STYLES = {
+  week: {
+    card: 'border-[3px] border-gray-600',
+    title: 'text-whitesmoke',
+    status: 'text-whitesmoke',
+    goal: 'text-[#CFFEC9]', // brand/verde-100
+    connector: 'bg-lgray',
+    todo: 'bg-divider text-whitesmoke',
+  },
+  pending: {
+    card: 'border-[3px] border-yellow',
+    title: 'text-whitesmoke',
+    status: 'text-whitesmoke',
+    goal: 'text-[#FDFF8B]', // brand/amarillo-200
+    connector: 'bg-lgray',
+    todo: 'bg-yellow text-black',
+  },
+  disabled: {
+    card: 'bg-darker-gray',
+    title: 'text-divider',
+    status: 'text-divider',
+    goal: '',
+    connector: 'bg-divider',
+    todo: 'bg-gray-600 text-lgray',
+  },
+} as const;
+
 // Paso de la barra (Figma "status"): círculo de 32px. Hecho = insignia verde
-// con check; pendiente = gris-500 con los tres puntitos blanco-100, rotados
-// 90° como la instancia del Figma. El ícono ocupa 23.467/32 ≈ 73%.
-function Step({ done }: { done: boolean }) {
+// con check; pendiente = círculo del color de la variante con los tres
+// puntitos rotados 90°, como la instancia del Figma (ícono 23.467/32 ≈ 73%).
+function Step({ done, todoClass }: { done: boolean; todoClass: string }) {
   if (done) return <IconCheckBadge className="size-8" />;
   return (
-    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-divider text-whitesmoke">
+    <span className={cn('flex size-8 shrink-0 items-center justify-center rounded-full', todoClass)}>
       <IconTresPuntitos className="size-[73%] rotate-90" />
     </span>
   );
 }
 
-export function WeeklyProgress({ total, completed, title = 'Tu semana', className }: WeeklyProgressProps) {
+export function WeeklyProgress({ total, completed, variant = 'week', title, className }: WeeklyProgressProps) {
   const t = Math.max(1, Math.floor(total));
-  const c = Math.max(0, Math.min(t, Math.floor(completed)));
-  const copy = weeklyProgressCopy(t, c);
+  // En `disabled` no se pintan pasos hechos: la semana todavía no se activó
+  // (1761:32507 muestra los tres apagados).
+  const c = variant === 'disabled' ? 0 : Math.max(0, Math.min(t, Math.floor(completed)));
+  const s = STYLES[variant];
+  const copy =
+    variant === 'pending' ? pendingProgressCopy(t, completed)
+      : variant === 'disabled' ? disabledProgressCopy(t, completed)
+        : weeklyProgressCopy(t, completed);
+  const heading = title ?? (variant === 'pending' ? 'Actividades pendientes' : 'Tu semana');
 
   return (
-    // Card "recompensas": borde 3px gris-oscuro-600 (#4D584F, token gray-600 —
-    // NO `divider`, que es gris-500), radio 24, padding 16 horizontal / 24
-    // vertical, sin fondo.
-    <div
-      className={cn(
-        'flex w-full flex-col overflow-clip rounded-card border-[3px] border-gray-600 px-4 py-6 text-whitesmoke',
-        className,
-      )}
-    >
+    // Card "recompensas": radio 24, padding 16 horizontal / 24 vertical.
+    <div className={cn('flex w-full flex-col overflow-clip rounded-card px-4 py-6', s.card, className)}>
       <div className="flex w-full flex-col gap-[10px]">
-        <p className="font-inter font-semibold text-[20px] leading-[1.4] tracking-[0.2px]">{title}</p>
+        <p className={cn('font-inter font-semibold text-[20px] leading-[1.4] tracking-[0.2px]', s.title)}>{heading}</p>
 
-        {/* Barra: pasos + conectores de 4px gris-300 que se reparten el ancho,
-            gap 4. Los conectores son SIEMPRE grises, también entre dos pasos
-            hechos (así en los 4 escenarios del Figma).
-            Ancho: 290 en los dos frames. En desktop 290 es el ancho completo
-            de la card (328 − 2×16 − 2×3); en mobile la card mide 408 y la
-            barra sigue en 290 mientras los textos llegan a 370. `w-full` +
-            techo de 290 reproduce los dos frames. */}
+        {/* Barra: pasos + conectores de 4px que se reparten el ancho, gap 4.
+            Ancho: 290 en los frames de 328; en mobile la barra de "Tu semana"
+            simplificada quedó en 290 y la de "Actividades pendientes" ocupa
+            el ancho — por eso el techo sólo en `week`. */}
         <div
-          className="flex w-full max-w-[290px] items-center gap-1"
+          className={cn('flex w-full items-center gap-1', variant === 'week' && 'max-w-[290px]')}
           role="progressbar"
           aria-valuemin={0}
           aria-valuemax={t}
           aria-valuenow={c}
-          aria-label={title}
+          aria-label={heading}
         >
           {Array.from({ length: t }).map((_, i) => (
             <React.Fragment key={i}>
-              {i > 0 && <span className="h-1 min-w-px flex-1 rounded-[4px] bg-lgray" />}
-              <Step done={i < c} />
+              {i > 0 && <span className={cn('h-1 min-w-px flex-1 rounded-[4px]', s.connector)} />}
+              <Step done={i < c} todoClass={s.todo} />
             </React.Fragment>
           ))}
         </div>
 
-        <p className="font-inter font-medium text-[14px] leading-[1.5] tracking-[0.14px]">{copy.status}</p>
+        <p className={cn('font-inter font-medium text-[14px] leading-[1.5] tracking-[0.14px]', s.status)}>{copy.status}</p>
 
-        {/* Verde-100 (#CFFEC9) no es token del preset todavía. El número va en
-            Shantell Regular y el resto en SemiBold (nodo 1718:31242). */}
-        <p className="font-shantell font-semibold text-[16px] leading-[1.3] text-[#CFFEC9]">
-          {copy.remaining !== null && <span className="font-normal">{copy.remaining}</span>}
-          {copy.goal}
-        </p>
+        {copy.goal && (
+          <p className={cn('font-shantell font-semibold text-[16px] leading-[1.3]', s.goal)}>
+            {copy.remaining !== null && <span className="font-normal">{copy.remaining}</span>}
+            {copy.goal}
+          </p>
+        )}
       </div>
     </div>
   );
