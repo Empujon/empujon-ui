@@ -13,6 +13,10 @@ import { IconCaretDown, IconCheckMark, IconPlus } from './designerIcons';
  * ícono opcional + label + chevron, menú con soporte de multiselect (checkbox) y un
  * ítem de acción al final (ej. "Agregar institución").
  *
+ * Estados del trigger (hand-off fluidez "Ajusta tu cámara y micrófono", node 1849:3222):
+ * deshabilitado = borde e ícono `divider` (#6B796B); abierto = naranja; error = rojo;
+ * reposo = whitesmoke. Abierto gana sobre error: es la interacción en curso.
+ *
  * El menú NO está portalado (posición `absolute` relativa al trigger) — más simple,
  * pero puede recortarse cerca del borde de la pantalla. Si eso importa, mirar cómo
  * `Select`/`NeutralSelect` resuelve el posicionamiento con portal + recompute on scroll.
@@ -23,7 +27,7 @@ export interface DropdownItem {
 }
 
 export interface DropdownProps {
-  /** Texto del trigger. */
+  /** Texto del trigger. Con `hideLabel`, queda sólo como `aria-label`. */
   label: string;
   icon?: React.ReactNode;
   items: DropdownItem[];
@@ -32,6 +36,17 @@ export interface DropdownProps {
   onChange: (value: string[]) => void;
   /** Ítem extra al final del menú, ej. { label: 'Agregar institución', onClick } */
   actionItem?: { label: string; icon?: React.ReactNode; onClick: () => void };
+  /**
+   * Trigger sólo con ícono + chevron. Figma: "componente dropdown con el texto
+   * oculto" (selector de micrófono de fluidez).
+   */
+  hideLabel?: boolean;
+  /** Trigger gris y sin abrir (ej. antes de que el navegador otorgue el permiso). */
+  disabled?: boolean;
+  /** Trigger en rojo (borde e ícono). */
+  error?: boolean;
+  /** De qué borde del trigger cuelga el menú. Default 'right' (selector del header). */
+  menuAlign?: 'left' | 'right';
   className?: string;
 }
 
@@ -48,8 +63,23 @@ const CheckboxGlyph = ({ checked }: { checked: boolean }) => (
   </span>
 );
 
-export function Dropdown({ label, icon, items, multiselect = false, value, onChange, actionItem, className }: DropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function Dropdown({
+  label,
+  icon,
+  items,
+  multiselect = false,
+  value,
+  onChange,
+  actionItem,
+  hideLabel = false,
+  disabled = false,
+  error = false,
+  menuAlign = 'right',
+  className,
+}: DropdownProps) {
+  const [openState, setIsOpen] = useState(false);
+  // Si se deshabilita con el menú abierto, el menú se cierra.
+  const isOpen = openState && !disabled;
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -70,35 +100,52 @@ export function Dropdown({ label, icon, items, multiselect = false, value, onCha
     }
   };
 
+  const triggerColor = disabled
+    ? 'cursor-not-allowed border-divider text-divider'
+    : isOpen
+      ? 'border-orange text-orange'
+      : error
+        ? 'border-red text-red hover:border-blue hover:text-blue'
+        : 'border-whitesmoke text-whitesmoke hover:border-blue hover:text-blue';
+
   return (
     <div ref={ref} className={cn('relative inline-block', className)}>
       <button
         type="button"
         onClick={() => setIsOpen((v) => !v)}
+        disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-label={hideLabel ? label : undefined}
+        aria-invalid={error || undefined}
         className={cn(
           'group flex h-11 items-center gap-3 rounded-pill border-2 bg-darker-gray px-4 transition-colors',
-          isOpen ? 'border-orange text-orange' : 'border-whitesmoke text-whitesmoke hover:border-blue hover:text-blue',
+          triggerColor,
         )}
       >
         {icon && <span className="size-6 shrink-0">{icon}</span>}
-        <span
-          className={cn(
-            'font-inter font-semibold text-[16px] tracking-[0.16px] whitespace-nowrap',
-            !isOpen &&
-              'group-hover:[text-decoration-line:underline] group-hover:[text-decoration-style:wavy] group-hover:underline-offset-2',
-          )}
-        >
-          {label}
-        </span>
+        {!hideLabel && (
+          <span
+            className={cn(
+              'font-inter font-semibold text-[16px] tracking-[0.16px] whitespace-nowrap',
+              !isOpen &&
+                !disabled &&
+                'group-hover:[text-decoration-line:underline] group-hover:[text-decoration-style:wavy] group-hover:underline-offset-2',
+            )}
+          >
+            {label}
+          </span>
+        )}
         <IconCaretDown className={cn('size-4 shrink-0 transition-transform', isOpen && 'rotate-180')} />
       </button>
 
       {isOpen && (
         <div
           role="listbox"
-          className="absolute right-0 top-[calc(100%+2px)] z-10 flex min-w-[223px] flex-col items-start overflow-hidden rounded-[16px] bg-darker-gray py-2 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.3),0px_2px_8px_1px_rgba(0,0,0,0.1)]"
+          className={cn(
+            'absolute top-[calc(100%+2px)] z-10 flex min-w-[223px] flex-col items-start overflow-hidden rounded-[16px] bg-darker-gray py-2 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.3),0px_2px_8px_1px_rgba(0,0,0,0.1)]',
+            menuAlign === 'left' ? 'left-0' : 'right-0',
+          )}
         >
           {items.map((item) => {
             const isSelected = value.includes(item.value);

@@ -2,53 +2,85 @@
 
 import React from 'react';
 import { cn } from '../lib/cn';
+import { Dropdown, type DropdownItem } from './Dropdown';
 import { IconMic } from './designerIcons';
 
 /**
- * Mic — indicador de nivel de micrófono, sacado 1:1 del componente real en
- * producción (fluidez_lectora, pantalla "Ajusta tu cámara y micrófono").
+ * Mic — selector de micrófono + medidor de nivel (Figma › hand-off fluidez
+ * "Ajusta tu cámara y micrófono", node 1849:3222, bloque "mic").
  *
- * NO es reconocimiento de voz (STT). Lo que hay ahí es un medidor de volumen
- * vía `getUserMedia` + `AnalyserNode` (fftSize 256, promedio de frequencyData
- * normalizado 0–1) para el chequeo de hardware previo al ejercicio — este
- * componente es la pieza VISUAL de esa idea, centralizada; la captura de
- * audio sigue siendo responsabilidad de la app.
+ * NO es reconocimiento de voz (STT): es la pieza VISUAL del chequeo de hardware
+ * previo al ejercicio. La captura de audio (`getUserMedia` + `AnalyserNode`),
+ * la lista de dispositivos (`enumerateDevices`) y la regla de "no te escuchamos"
+ * siguen siendo responsabilidad de la app.
  *
- * El color sale del propio nivel, igual que en prod: sin escuchar = blanco
- * 50%; escuchando con nivel 0.15–0.8 (rango "bueno" para hablar) = verde;
- * fuera de ese rango (muy bajo o saturado) = rojo.
+ * Reemplaza a la píldora anterior (ícono + 30 barras blancas/verdes/rojas). En el
+ * diseño nuevo el color de las barras sólo dice si hay señal (verde) o no (gris):
+ * el error se marca en el selector (`error`), no en las barras.
+ *
+ * - Sin permiso todavía → `disabled`: selector gris, barras grises.
+ * - Con permiso → selector blanco; las barras se encienden según `level`.
+ * - Sin señal un rato → `error`: selector en rojo (la app decide cuándo).
+ *
+ * Ancho: 408px en el Figma (desktop y mobile); acá es `max-w-[408px]` y las barras
+ * reparten el espacio que deja el selector, para no desbordar en mobile chico.
  */
 export interface MicProps {
-  /** true = escuchando (glifo/barras toman color según `level`), false = idle (todo blanco 50%). */
-  listening: boolean;
-  /** Nivel de audio 0–1. Si se omite, listening=true usa un nivel demo (~1/3, cae en rango "bueno"). */
+  /** Nivel de audio 0–1. Las barras encendidas son `round(level × barsCount)`. */
   level?: number;
+  /** Dispositivos de entrada para el selector (deviceId + nombre). */
+  devices?: DropdownItem[];
+  /** deviceId del micrófono en uso. */
+  deviceId?: string;
+  onDeviceChange?: (deviceId: string) => void;
+  /** Sin permiso: selector gris y deshabilitado, barras apagadas. */
+  disabled?: boolean;
+  /** Sin señal: selector en rojo. */
+  error?: boolean;
+  /** aria-label del selector. Default "Elegir micrófono". */
+  label?: string;
+  /** Default 23, como en el Figma. */
   barsCount?: number;
   className?: string;
 }
 
-export function Mic({ listening, level, barsCount = 30, className }: MicProps) {
-  const value = level ?? (listening ? 1 / 3 : 0);
-  const activeCount = Math.round(value * barsCount);
-  const inGoodRange = value >= 0.15 && value <= 0.8;
-  const iconColor = !listening ? 'text-white/50' : inGoodRange ? 'text-green' : 'text-red';
-  const activeBarColor = !listening ? 'bg-white/50' : inGoodRange ? 'bg-green' : 'bg-red';
+export function Mic({
+  level = 0,
+  devices = [],
+  deviceId,
+  onDeviceChange,
+  disabled = false,
+  error = false,
+  label = 'Elegir micrófono',
+  barsCount = 23,
+  className,
+}: MicProps) {
+  const clamped = Math.min(Math.max(level, 0), 1);
+  const activeCount = disabled ? 0 : Math.round(clamped * barsCount);
 
   return (
-    <div
-      className={cn(
-        'flex h-10 w-full max-w-sm shrink-0 items-center gap-3 rounded-pill bg-darker-gray px-3 sm:h-12 sm:px-4',
-        className,
-      )}
-    >
-      <IconMic className={cn('size-6 shrink-0', iconColor)} />
-      <div className="flex h-6 flex-1 items-center justify-between gap-0.5">
+    <div className={cn('flex w-full max-w-[408px] items-center gap-[17px]', className)}>
+      <Dropdown
+        label={label}
+        hideLabel
+        icon={<IconMic className="size-full" />}
+        items={devices}
+        value={deviceId ? [deviceId] : []}
+        onChange={(v) => {
+          if (v[0]) onDeviceChange?.(v[0]);
+        }}
+        disabled={disabled}
+        error={error}
+        menuAlign="left"
+        className="shrink-0"
+      />
+      <div className="flex min-w-0 flex-1 items-center justify-between" aria-hidden="true">
         {Array.from({ length: barsCount }).map((_, i) => (
           <span
             key={i}
             className={cn(
-              'w-1.5 rounded-full transition-all duration-75',
-              i < activeCount ? cn(activeBarColor, 'h-full') : 'h-2/3 bg-gray-600 opacity-50',
+              'h-6 w-1.5 shrink-0 rounded-[7.333px] transition-colors duration-75',
+              i < activeCount ? 'bg-green' : 'bg-divider',
             )}
           />
         ))}
