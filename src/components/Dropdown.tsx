@@ -47,8 +47,34 @@ export interface DropdownProps {
   error?: boolean;
   /** De qué borde del trigger cuelga el menú. Default 'right' (selector del header). */
   menuAlign?: 'left' | 'right';
+  /**
+   * 'md' (default) = el componente del Figma. 'sm' = la instancia a escala 0,917
+   * del selector de micrófono de fluidez (trigger 40px, ícono 22, textos 14,67).
+   */
+  size?: 'md' | 'sm';
   className?: string;
 }
+
+// Medidas por tamaño. 'sm' sale del design-context del hand-off de fluidez
+// (node 1849:3222): todo el componente escalado a 0,917.
+const SIZES = {
+  md: {
+    trigger: 'h-11 gap-3 px-4',
+    icon: 'size-6',
+    caret: 'size-4',
+    menu: 'rounded-[16px] py-2 min-w-[223px]',
+    item: 'gap-2 px-4 py-3 text-[16px] tracking-[0.16px]',
+    check: 'size-6',
+  },
+  sm: {
+    trigger: 'h-10 gap-[11px] px-[14.667px]',
+    icon: 'size-[22px]',
+    caret: 'size-[14.667px]',
+    menu: 'rounded-[14.667px] py-[7.333px] min-w-[204px]',
+    item: 'gap-[7.333px] px-[14.667px] py-[11px] text-[14.67px] tracking-[0.1467px]',
+    check: 'size-[22px]',
+  },
+} as const;
 
 const CheckboxGlyph = ({ checked }: { checked: boolean }) => (
   <span
@@ -75,8 +101,10 @@ export function Dropdown({
   disabled = false,
   error = false,
   menuAlign = 'right',
+  size = 'md',
   className,
 }: DropdownProps) {
+  const sz = SIZES[size];
   const [openState, setIsOpen] = useState(false);
   // Si se deshabilita con el menú abierto, el menú se cierra.
   const isOpen = openState && !disabled;
@@ -119,15 +147,16 @@ export function Dropdown({
         aria-label={hideLabel ? label : undefined}
         aria-invalid={error || undefined}
         className={cn(
-          'group flex h-11 items-center gap-3 rounded-pill border-2 bg-darker-gray px-4 transition-colors',
+          cn('group flex items-center rounded-pill border-2 bg-darker-gray transition-colors', sz.trigger),
           triggerColor,
         )}
       >
-        {icon && <span className="size-6 shrink-0">{icon}</span>}
+        {icon && <span className={cn('shrink-0', sz.icon)}>{icon}</span>}
         {!hideLabel && (
           <span
             className={cn(
-              'font-inter font-semibold text-[16px] tracking-[0.16px] whitespace-nowrap',
+              'font-inter font-semibold whitespace-nowrap',
+              size === 'sm' ? 'text-[14.67px] tracking-[0.1467px]' : 'text-[16px] tracking-[0.16px]',
               !isOpen &&
                 !disabled &&
                 'group-hover:[text-decoration-line:underline] group-hover:[text-decoration-style:wavy] group-hover:underline-offset-2',
@@ -136,14 +165,15 @@ export function Dropdown({
             {label}
           </span>
         )}
-        <IconCaretDown className={cn('size-4 shrink-0 transition-transform', isOpen && 'rotate-180')} />
+        <IconCaretDown className={cn('shrink-0 transition-transform', sz.caret, isOpen && 'rotate-180')} />
       </button>
 
       {isOpen && (
         <div
           role="listbox"
           className={cn(
-            'absolute top-[calc(100%+2px)] z-10 flex min-w-[223px] flex-col items-start overflow-hidden rounded-[16px] bg-darker-gray py-2 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.3),0px_2px_8px_1px_rgba(0,0,0,0.1)]',
+            'absolute top-[calc(100%+2px)] z-10 flex flex-col items-start overflow-hidden bg-darker-gray shadow-[0px_1px_5px_0px_rgba(0,0,0,0.3),0px_2px_8px_1px_rgba(0,0,0,0.1)]',
+            sz.menu,
             menuAlign === 'left' ? 'left-0' : 'right-0',
           )}
         >
@@ -157,13 +187,14 @@ export function Dropdown({
                 aria-selected={isSelected}
                 onClick={() => toggleItem(item.value)}
                 className={cn(
-                  'group flex w-full items-center gap-2 px-4 py-3 text-left font-inter font-semibold text-[16px] tracking-[0.16px] transition-colors',
+                  'group flex w-full items-center text-left font-inter font-semibold transition-colors',
+                  sz.item,
                   isSelected && !multiselect ? 'text-orange' : 'text-whitesmoke hover:bg-blue hover:text-black',
                 )}
               >
                 {multiselect && <CheckboxGlyph checked={isSelected} />}
                 <span className="flex-1 truncate">{item.label}</span>
-                {isSelected && !multiselect && <IconCheckMark className="size-6 shrink-0" />}
+                {isSelected && !multiselect && <IconCheckMark className={cn('shrink-0', sz.check)} />}
               </button>
             );
           })}
@@ -171,9 +202,9 @@ export function Dropdown({
             <button
               type="button"
               onClick={actionItem.onClick}
-              className="flex w-full items-center gap-2 px-4 py-3 text-left font-inter font-semibold text-[16px] tracking-[0.16px] text-whitesmoke hover:bg-blue hover:text-black"
+              className={cn('flex w-full items-center text-left font-inter font-semibold text-whitesmoke hover:bg-blue hover:text-black', sz.item)}
             >
-              {actionItem.icon ?? <IconPlus className="size-6 shrink-0" />}
+              {actionItem.icon ?? <IconPlus className={cn('shrink-0', sz.check)} />}
               {actionItem.label}
             </button>
           )}

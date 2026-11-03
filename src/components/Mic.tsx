@@ -22,6 +22,8 @@ import { IconMic } from './designerIcons';
  * - Con permiso → selector blanco; las barras se encienden según `level`.
  * - Sin señal un rato → `error`: selector en rojo (la app decide cuándo).
  *
+ * El selector va en `size="sm"`: en el Figma la instancia está a escala 0,917.
+ *
  * Ancho: 408px en el Figma (desktop y mobile); acá es `max-w-[408px]` y las barras
  * reparten el espacio que deja el selector, para no desbordar en mobile chico.
  */
@@ -72,6 +74,7 @@ export function Mic({
         disabled={disabled}
         error={error}
         menuAlign="left"
+        size="sm"
         className="shrink-0"
       />
       <div className="flex min-w-0 flex-1 items-center justify-between" aria-hidden="true">
